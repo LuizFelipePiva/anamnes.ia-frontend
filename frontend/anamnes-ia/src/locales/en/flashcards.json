@@ -1,0 +1,62 @@
+{
+  "header": {
+    "title": "Flashcards",
+    "subtitle": "Spaced repetition",
+    "due_today": "{{count}} to review today",
+    "create": "Create flashcard"
+  },
+  "decks": {
+    "section_title": "MY DECKS",
+    "summary_one": "{{count}} deck · {{cards}} cards in total",
+    "summary_other": "{{count}} decks · {{cards}} cards in total",
+    "free": "Open",
+    "free_hint": "· available to everyone",
+    "class_hint": "· exclusive to the class",
+    "class_fallback": "Class",
+    "empty": "No decks available yet.",
+    "error_decks": "Could not load the decks.",
+    "error_cards": "Could not load the cards.",
+    "retry": "Try again"
+  },
+  "card": {
+    "source": {
+      "ai": "AI",
+      "case": "Case",
+      "soap": "SOAP",
+      "manual": "Manual"
+    },
+    "total_one": "{{count}} card",
+    "total_other": "{{count}} cards",
+    "due_one": "{{count}} due today",
+    "due_other": "{{count}} due today",
+    "up_to_date": "Up to date ✓"
+  },
+  "review": {
+    "question": "Question",
+    "answer": "Answer",
+    "reveal": "Click to reveal →",
+    "remaining": "{{count}} remaining",
+    "skip": "Skip",
+    "ratings": {
+      "again": "Again",
+      "again_hint": "< 1 min",
+      "hard": "Hard",
+      "hard_hint": "~1 day",
+      "good": "Good",
+      "good_hint": "~3 days",
+      "easy": "Easy",
+      "easy_hint": "~7 days"
+    },
+    "done": {
+      "title": "Deck completed!",
+      "subtitle_one": "You reviewed 1 card from <1>{{deck}}</1>",
+      "subtitle_other": "You reviewed all {{count}} cards from <1>{{deck}}</1>",
+      "stat_again": "↺ Again: {{count}}",
+      "stat_hard": "✗ Hard: {{count}}",
+      "stat_good": "◎ Good: {{count}}",
+      "stat_easy": "✓ Easy: {{count}}",
+      "review_again": "Review again",
+      "back_to_decks": "Back to decks"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "back": "Voltar",
+  "role": {
+    "student": "Aluno",
+    "teacher": "Professor",
+    "admin": "Administrador"
+  },
+  "section": {
+    "personal": "Informações Pessoais",
+    "account": "Conta",
+    "security": "Segurança"
+  },
+  "field": {
+    "full_name": "Nome completo",
+    "institution": "Instituição",
+    "email": "E-mail",
+    "account_type": "Tipo de conta",
+    "current_password": "Senha atual",
+    "new_password": "Nova senha",
+    "confirm_password": "Confirmar nova senha"
+  },
+  "placeholder": {
+    "name": "Seu nome",
+    "institution": "Ex: UFMG, USP, HCor...",
+    "new_password": "Mínimo 6 caracteres"
+  },
+  "hint": {
+    "optional": "Opcional",
+    "email_readonly": "O e-mail não pode ser alterado por aqui."
+  },
+  "action": {
+    "save": "Salvar alterações",
+    "saving": "Salvando...",
+    "change_password": "Alterar senha",
+    "changing": "Alterando..."
+  },
+  "msg": {
+    "info_saved": "Informações salvas com sucesso!",
+    "info_error": "Erro ao salvar",
+    "fill_all": "Preencha todos os campos",
+    "password_short": "A nova senha deve ter pelo menos 6 caracteres",
+    "password_mismatch": "As senhas não coincidem",
+    "password_changed": "Senha alterada com sucesso!",
+    "password_error": "Erro ao alterar senha"
+  }
+}

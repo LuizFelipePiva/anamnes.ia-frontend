@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" width="800" height="900">
+  <title>Esquema anatômico de radiografia de tórax em PA</title>
+  <rect width="800" height="900" fill="#0d0d12"/>
+  <g fill="none" stroke="#8f9099" stroke-width="2.5" stroke-linecap="round">
+    <!-- gradil costal -->
+    <g opacity="0.45">
+      <path d="M150 200 Q400 130 650 200"/>
+      <path d="M132 275 Q400 205 668 275"/>
+      <path d="M120 350 Q400 285 680 350"/>
+      <path d="M118 425 Q400 365 682 425"/>
+      <path d="M125 500 Q400 445 675 500"/>
+      <path d="M140 575 Q400 528 660 575"/>
+    </g>
+    <!-- contorno pulmonar -->
+    <path d="M330 175 Q205 200 165 340 Q135 470 175 620 Q200 690 300 700 Q340 640 345 480 Q348 300 330 175 Z" stroke="#c9cad3" stroke-width="3"/>
+    <path d="M470 175 Q595 200 635 340 Q665 470 625 620 Q600 690 500 700 Q460 640 455 480 Q452 300 470 175 Z" stroke="#c9cad3" stroke-width="3"/>
+    <!-- traqueia e carina -->
+    <path d="M385 120 L385 330 M415 120 L415 330" stroke="#c9cad3"/>
+    <path d="M385 330 Q350 355 320 390 M415 330 Q450 355 480 390" stroke="#c9cad3"/>
+    <!-- silhueta cardíaca -->
+    <path d="M395 380 Q345 400 330 470 Q315 560 350 620 Q400 660 470 625 Q505 570 495 470 Q485 400 425 380 Z" stroke="#e2e3ea" stroke-width="3.5"/>
+    <!-- arco aórtico -->
+    <path d="M400 300 Q345 285 335 330" stroke="#e2e3ea"/>
+    <!-- hemidiafragmas e seios costofrênicos -->
+    <path d="M175 620 Q290 700 350 640" stroke="#c9cad3" stroke-width="3"/>
+    <path d="M625 600 Q510 690 460 630" stroke="#c9cad3" stroke-width="3"/>
+    <!-- clavículas -->
+    <path d="M195 205 Q290 165 370 190" opacity="0.7"/>
+    <path d="M605 205 Q510 165 430 190" opacity="0.7"/>
+    <!-- coluna -->
+    <g opacity="0.35">
+      <path d="M383 130 L383 720 M417 130 L417 720"/>
+      <path d="M383 200 L417 200 M383 275 L417 275 M383 350 L417 350 M383 425 L417 425 M383 500 L417 500 M383 575 L417 575 M383 650 L417 650"/>
+    </g>
+    <!-- bolha gástrica -->
+    <ellipse cx="545" cy="690" rx="52" ry="30" opacity="0.55"/>
+  </g>
+  <text x="400" y="860" fill="#5f6068" font-family="system-ui, sans-serif" font-size="19" text-anchor="middle">Esquema didático — não é uma radiografia real</text>
+</svg>

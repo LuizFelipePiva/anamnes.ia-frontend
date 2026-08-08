@@ -1,0 +1,8 @@
+-- Aplicada via painel do Supabase (não pelo CLI). Arquivo criado apenas para
+-- alinhar o histórico local com o remoto (SPEC-007 reconciliou o drift em
+-- 2026-07-24). Já consta em supabase_migrations.schema_migrations, então o CLI
+-- NÃO reexecuta este conteúdo.
+--
+-- Intenção (pelo nome): restringir escrita em public.questions_bank a admin,
+-- deixando leitura liberada a usuários autenticados. A fonte da verdade das
+-- políticas é o banco de produção (ver pg_policies). Não recriar aqui às cegas.

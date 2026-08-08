@@ -1,0 +1,46 @@
+{
+  "header_title": "Casos Clínicos",
+  "header_subtitle": "Biblioteca completa",
+  "search_placeholder": "Buscar por título, especialidad, nivel...",
+  "filter_all": "Todos",
+  "filter_all_specialties": "Todas las especialidades",
+  "difficulty": {
+    "basico": "Básico",
+    "intermediario": "Intermedio",
+    "avancado": "Avanzado"
+  },
+  "status": {
+    "completed": "Completado",
+    "abandoned": "Abandonado",
+    "in_progress": "En curso",
+    "new": "Nuevo"
+  },
+  "action": {
+    "retry": "Intentar de nuevo",
+    "new_attempt": "Nuevo intento",
+    "start": "Iniciar caso",
+    "view": "Ver caso"
+  },
+  "age": "{{age}} años",
+  "initial_listen": "Escucha inicial",
+  "best_score": "Mejor Puntuación",
+  "attempts": "Intentos",
+  "no_attempts": "Aún no hay intentos",
+  "free": "Gratis",
+  "estimated_time": "Tiempo estimado",
+  "chief_complaint": "Motivo de consulta",
+  "expiry": {
+    "today": "Expira hoy",
+    "hours": "Expira en {{count}}h",
+    "days_one": "Expira en 1 día",
+    "days_other": "Expira en {{count}} días",
+    "date": "Expira: {{date}}"
+  },
+  "empty": {
+    "class": "Aún no hay casos asignados a esta clase.",
+    "search": "No se encontraron casos para \"{{term}}\".",
+    "filters": "No hay casos para los filtros seleccionados.",
+    "none": "No hay casos disponibles."
+  },
+  "footer": "Anamnes.IA · CNPJ: 62.785.748/0001-02"
+}

@@ -1,0 +1,382 @@
+/* ── SimuladosListPage.css ─────────────────────────────────────────────────── */
+
+.sl-page {
+  min-height: 100vh;
+  background: var(--bg-color);
+  padding: 2rem 1.5rem 4rem;
+}
+
+.sl-header {
+  max-width: 900px;
+  margin: 0 auto 2rem;
+}
+
+.sl-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border: 1.5px solid var(--border-main);
+  border-radius: 0.6rem;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: border-color 0.18s, color 0.18s, background 0.18s;
+}
+
+.sl-back-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  background: rgba(132, 74, 245, 0.05);
+}
+
+.sl-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 0.25rem;
+}
+
+.sl-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* ── Novo simulado ── */
+.sl-create-card {
+  max-width: 900px;
+  margin: 0 auto 2.5rem;
+  background: var(--surface-color);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1.25rem;
+  padding: 1.75rem 2rem;
+  box-shadow: 0 2px 12px rgba(132, 74, 245, 0.06);
+}
+
+.sl-create-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sl-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.sl-form-grid .sl-field-full {
+  grid-column: 1 / -1;
+}
+
+.sl-field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+.sl-field input,
+.sl-field select,
+.sl-field textarea {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--border-main);
+  border-radius: 0.6rem;
+  background: var(--bg-color);
+  color: var(--text-main);
+  font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.sl-field input:focus,
+.sl-field select:focus,
+.sl-field textarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(132, 74, 245, 0.12);
+}
+
+.sl-form-actions {
+  margin-top: 1.25rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Seção de simulados disponíveis ── */
+.sl-section-title {
+  max-width: 900px;
+  margin: 0 auto 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sl-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+/* ── Card individual ── */
+.sl-card {
+  background: var(--surface-color);
+  border: 1px solid var(--border-subtle);
+  border-radius: 1.1rem;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sl-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(132, 74, 245, 0.12);
+  border-color: var(--accent-color);
+}
+
+.sl-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.sl-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+  flex: 1;
+}
+
+.sl-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sl-badge.primary {
+  background: rgba(132, 74, 245, 0.12);
+  color: var(--accent-color);
+}
+
+.sl-badge.muted {
+  background: var(--bg-color);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+
+.sl-badge.assigned {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+}
+
+.sl-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.sl-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.sl-card-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.sl-card-questions {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.sl-card-due {
+  font-size: 0.78rem;
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+/* ── Botões ── */
+.sl-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1.4rem;
+  border: none;
+  border-radius: 0.7rem;
+  background: var(--accent-color);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
+}
+
+.sl-btn-primary:hover:not(:disabled) {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(132, 74, 245, 0.35);
+}
+
+.sl-btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.sl-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #ef4444;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.sl-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+/* ── Estados ── */
+.sl-empty {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+}
+
+.sl-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.sl-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 12rem;
+  color: var(--text-muted);
+  gap: 0.75rem;
+}
+
+.sl-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--border-main);
+  border-top-color: var(--accent-color);
+  border-radius: 50%;
+  animation: sl-spin 0.8s linear infinite;
+}
+
+@keyframes sl-spin {
+  to { transform: rotate(360deg); }
+}
+
+.sl-error-msg {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0.8rem 1rem;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 0.6rem;
+  color: #ef4444;
+  font-size: 0.88rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Attempts section */
+.sl-attempts-section {
+  max-width: 900px;
+  margin: 2.5rem auto 0;
+}
+
+.sl-attempts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.sl-attempt-row {
+  background: var(--surface-color);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.85rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.sl-attempt-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.sl-attempt-date {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.sl-attempt-score {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.sl-attempt-score.good { color: #10b981; }
+.sl-attempt-score.mid  { color: #f59e0b; }
+.sl-attempt-score.bad  { color: #ef4444; }
+
+@media (max-width: 640px) {
+  .sl-form-grid { grid-template-columns: 1fr; }
+  .sl-create-card { padding: 1.25rem 1rem; }
+}

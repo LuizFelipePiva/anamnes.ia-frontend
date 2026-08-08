@@ -1,0 +1,70 @@
+{
+  "header": {
+    "title": "Флеш-карточки",
+    "subtitle": "Интервальное повторение",
+    "due_today": "{{count}} к повторению сегодня",
+    "create": "Создать флеш-карточку"
+  },
+  "decks": {
+    "section_title": "МОИ НАБОРЫ",
+    "summary_one": "{{count}} набор · {{cards}} карточек всего",
+    "summary_few": "{{count}} набора · {{cards}} карточек всего",
+    "summary_many": "{{count}} наборов · {{cards}} карточек всего",
+    "summary_other": "{{count}} набора · {{cards}} карточек всего",
+    "free": "Бесплатные",
+    "free_hint": "· доступно всем",
+    "class_hint": "· только для группы",
+    "class_fallback": "Группа",
+    "empty": "Пока нет доступных наборов.",
+    "error_decks": "Не удалось загрузить наборы.",
+    "error_cards": "Не удалось загрузить карточки.",
+    "retry": "Повторить попытку"
+  },
+  "card": {
+    "source": {
+      "ai": "ИИ",
+      "case": "Случай",
+      "soap": "SOAP",
+      "manual": "Вручную"
+    },
+    "total_one": "{{count}} карточка",
+    "total_few": "{{count}} карточки",
+    "total_many": "{{count}} карточек",
+    "total_other": "{{count}} карточки",
+    "due_one": "{{count}} на сегодня",
+    "due_few": "{{count}} на сегодня",
+    "due_many": "{{count}} на сегодня",
+    "due_other": "{{count}} на сегодня",
+    "up_to_date": "Всё выполнено ✓"
+  },
+  "review": {
+    "question": "Вопрос",
+    "answer": "Ответ",
+    "reveal": "Нажмите, чтобы увидеть ответ →",
+    "remaining": "Осталось: {{count}}",
+    "skip": "Пропустить",
+    "ratings": {
+      "again": "Повторить",
+      "again_hint": "< 1 мин",
+      "hard": "Сложно",
+      "hard_hint": "~1 день",
+      "good": "Хорошо",
+      "good_hint": "~3 дня",
+      "easy": "Легко",
+      "easy_hint": "~7 дней"
+    },
+    "done": {
+      "title": "Набор завершён!",
+      "subtitle_one": "Вы повторили {{count}} карточку из <1>{{deck}}</1>",
+      "subtitle_few": "Вы повторили {{count}} карточки из <1>{{deck}}</1>",
+      "subtitle_many": "Вы повторили все {{count}} карточек из <1>{{deck}}</1>",
+      "subtitle_other": "Вы повторили {{count}} карточки из <1>{{deck}}</1>",
+      "stat_again": "↺ Повторить: {{count}}",
+      "stat_hard": "✗ Сложно: {{count}}",
+      "stat_good": "◎ Хорошо: {{count}}",
+      "stat_easy": "✓ Легко: {{count}}",
+      "review_again": "Повторить снова",
+      "back_to_decks": "Вернуться к наборам"
+    }
+  }
+}

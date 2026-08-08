@@ -1,0 +1,46 @@
+{
+  "back": "Volver",
+  "role": {
+    "student": "Estudiante",
+    "teacher": "Profesor",
+    "admin": "Administrador"
+  },
+  "section": {
+    "personal": "Información Personal",
+    "account": "Cuenta",
+    "security": "Seguridad"
+  },
+  "field": {
+    "full_name": "Nombre completo",
+    "institution": "Institución",
+    "email": "Correo",
+    "account_type": "Tipo de cuenta",
+    "current_password": "Contraseña actual",
+    "new_password": "Nueva contraseña",
+    "confirm_password": "Confirmar nueva contraseña"
+  },
+  "placeholder": {
+    "name": "Tu nombre",
+    "institution": "Ej: UFMG, USP, HCor...",
+    "new_password": "Mínimo 6 caracteres"
+  },
+  "hint": {
+    "optional": "Opcional",
+    "email_readonly": "El correo no se puede cambiar aquí."
+  },
+  "action": {
+    "save": "Guardar cambios",
+    "saving": "Guardando...",
+    "change_password": "Cambiar contraseña",
+    "changing": "Cambiando..."
+  },
+  "msg": {
+    "info_saved": "¡Información guardada con éxito!",
+    "info_error": "Error al guardar",
+    "fill_all": "Completa todos los campos",
+    "password_short": "La nueva contraseña debe tener al menos 6 caracteres",
+    "password_mismatch": "Las contraseñas no coinciden",
+    "password_changed": "¡Contraseña cambiada con éxito!",
+    "password_error": "Error al cambiar la contraseña"
+  }
+}

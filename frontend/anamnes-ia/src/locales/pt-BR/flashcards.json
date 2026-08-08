@@ -1,0 +1,62 @@
+{
+  "header": {
+    "title": "Flashcards",
+    "subtitle": "Revisão espaçada",
+    "due_today": "{{count}} para revisar hoje",
+    "create": "Criar flashcard"
+  },
+  "decks": {
+    "section_title": "MEUS DECKS",
+    "summary_one": "{{count}} deck · {{cards}} cards no total",
+    "summary_other": "{{count}} decks · {{cards}} cards no total",
+    "free": "Livres",
+    "free_hint": "· disponível para todos",
+    "class_hint": "· exclusivo da turma",
+    "class_fallback": "Turma",
+    "empty": "Nenhum deck disponível ainda.",
+    "error_decks": "Não foi possível carregar os decks.",
+    "error_cards": "Não foi possível carregar os cards.",
+    "retry": "Tentar novamente"
+  },
+  "card": {
+    "source": {
+      "ai": "IA",
+      "case": "Caso",
+      "soap": "SOAP",
+      "manual": "Manual"
+    },
+    "total_one": "{{count}} card",
+    "total_other": "{{count}} cards",
+    "due_one": "{{count}} para hoje",
+    "due_other": "{{count}} para hoje",
+    "up_to_date": "Em dia ✓"
+  },
+  "review": {
+    "question": "Pergunta",
+    "answer": "Resposta",
+    "reveal": "Clique para revelar →",
+    "remaining": "{{count}} restantes",
+    "skip": "Pular",
+    "ratings": {
+      "again": "Repetir",
+      "again_hint": "< 1 min",
+      "hard": "Difícil",
+      "hard_hint": "~1 dia",
+      "good": "Bom",
+      "good_hint": "~3 dias",
+      "easy": "Fácil",
+      "easy_hint": "~7 dias"
+    },
+    "done": {
+      "title": "Deck concluído!",
+      "subtitle_one": "Você revisou 1 card de <1>{{deck}}</1>",
+      "subtitle_other": "Você revisou todos os {{count}} cards de <1>{{deck}}</1>",
+      "stat_again": "↺ Repetir: {{count}}",
+      "stat_hard": "✗ Difícil: {{count}}",
+      "stat_good": "◎ Bom: {{count}}",
+      "stat_easy": "✓ Fácil: {{count}}",
+      "review_again": "Revisar de novo",
+      "back_to_decks": "Voltar aos decks"
+    }
+  }
+}

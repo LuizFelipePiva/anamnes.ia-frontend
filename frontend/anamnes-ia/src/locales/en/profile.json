@@ -1,0 +1,46 @@
+{
+  "back": "Back",
+  "role": {
+    "student": "Student",
+    "teacher": "Teacher",
+    "admin": "Administrator"
+  },
+  "section": {
+    "personal": "Personal Information",
+    "account": "Account",
+    "security": "Security"
+  },
+  "field": {
+    "full_name": "Full name",
+    "institution": "Institution",
+    "email": "Email",
+    "account_type": "Account type",
+    "current_password": "Current password",
+    "new_password": "New password",
+    "confirm_password": "Confirm new password"
+  },
+  "placeholder": {
+    "name": "Your name",
+    "institution": "e.g. UFMG, USP, HCor...",
+    "new_password": "At least 6 characters"
+  },
+  "hint": {
+    "optional": "Optional",
+    "email_readonly": "Email cannot be changed here."
+  },
+  "action": {
+    "save": "Save changes",
+    "saving": "Saving...",
+    "change_password": "Change password",
+    "changing": "Changing..."
+  },
+  "msg": {
+    "info_saved": "Information saved successfully!",
+    "info_error": "Failed to save",
+    "fill_all": "Fill in all fields",
+    "password_short": "The new password must be at least 6 characters",
+    "password_mismatch": "Passwords do not match",
+    "password_changed": "Password changed successfully!",
+    "password_error": "Failed to change password"
+  }
+}

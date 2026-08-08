@@ -1,0 +1,161 @@
+{
+  "role": "Estudiante",
+  "loading": "Cargando…",
+  "profile_not_found": "Perfil no encontrado.",
+  "load_error": "Error al cargar el perfil",
+  "try_again": "Intentar de nuevo",
+  "train_now": "Entrenar ahora",
+  "limit_reached": "Límite alcanzado",
+  "back_to_menu": "Volver al menú",
+  "no_data": "Aún no hay datos",
+  "initial_listen": "Escucha inicial",
+  "chat_ai": "Chat IA",
+  "start_now": "Empezar ahora →",
+  "pts": "pts",
+  "tabs": {
+    "overview": "Resumen",
+    "classes": "Mis Clases",
+    "history": "Historial",
+    "performance": "Rendimiento",
+    "achievements": "Logros",
+    "flashcards": "Flashcards"
+  },
+  "difficulty": {
+    "basico": "Básico",
+    "medio": "Medio",
+    "avancado": "Avanzado"
+  },
+  "status": {
+    "completed": "Completado",
+    "abandoned": "Abandonado",
+    "in_progress": "En curso"
+  },
+  "expiry": {
+    "today": "Expira hoy",
+    "hours": "Expira en {{count}}h",
+    "days_one": "Expira en 1 día",
+    "days_other": "Expira en {{count}} días",
+    "date": "Expira: {{date}}"
+  },
+  "stats": {
+    "cases_started": "Casos iniciados",
+    "completed": "Completados",
+    "avg_score": "Nota media",
+    "best_score": "Mejor nota",
+    "avg_time": "Tiempo medio",
+    "classes": "Clases",
+    "completion_rate": "Tasa de finalización"
+  },
+  "overview": {
+    "greeting": "Hola, {{name}}",
+    "greeting_fallback": "estudiante",
+    "greeting_subtitle": "Aquí tienes un resumen de tu progreso",
+    "recent_activity": "Actividad reciente",
+    "see_all": "Ver todo →",
+    "no_activity": "Aún no hay actividad.",
+    "weekly_evolution": "Evolución semanal",
+    "details": "Detalles →",
+    "cta_title": "¿Listo para practicar?",
+    "cta_subtitle": "Elige un caso y empieza ahora",
+    "quota_cases": "{{used}}/{{limit}} casos hoy",
+    "quota_ai": "{{used}}/{{limit}} Chat IA hoy",
+    "join_class": "Unirse a clase",
+    "start_case": "Iniciar caso",
+    "plan_free": "Plan gratis"
+  },
+  "classes": {
+    "title": "Mis Clases",
+    "count_one": "{{count}} clase inscrita",
+    "count_other": "{{count}} clases inscritas",
+    "empty": "Aún no estás inscrito en ninguna clase.",
+    "join_full": "Unirse a una Clase",
+    "join": "Unirse a clase",
+    "joined_at": "Te uniste el {{date}}",
+    "hide_cases": "Ocultar casos",
+    "see_cases": "Ver casos disponibles",
+    "see_cases_count": "Ver casos disponibles ({{count}})",
+    "no_cases": "Aún no hay casos disponibles en esta clase.",
+    "start": "Iniciar",
+    "limit": "Límite"
+  },
+  "history": {
+    "title": "Historial",
+    "count_one": "{{count}} actividad realizada",
+    "count_other": "{{count}} actividades realizadas",
+    "empty": "Aún no hay historial.",
+    "start_chat": "Iniciar un chat →"
+  },
+  "performance": {
+    "title": "Rendimiento",
+    "subtitle": "Análisis completo de tu progreso",
+    "by_specialty": "Por especialidad",
+    "case_count_one": "{{count}} caso",
+    "case_count_other": "{{count}} casos",
+    "pts_value": "{{score}} pts"
+  },
+  "achievements": {
+    "title": "Logros",
+    "coming_soon_desc": "¡Esta función estará disponible pronto!",
+    "coming_soon_detail": "Insignias, rachas e hitos de progreso.",
+    "coming_soon": "Próximamente"
+  },
+  "join": {
+    "title": "Unirse a la Clase",
+    "desc": "Ingresa el código de invitación proporcionado por tu profesor.",
+    "placeholder": "Ej: A3K9M2",
+    "joining": "Uniéndose...",
+    "submit": "Unirse",
+    "success": "¡Te uniste a la clase \"{{name}}\" con éxito!",
+    "error": "Error al unirse a la clase"
+  },
+  "flashcards": {
+    "my_decks": "Mis Mazos",
+    "deck_count_one": "{{count}} mazo personal",
+    "deck_count_other": "{{count}} mazos personales",
+    "new_deck": "Nuevo Mazo",
+    "no_decks": "Aún no hay mazos creados.",
+    "create_first_deck": "Crear tu primer mazo",
+    "no_specialty": "Sin especialidad",
+    "card_count_one": "{{count}} tarjeta",
+    "card_count_other": "{{count}} tarjetas",
+    "new_card": "Nueva Tarjeta",
+    "no_cards": "Este mazo aún no tiene tarjetas.",
+    "add_first_card": "Agregar tu primera tarjeta",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "create": "Crear",
+    "save_error": "Error al guardar",
+    "deck_modal": {
+      "edit_title": "Editar Mazo",
+      "new_title": "Nuevo Mazo",
+      "name": "Nombre *",
+      "name_placeholder": "Ej: Cardiología — Bases",
+      "specialty": "Especialidad",
+      "select": "Seleccionar…",
+      "description": "Descripción",
+      "optional": "Opcional",
+      "name_required": "El nombre es obligatorio"
+    },
+    "card_modal": {
+      "edit_title": "Editar Tarjeta",
+      "new_title": "Nueva Tarjeta",
+      "front": "Frente *",
+      "front_placeholder": "Pregunta o estímulo",
+      "back": "Reverso *",
+      "back_placeholder": "Respuesta / explicación",
+      "hint": "Pista (opcional)",
+      "hint_placeholder": "Una pista para repasar",
+      "difficulty": "Dificultad",
+      "front_required": "El frente es obligatorio",
+      "back_required": "El reverso es obligatorio",
+      "easy": "Fácil",
+      "medium": "Medio",
+      "hard": "Difícil"
+    },
+    "delete": {
+      "title": "Confirmar eliminación",
+      "body": "¿Seguro que deseas eliminar \"{{label}}\"? Esta acción no se puede deshacer.",
+      "confirm": "Eliminar"
+    }
+  }
+}

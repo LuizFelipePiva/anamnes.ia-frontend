@@ -1,0 +1,46 @@
+{
+  "header_title": "Clinical Cases",
+  "header_subtitle": "Full library",
+  "search_placeholder": "Search by title, specialty, level...",
+  "filter_all": "All",
+  "filter_all_specialties": "All specialties",
+  "difficulty": {
+    "basico": "Basic",
+    "intermediario": "Intermediate",
+    "avancado": "Advanced"
+  },
+  "status": {
+    "completed": "Completed",
+    "abandoned": "Abandoned",
+    "in_progress": "In progress",
+    "new": "New"
+  },
+  "action": {
+    "retry": "Try again",
+    "new_attempt": "New attempt",
+    "start": "Start case",
+    "view": "View case"
+  },
+  "age": "{{age}} years old",
+  "initial_listen": "Initial listening",
+  "best_score": "Best Score",
+  "attempts": "Attempts",
+  "no_attempts": "No attempts yet",
+  "free": "Free",
+  "estimated_time": "Estimated time",
+  "chief_complaint": "Chief complaint",
+  "expiry": {
+    "today": "Expires today",
+    "hours": "Expires in {{count}}h",
+    "days_one": "Expires in 1 day",
+    "days_other": "Expires in {{count}} days",
+    "date": "Expires: {{date}}"
+  },
+  "empty": {
+    "class": "No cases assigned to this class yet.",
+    "search": "No cases found for \"{{term}}\".",
+    "filters": "No cases for the selected filters.",
+    "none": "No cases available."
+  },
+  "footer": "Anamnes.IA · CNPJ: 62.785.748/0001-02"
+}

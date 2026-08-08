@@ -1,0 +1,53 @@
+# =============================================
+# docker-compose.prod.yml — Ambiente de PRODUÇÃO
+# uso: docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --build
+# =============================================
+
+name: anamnes-ai-prod
+
+services:
+
+  # ─── Backend (FastAPI + uvicorn multi-worker) ──
+  backend:
+    build:
+      context: ./backend
+      target: production
+    image: anamnes-backend:latest
+    container_name: anamnes-backend
+    restart: always
+    env_file:
+      - ${PROD_ENV_FILE:-.env.prod}
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    networks:
+      - internal
+
+  # ─── Frontend (nginx + build Vite) ────────────
+  frontend:
+    build:
+      context: ./frontend/anamnes-ia
+      target: production
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+    image: anamnes-frontend:latest
+    container_name: anamnes-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge

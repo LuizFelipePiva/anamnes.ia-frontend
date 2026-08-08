@@ -1,0 +1,36 @@
+# =============================================
+# .gitignore raiz do repositório
+# =============================================
+
+# Segredos de produção — NUNCA commitar
+.env.prod
+backend/.env.prod
+*.env.prod
+
+# Artefatos Docker locais
+*.tar
+
+# Scripts locais
+dev.ps1
+
+# IDE / OS
+.vscode/settings.json
+.idea/
+*.DS_Store
+Thumbs.db
+
+# Claude Code local config e tooling de agentes
+.claude/
+.agents/
+.mcp.json
+skills-lock.json
+
+# Ambientes Virtuais
+venv/
+env/
+.venv/
+
+# Python bytecode
+__pycache__/
+*.pyc
+.pytest_cache/

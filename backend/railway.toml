@@ -1,0 +1,21 @@
+# =============================================
+# Railway config — backend FastAPI
+# Docs: https://docs.railway.app/reference/config-as-code
+# =============================================
+
+[build]
+  # Usa o Dockerfile existente, stage de produção
+  dockerfilePath = "Dockerfile"
+  buildTarget    = "production"
+
+[deploy]
+  # Railway injeta $PORT automaticamente — NÃO hardcode 8000
+  # --proxy-headers: IP real do usuário via X-Forwarded-For (rate limit por IP correto)
+  startCommand = "uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 2 --proxy-headers --forwarded-allow-ips '*' --log-level info"
+
+  # Health check para Railway saber quando o serviço está pronto
+  healthcheckPath    = "/api/health"
+  healthcheckTimeout = 30
+
+  restartPolicyType    = "on_failure"
+  restartPolicyMaxRetries = 3
