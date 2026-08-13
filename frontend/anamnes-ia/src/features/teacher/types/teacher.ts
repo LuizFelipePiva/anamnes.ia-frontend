@@ -72,25 +72,8 @@ export interface CaseInfo {
   form_data: Record<string, unknown> | null;
   published: boolean;
   visibility: CaseVisibility;
-  available_until: string | null;
   created_at: string | null;
   updated_at: string | null;
-}
-
-/** Vínculo caso ↔ turma (prazo por turma). O caso em si permanece no painel. */
-export interface CaseAssignmentDetail {
-  id: string;
-  case_id: string;
-  class_id: string;
-  due_date: string | null;
-  classes?: { id: string; name: string; code: string };
-}
-
-export interface SoapWeights {
-  S: number;
-  O: number;
-  A: number;
-  P: number;
 }
 
 export interface CaseFormData {
@@ -99,6 +82,7 @@ export interface CaseFormData {
   sintomas: string;
   especificidades: string;
   exames: string;
+  exame_fisico: string;
   historico_familiar: string;
   habitos: string;
   dificuldade: string;
@@ -108,7 +92,6 @@ export interface CaseFormData {
   persona_profissao: string;
   persona_emocional: string;
   persona_contexto: string;
-  soap_weights: SoapWeights;
 }
 
 export interface CaseCreate {
@@ -120,7 +103,6 @@ export interface CaseCreate {
   form_data?: Record<string, unknown>;
   published?: boolean;
   visibility?: CaseVisibility;
-  available_until?: string | null;
 }
 
 export interface CaseUpdate {
@@ -131,7 +113,6 @@ export interface CaseUpdate {
   patient_prompt?: string;
   published?: boolean;
   visibility?: CaseVisibility;
-  available_until?: string | null;
 }
 
 // ─── DASHBOARD ────────────────────────────
@@ -161,7 +142,6 @@ export interface StudentStats {
   email: string;
   attempts: number;
   completed: number;
-  completed_by_class: Record<string, number>;
   average_score: number;
   last_activity: string | null;
 }
@@ -219,5 +199,5 @@ export interface WeeklyStats {
 }
 
 // ─── VIEW ─────────────────────────────────
-export type ViewType = 'reports' | 'classes' | 'students' | 'cases' | 'content' | 'free-cases' | 'flashcards';
+export type ViewType = 'reports' | 'classes' | 'students' | 'cases' | 'content' | 'free-cases';
 

@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate, useBlocker } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { History, Clock, X } from 'lucide-react';
 import { MainMenu, SoapForm } from '@/shared/components';
 import { ThreadProvider, ChatGPT } from '@/features/chat';
 import { completeCaseAttempt, startAiChat, startCaseAttempt, abandonAttempt } from '@/features/chat/services/studentService';
-import type { CaseCompleteResult, CaseStartResult, SoapBreakdown } from '@/features/chat/services/studentService';
+import type { CaseCompleteResult, CaseStartResult } from '@/features/chat/services/studentService';
 import { authFetch } from '@/core/utils';
 import { config } from '@/config/env';
 import { API_ENDPOINTS } from '@/config/constants';
-import { SPECIALTIES, specialtyLabel } from '@/shared/utils/specialties';
 
 type ChatMode = 'easy' | 'advanced' | null;
 
@@ -34,6 +33,7 @@ interface FreeChatCaseState {
     conversationId: string;
     patientGreeting: string;
     patientSystemPrompt?: string;
+    form_data?: Record<string, unknown>;
   };
   // Navegacão imediata: attempt só é criado após selecão de modo (igual ao Chat IA)
   pendingCase?: {
@@ -44,10 +44,15 @@ interface FreeChatCaseState {
   };
 }
 
+interface SavedExam {
+  id: string;
+  timestamp: Date;
+  findings: string[];
+}
+
 const StudentChat: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { t } = useTranslation('chat');
   const state = location.state as FreeChatCaseState | null;
 
   const currentFreeCase = state?.freeCase;
@@ -60,11 +65,6 @@ const StudentChat: React.FC = () => {
   const [aiChatResult, setAiChatResult] = useState<CaseStartResult | null>(null);
   const [aiChatLoading, setAiChatLoading] = useState(false);
   const [aiChatError, setAiChatError] = useState<string | null>(null);
-
-  // Seleção de especialidade — apenas para Chat IA
-  const isAiChat = !currentFreeCase && !caseAttempt && !pendingCase;
-  const [selectedSpecialty, setSelectedSpecialty] = useState<string>('');
-  const [specialtyConfirmed, setSpecialtyConfirmed] = useState(!isAiChat);
 
   // Attempt efetivo: caseAttempt (legado) | pendingCase resolvido | Chat IA resolvido
   const resolvedAttempt = useMemo(() =>
@@ -79,6 +79,7 @@ const StudentChat: React.FC = () => {
       conversationId: caseAttemptResult.conversation_id,
       patientGreeting: '',
       patientSystemPrompt: caseAttemptResult.patient_prompt,
+      form_data: caseAttemptResult.form_data,
     } : null) ??
     (aiChatResult ? {
       caseId: aiChatResult.case_id ?? '',
@@ -89,6 +90,7 @@ const StudentChat: React.FC = () => {
       threadId: aiChatResult.thread_id,
       conversationId: aiChatResult.conversation_id,
       patientGreeting: aiChatResult.patient_prompt,
+      form_data: aiChatResult.form_data,
     } : null)
     , [caseAttempt, pendingCase, caseAttemptResult, aiChatResult]);
 
@@ -106,7 +108,7 @@ const StudentChat: React.FC = () => {
     } else if (!caseAttempt && !currentFreeCase) {
       // Chat IA
       setAiChatLoading(true);
-      startAiChat(selectedSpecialty || undefined)
+      startAiChat()
         .then(result => { setAiChatResult(result); setAiChatLoading(false); setChatMode(mode); })
         .catch(err => { setAiChatError(err.message); setAiChatLoading(false); });
     } else {
@@ -147,6 +149,19 @@ const StudentChat: React.FC = () => {
   // Estado reativo que espelha isCompletedRef — usado no useBlocker (avaliado no render)
   const [isCompleted, setIsCompleted] = useState(false);
 
+  // Histórico de exames físicos
+  const [savedExams, setSavedExams] = useState<SavedExam[]>([]);
+  const [showHistoryDropdown, setShowHistoryDropdown] = useState(false);
+
+  const handleSaveExamToHistory = (findings: string[]) => {
+    const newExam: SavedExam = {
+      id: Math.random().toString(36).substr(2, 9),
+      timestamp: new Date(),
+      findings
+    };
+    setSavedExams(prev => [newExam, ...prev]);
+  };
+
   // Atualiza attemptIdRef sempre que o attempt mudar (usado no beforeunload / cleanup)
   useEffect(() => {
     const id = resolvedAttempt?.attemptId ?? caseAttempt?.attemptId ?? null;
@@ -160,7 +175,9 @@ const StudentChat: React.FC = () => {
   );
   useEffect(() => {
     if (blocker.state === 'blocked') {
-      const confirmed = window.confirm(t('leave_confirm'));
+      const confirmed = window.confirm(
+        'Você tem um caso em andamento. Se sair agora, a tentativa será marcada como abandonada.\n\nDeseja sair mesmo assim?'
+      );
       if (confirmed) {
         // Chama abandonAttempt ANTES de navegar, enquanto o componente ainda está montado
         if (attemptIdRef.current) {
@@ -173,7 +190,7 @@ const StudentChat: React.FC = () => {
         blocker.reset();
       }
     }
-  }, [blocker, t]);
+  }, [blocker]);
 
   // Abandona attempt ao sair da página sem finalizar
   useEffect(() => {
@@ -209,6 +226,9 @@ const StudentChat: React.FC = () => {
   const isCaseAttempt = !!resolvedAttempt;
 
   const existingThreadId = resolvedAttempt?.threadId ?? currentFreeCase?.threadId;
+
+  // Patologia para lookup no suggestionsData (exame físico)
+  const casePatologia = resolvedAttempt?.caseTitle ?? currentFreeCase?.title;
 
   // Para caseAttempt: usa patientSystemPrompt como prompt inicial (GPT responde após modo sér selecionado).
   // Para Chat IA: patientSystemPrompt é undefined (GPT já foi chamado no backend, greeting em existingMessages).
@@ -273,7 +293,7 @@ const StudentChat: React.FC = () => {
       setIsCompleted(true);
       setPendingSoapContent(null);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : t('errors.complete_case');
+      const msg = err instanceof Error ? err.message : 'Erro ao completar caso';
       alert(msg);
       setIsChatLocked(false);
     } finally {
@@ -282,22 +302,62 @@ const StudentChat: React.FC = () => {
   };
 
   const evaluateFreeCaseSoap = async (soapContent: string): Promise<CaseCompleteResult> => {
-    const res = await authFetch(`${config.apiUrl}${API_ENDPOINTS.CASES_EVALUATE_SOAP}`, {
+    const threadId = chatThreadIdRef.current;
+    if (!threadId) throw new Error('Chat ainda nao foi iniciado');
+
+    const evaluationPrompt = `
+[MODO AVALIADOR - responda APENAS o JSON abaixo, sem nenhum texto adicional]
+Voce e um avaliador rigoroso de educacao medica. Avalie o SOAP enviado pelo aluno considerando a conversa de anamnese realizada neste chat.
+
+Criterios (25 pontos cada, total 100):
+- Subjetivo (S): O aluno descreveu queixas, HDA e sintomas relevantes coletados na anamnese? (25 pts)
+- Objetivo (O): Exame fisico e observacoes clinicas coerentes com o caso? (25 pts)
+- Avaliacao (A): Hipotese diagnostica adequada e fundamentada? (25 pts)
+- Plano (P): Plano terapeutico coerente e completo? (25 pts)
+
+REGRAS IMPORTANTES:
+- Se o aluno escreveu respostas genericas, vazias, sem sentido, ou que nao tem relacao com o caso (ex: "teste", "abc", "asdf"), a nota DEVE ser entre 0 e 10.
+- Se o SOAP esta incompleto ou superficial, a nota deve ser proporcional ao esforco real.
+- Seja justo mas rigoroso. Nao infle notas.
+
+Responda SOMENTE com JSON valido (sem markdown, sem \`\`\`):
+{"score": <numero 0-100>, "feedback": "<feedback detalhado>"}
+
+SOAP do aluno:
+${soapContent}
+`.trim();
+
+    const res = await authFetch(`${config.apiUrl}${API_ENDPOINTS.GPT}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        soap_content: soapContent,
-        case_summary: currentFreeCase?.title || null,
-        conversation_id: conversationId || null,
-      }),
+      body: JSON.stringify({ thread_id: threadId, message: evaluationPrompt }),
     });
-    if (!res.ok) throw new Error(t('errors.evaluate_soap'));
+
     const data = await res.json();
+    const reply: string = data.reply || '';
+
+    console.log('[SOAP Eval] Raw GPT response:', reply);
+
+    let score: number | null = null;
+    let feedback = reply;
+    try {
+      let clean = reply.trim();
+      if (clean.startsWith('```')) {
+        clean = clean.split('\n').slice(1).join('\n');
+        clean = clean.replace(/```\s*$/, '');
+      }
+      const parsed = JSON.parse(clean);
+      score = Math.min(100, Math.max(0, Number(parsed.score) || 0));
+      feedback = parsed.feedback || reply;
+    } catch {
+      // GPT nao retornou JSON - score fica null
+    }
+
     const durationSeconds = Math.floor((Date.now() - freeCaseStartTime.current) / 1000);
+
     return {
       attempt_id: 'free-case',
-      score: data.score ?? null,
-      feedback: data.feedback || t('result.eval_fallback'),
+      score,
+      feedback,
       duration_seconds: durationSeconds,
     };
   };
@@ -325,11 +385,11 @@ const StudentChat: React.FC = () => {
         <div className="flex items-center gap-2 flex-wrap">
           {resolvedAttempt ? (
             <span className="inline-flex items-center rounded-full bg-indigo-500/20 text-indigo-300 text-[11px] font-semibold px-2.5 py-1">
-              {aiChatResult ? t('header.simulation') : t('header.teacher_case')}
+              {aiChatResult ? 'Simulação' : 'Caso do professor'}
             </span>
           ) : (
             <span className="inline-flex items-center rounded-full bg-violet-500/20 text-violet-300 text-[11px] font-semibold px-2.5 py-1">
-              {t('header.free_case')}
+              Caso gratuito
             </span>
           )}
           {currentFreeCase && (
@@ -338,7 +398,7 @@ const StudentChat: React.FC = () => {
                 {currentFreeCase.level}
               </span>
               <span className="inline-flex items-center rounded-full bg-sky-500/10 text-sky-300 text-[11px] font-medium px-2 py-0.5">
-                {specialtyLabel(currentFreeCase.area)}
+                {currentFreeCase.area}
               </span>
             </>
           )}
@@ -349,23 +409,34 @@ const StudentChat: React.FC = () => {
               </span>
               {resolvedAttempt.specialty && (
                 <span className="inline-flex items-center rounded-full bg-sky-500/10 text-sky-300 text-[11px] font-medium px-2 py-0.5">
-                  {specialtyLabel(resolvedAttempt.specialty)}
+                  {resolvedAttempt.specialty}
                 </span>
               )}
             </>
           )}
           {chatMode === 'easy' && (
             <span className="inline-flex items-center rounded-full bg-green-500/20 text-green-300 text-[11px] font-semibold px-2.5 py-1">
-              {t('header.mode_standard')}
+              Modo Facil
             </span>
           )}
           {chatMode === 'advanced' && (
             <span className="inline-flex items-center rounded-full bg-orange-500/20 text-orange-300 text-[11px] font-semibold px-2.5 py-1">
-              {t('header.mode_memorization')}
+              Modo Avancado
             </span>
           )}
         </div>
-        
+        {chatMode !== 'easy' && (
+          <>
+            <h1 className="text-sm sm:text-base font-semibold text-gray-100">
+              {resolvedAttempt?.caseTitle ?? currentFreeCase?.title ?? 'Caso clinico de treino'}
+            </h1>
+            <p className="text-[11px] text-gray-400">
+              {(isCaseAttempt && !aiChatResult)
+                ? 'Conduza a anamnese e, ao terminar, clique em "Finalizar Consulta" para enviar seu SOAP.'
+                : 'Use o chat para conduzir a anamnese, formular hipoteses diagnosticas e treinar seu raciocinio clinico.'}
+            </p>
+          </>
+        )}
       </div>
 
       {/* Cronômetro */}
@@ -392,23 +463,23 @@ const StudentChat: React.FC = () => {
               <span className="text-4xl">&#x26A0;&#xFE0F;</span>
             </div>
             <h3 className="text-lg font-bold text-gray-100 text-center mb-2">
-              {t('confirm.title')}
+              Finalizar atendimento?
             </h3>
             <p className="text-sm text-gray-400 text-center mb-6">
-              {t('confirm.body')}
+              Isso ira encerrar o atendimento simulado e enviar seu SOAP para avaliacao. Esta acao nao pode ser desfeita.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={handleCancelConfirm}
                 className="flex-1 py-2.5 rounded-xl bg-[#4a4556] text-gray-200 font-semibold text-sm border border-[#5a5466] hover:bg-[#5a5466] transition-all"
               >
-                {t('confirm.back_edit')}
+                Voltar e editar
               </button>
               <button
                 onClick={handleConfirmComplete}
                 className="flex-1 py-2.5 rounded-xl bg-violet-600 text-white font-semibold text-sm hover:bg-violet-700 transition-all"
               >
-                {t('confirm.yes_finish')}
+                Sim, finalizar
               </button>
             </div>
           </div>
@@ -419,8 +490,8 @@ const StudentChat: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="bg-[#393542] rounded-2xl shadow-2xl w-full max-w-xs mx-4 p-8 text-center border border-[#4a4556]">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-400 mx-auto mb-4" />
-            <h3 className="text-base font-bold text-gray-100 mb-1">{t('evaluating.title')}</h3>
-            <p className="text-sm text-gray-400">{t('evaluating.body')}</p>
+            <h3 className="text-base font-bold text-gray-100 mb-1">Avaliando seu SOAP...</h3>
+            <p className="text-sm text-gray-400">O avaliador esta analisando sua resposta. Isso pode levar alguns segundos.</p>
           </div>
         </div>
       )}
@@ -439,55 +510,24 @@ const StudentChat: React.FC = () => {
                 {caseResult.score !== null ? caseResult.score : '\u2014'}
               </div>
               <p className="text-sm text-gray-400">
-                {caseResult.score !== null ? t('result.of_100') : t('result.unavailable')}
+                {caseResult.score !== null ? 'de 100 pontos' : 'Nota indisponivel'}
               </p>
               <div className="mt-2 inline-flex items-center gap-1.5 text-xs text-gray-500 bg-[#2a2635] rounded-full px-3 py-1">
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
                   <circle cx="12" cy="12" r="10" />
                 </svg>
-                {t('duration', { min: Math.floor(caseResult.duration_seconds / 60), sec: caseResult.duration_seconds % 60 })}
+                {Math.floor(caseResult.duration_seconds / 60)}min {caseResult.duration_seconds % 60}s
               </div>
             </div>
-            <div className="px-6 py-5 flex flex-col gap-4">
-              {/* Breakdown por seção SOAP */}
-              {caseResult.breakdown && (
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-300 mb-2">{t('result.section_scores')}</h4>
-                  <div className="flex flex-col gap-1.5">
-                    {(Object.entries(caseResult.breakdown) as [keyof SoapBreakdown, SoapBreakdown[keyof SoapBreakdown]][]).map(([dim, data]) => {
-                      const labels: Record<string, string> = { subjetivo: t('result.soap_s'), objetivo: t('result.soap_o'), avaliacao: t('result.soap_a'), plano: t('result.soap_p') };
-                      const pct = data.score;
-                      const barColor = pct >= 80 ? 'bg-green-500' : pct >= 60 ? 'bg-amber-400' : 'bg-rose-500';
-                      return (
-                        <div key={dim} className="bg-[#2a2635] rounded-lg px-3 py-2">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs text-gray-400 font-medium">{labels[dim]}</span>
-                            <span className="text-xs font-bold text-gray-200">
-                              {data.score}<span className="text-gray-500 font-normal">/100</span>
-                              <span className="ml-1.5 text-gray-500">({data.weight}%)</span>
-                            </span>
-                          </div>
-                          <div className="w-full bg-[#3d3848] rounded-full h-1.5">
-                            <div className={`${barColor} h-1.5 rounded-full transition-all`} style={{ width: `${data.score}%` }} />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* Feedback geral */}
-              <div>
-                <h4 className="text-sm font-semibold text-gray-300 mb-2 flex items-center gap-1.5">
-                  <span>&#x1F4AC;</span> {t('result.feedback')}
-                </h4>
-                <div className="bg-[#2a2635] rounded-xl p-4 max-h-44 overflow-y-auto">
-                  <p className="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">
-                    {caseResult.feedback}
-                  </p>
-                </div>
+            <div className="px-6 py-5">
+              <h4 className="text-sm font-semibold text-gray-300 mb-2 flex items-center gap-1.5">
+                <span>&#x1F4AC;</span> Feedback do avaliador
+              </h4>
+              <div className="bg-[#2a2635] rounded-xl p-4 max-h-44 overflow-y-auto">
+                <p className="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">
+                  {caseResult.feedback}
+                </p>
               </div>
             </div>
             <div className="px-6 pb-6 flex flex-col sm:flex-row gap-3">
@@ -498,7 +538,7 @@ const StudentChat: React.FC = () => {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4" />
                 </svg>
-                {t('result.back_home')}
+                Voltar ao inicio
               </button>
               {conversationId && (
                 <button
@@ -508,7 +548,7 @@ const StudentChat: React.FC = () => {
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
-                  {t('result.view_conversation')}
+                  Ver conversa
                 </button>
               )}
             </div>
@@ -526,7 +566,7 @@ const StudentChat: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2a2635]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-400 mx-auto mb-4" />
-            <p className="text-sm text-gray-400">{t('loading_patient')}</p>
+            <p className="text-sm text-gray-400">Preparando seu paciente virtual...</p>
           </div>
         </div>
       )}
@@ -534,9 +574,9 @@ const StudentChat: React.FC = () => {
       {aiChatError && !aiChatLoading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2a2635] p-4">
           <div className="text-center max-w-sm">
-            <p className="text-red-400 font-semibold mb-2">{t('ai_error_title')}</p>
+            <p className="text-red-400 font-semibold mb-2">Erro ao iniciar Chat IA</p>
             <p className="text-gray-400 text-sm mb-4">{aiChatError}</p>
-            <button onClick={() => navigate('/mainpage')} className="text-sm text-indigo-400 hover:text-indigo-300">{t('back_home')}</button>
+            <button onClick={() => navigate('/mainpage')} className="text-sm text-indigo-400 hover:text-indigo-300">Voltar ao início</button>
           </div>
         </div>
       )}
@@ -551,55 +591,15 @@ const StudentChat: React.FC = () => {
 
         <div className="flex-1 flex flex-col overflow-hidden relative w-full min-h-0">
 
-          {/* Seletor de especialidade — apenas Chat IA, antes de escolher modo */}
-          {chatMode === null && !specialtyConfirmed && (
-            <div className="absolute inset-0 z-40 flex items-center justify-center bg-[#2a2635]/95 backdrop-blur-sm p-4 overflow-y-auto">
-              <div className="w-full max-w-lg py-8">
-                <div className="text-center mb-8">
-                  <h2 className="text-2xl font-bold text-gray-100 mb-2">{t('specialty.title')}</h2>
-                  <p className="text-sm text-gray-400">
-                    {t('specialty.subtitle')}
-                  </p>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
-                  {[
-                    { label: t('specialty.random'), emoji: '🎲', value: '' },
-                    ...SPECIALTIES.map(s => ({ label: specialtyLabel(s.key), emoji: s.emoji, value: s.key })),
-                  ].map(({ label, emoji, value }) => {
-                    const active = selectedSpecialty === value;
-                    return (
-                      <button
-                        key={label}
-                        onClick={() => setSelectedSpecialty(value)}
-                        className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 text-sm font-medium transition-all text-left ${
-                          active
-                            ? 'border-violet-400 bg-violet-500/20 text-violet-300'
-                            : 'border-violet-500/30 bg-violet-500/10 text-gray-300 hover:border-violet-400/50 hover:bg-violet-500/20'
-                        }`}
-                      >
-                        <span>{emoji}</span>
-                        <span className="truncate">{label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-                <button
-                  onClick={() => setSpecialtyConfirmed(true)}
-                  className="w-full py-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold text-sm transition-all shadow-sm"
-                >
-                  {selectedSpecialty ? t('specialty.continue_with', { specialty: selectedSpecialty }) : t('specialty.continue_random')}
-                </button>
-              </div>
-            </div>
-          )}
-
           {/* Seletor de modo */}
-          {chatMode === null && specialtyConfirmed && (
+          {chatMode === null && (
             <div className="absolute inset-0 z-40 flex items-center justify-center bg-[#2a2635]/95 backdrop-blur-sm p-4">
               <div className="w-full max-w-lg">
                 <div className="text-center mb-8">
-                  <h2 className="text-2xl font-bold text-gray-100 mb-2">{t('mode.title')}</h2>
-                  <p className="text-sm text-gray-400">{t('mode.subtitle')}</p>
+                  <h2 className="text-2xl font-bold text-gray-100 mb-2">Escolha o modo de treino</h2>
+                  <p className="text-sm text-gray-400">
+                    Como voce quer praticar este caso clinico?
+                  </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <button
@@ -607,16 +607,16 @@ const StudentChat: React.FC = () => {
                     className="group flex flex-col items-center gap-4 p-6 rounded-2xl border-2 border-green-500/40 bg-green-500/10 hover:bg-green-500/20 hover:border-green-400/60 transition-all text-left"
                   >
                     <div className="w-14 h-14 rounded-2xl bg-green-500/20 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
-                      📖
+                      &#x1F4D6;
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-green-300 mb-1">{t('mode.standard_title')}</h3>
+                      <h3 className="text-lg font-bold text-green-300 mb-1">Modo Facil</h3>
                       <p className="text-sm text-gray-400 leading-relaxed">
-                        {t('mode.standard_desc')}
+                        O formulario SOAP fica visivel ao lado do chat. Voce pode consultar a conversa enquanto preenche.
                       </p>
                     </div>
                     <span className="mt-auto text-xs font-semibold text-green-400 bg-green-500/10 px-3 py-1 rounded-full border border-green-500/30">
-                      {t('mode.standard_badge')}
+                      Recomendado para iniciantes
                     </span>
                   </button>
 
@@ -625,16 +625,16 @@ const StudentChat: React.FC = () => {
                     className="group flex flex-col items-center gap-4 p-6 rounded-2xl border-2 border-orange-500/40 bg-orange-500/10 hover:bg-orange-500/20 hover:border-orange-400/60 transition-all text-left"
                   >
                     <div className="w-14 h-14 rounded-2xl bg-orange-500/20 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
-                      🔒
+                      &#x1F512;
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-orange-300 mb-1">{t('mode.memorization_title')}</h3>
+                      <h3 className="text-lg font-bold text-orange-300 mb-1">Modo Avancado</h3>
                       <p className="text-sm text-gray-400 leading-relaxed">
-                        {t('mode.memorization_desc')}
+                        O SOAP so aparece ao finalizar. Voce nao podera consultar o chat enquanto preenche.
                       </p>
                     </div>
                     <span className="mt-auto text-xs font-semibold text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/30">
-                      {t('mode.memorization_badge')}
+                      Simula exame real
                     </span>
                   </button>
                 </div>
@@ -642,7 +642,7 @@ const StudentChat: React.FC = () => {
             </div>
           )}
 
-          {chatMode !== null && caseHeader}
+          {caseHeader}
 
           {/* Modo Facil: layout split — SOAP à esquerda no desktop, cima/baixo no mobile */}
           {chatMode === 'easy' && (
@@ -656,22 +656,25 @@ const StudentChat: React.FC = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                       <span className="text-xs font-semibold text-violet-300 uppercase tracking-wide">
-                        {t('soap_panel.fill')}
+                        Preencha o SOAP
                       </span>
                       <span className="text-[10px] text-gray-500 ml-auto">
-                        {t('soap_panel.consult_chat')}
+                        Consulte o chat à direita
                       </span>
                     </div>
                     <div className="relative">
                       {!chatReady && (
                         <div className="absolute inset-0 z-10 rounded-2xl bg-[#2a2635]/80 backdrop-blur-sm flex flex-col items-center justify-center gap-3">
                           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-400" />
-                          <p className="text-sm text-gray-400 text-center px-4">{t('soap_panel.wait_patient')}</p>
+                          <p className="text-sm text-gray-400 text-center px-4">Aguarde o paciente responder antes de preencher o SOAP</p>
                         </div>
                       )}
                       <SoapForm
                         onSend={handleSoapSend}
                         loading={soapLoading}
+                        patologia={casePatologia}
+                        onSaveExam={handleSaveExamToHistory}
+                        customExameFisico={resolvedAttempt?.form_data?.exame_fisico}
                       />
                     </div>
                   </div>
@@ -692,6 +695,72 @@ const StudentChat: React.FC = () => {
                     onConversationReady={handleConversationReady}
                   />
                 </div>
+
+                {/* Histórico Integrado (A Bolinha no Canto) */}
+                {savedExams.length > 0 && (
+                  <div className="absolute top-[6rem] right-10 z-30">
+                    <button
+                      onClick={() => setShowHistoryDropdown(!showHistoryDropdown)}
+                      className={`relative w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 border border-white/5 backdrop-blur-md shadow-sm ${
+                        showHistoryDropdown 
+                          ? 'bg-violet-600 text-white' 
+                          : 'bg-[#2a2635]/60 text-violet-300 hover:bg-[#342f42] group'
+                      }`}
+                      title="Histórico de Exames Físicos"
+                    >
+                      <History size={18} />
+                      <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-[#2a2635]" />
+                      
+                      {/* Badge Discreta ao Hover se não aberto */}
+                      {!showHistoryDropdown && (
+                        <span className="absolute -left-10 bg-[#2a2635] text-[9px] font-bold text-violet-200 px-1.5 py-0.5 rounded border border-white/5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                          {savedExams.length} exames
+                        </span>
+                      )}
+                    </button>
+
+                    {/* Popover de Histórico */}
+                    {showHistoryDropdown && (
+                      <div className="absolute top-12 right-0 w-80 bg-[#1e1a26] border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div className="p-3 border-b border-white/5 bg-white/2 flex items-center justify-between">
+                          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Exames Salvos ({savedExams.length})</span>
+                          <button onClick={() => setShowHistoryDropdown(false)} className="text-gray-500 hover:text-white">
+                            <X size={14} />
+                          </button>
+                        </div>
+                        <div className="max-h-64 overflow-y-auto custom-scrollbar">
+                          {savedExams.map((exam, idx) => (
+                            <div key={exam.id} className="p-4 border-b border-white/5 hover:bg-white/5 transition-colors group">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2 text-violet-400">
+                                  <Clock size={12} />
+                                  <span className="text-xs font-bold">
+                                    {exam.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                  </span>
+                                </div>
+                                <span className="text-[10px] text-gray-500">Exame #{savedExams.length - idx}</span>
+                              </div>
+                              <div className="space-y-1">
+                                {exam.findings.slice(0, 3).map((finding, i) => (
+                                  <div key={i} className="flex items-start gap-2">
+                                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-violet-500/40 flex-shrink-0" />
+                                    <p className="text-[11px] text-gray-300 line-clamp-1">{finding}</p>
+                                  </div>
+                                ))}
+                                {exam.findings.length > 3 && (
+                                  <p className="text-[10px] text-violet-400/60 font-medium ml-3.5">+ {exam.findings.length - 3} outros achados</p>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="p-2 bg-violet-600/10 text-center">
+                          <p className="text-[9px] text-violet-300/60 uppercase font-black tracking-tighter">Os achados já foram incluídos no campo O do SOAP</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -714,7 +783,7 @@ const StudentChat: React.FC = () => {
                           <svg className="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                           </svg>
-                          {t('soap_panel.fill_title')}
+                          Preencher SOAP
                         </h3>
                         <button
                           onClick={() => { setShowSoap(false); setIsChatLocked(false); }}
@@ -725,13 +794,19 @@ const StudentChat: React.FC = () => {
                           </svg>
                         </button>
                       </div>
-                      <SoapForm onSend={handleSoapSend} loading={soapLoading} />
+                      <SoapForm 
+                        onSend={handleSoapSend} 
+                        loading={soapLoading} 
+                        patologia={casePatologia} 
+                        onSaveExam={handleSaveExamToHistory}
+                        customExameFisico={resolvedAttempt?.form_data?.exame_fisico}
+                      />
                     </div>
                   </div>
                 </div>
               )}
 
-              <div className="w-full max-w-4xl flex-1 min-h-0">
+              <div className="w-full max-w-4xl flex-1 min-h-0 relative">
                 <ChatGPT
                   initialPrompt={initialPrompt}
                   existingThreadId={existingThreadId}
@@ -742,6 +817,62 @@ const StudentChat: React.FC = () => {
                   onChatReady={handleChatReady}
                   onConversationReady={handleConversationReady}
                 />
+
+                {/* Histórico Integrado (A Bolinha no Canto) - Modo Avançado */}
+                {savedExams.length > 0 && (
+                  <div className="absolute top-[4.5rem] right-6 z-30">
+                    <button
+                      onClick={() => setShowHistoryDropdown(!showHistoryDropdown)}
+                      className={`relative w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 border border-white/5 backdrop-blur-md shadow-sm ${
+                        showHistoryDropdown 
+                          ? 'bg-violet-600 text-white' 
+                          : 'bg-[#2a2635]/60 text-violet-300 hover:bg-[#342f42] group'
+                      }`}
+                      title="Histórico de Exames Físicos"
+                    >
+                      <History size={18} />
+                      <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-[#2a2635]" />
+                    </button>
+
+                    {/* Popover de Histórico */}
+                    {showHistoryDropdown && (
+                      <div className="absolute top-12 right-0 w-80 bg-[#1e1a26] border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div className="p-3 border-b border-white/5 bg-white/2 flex items-center justify-between">
+                          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Exames Salvos ({savedExams.length})</span>
+                          <button onClick={() => setShowHistoryDropdown(false)} className="text-gray-500 hover:text-white">
+                            <X size={14} />
+                          </button>
+                        </div>
+                        <div className="max-h-64 overflow-y-auto custom-scrollbar">
+                          {savedExams.map((exam, idx) => (
+                            <div key={exam.id} className="p-4 border-b border-white/5 hover:bg-white/5 transition-colors group">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2 text-violet-400">
+                                  <Clock size={12} />
+                                  <span className="text-xs font-bold">
+                                    {exam.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                  </span>
+                                </div>
+                                <span className="text-[10px] text-gray-500">Exame #{savedExams.length - idx}</span>
+                              </div>
+                              <div className="space-y-1">
+                                {exam.findings.slice(0, 3).map((finding, i) => (
+                                  <div key={i} className="flex items-start gap-2">
+                                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-violet-500/40 flex-shrink-0" />
+                                    <p className="text-[11px] text-gray-300 line-clamp-1">{finding}</p>
+                                  </div>
+                                ))}
+                                {exam.findings.length > 3 && (
+                                  <p className="text-[10px] text-violet-400/60 font-medium ml-3.5">+ {exam.findings.length - 3} outros achados</p>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {!caseResult && (
@@ -752,7 +883,7 @@ const StudentChat: React.FC = () => {
                     className="bg-violet-600 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl font-semibold hover:bg-violet-700 transition text-xs sm:text-sm md:text-base flex items-center gap-2 shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     <span>&#x1F4DD;</span>
-                    <span>{soapLoading ? t('finish.evaluating') : !chatReady ? t('finish.wait_chat') : t('finish.finish_consult')}</span>
+                    <span>{soapLoading ? 'Avaliando...' : !chatReady ? 'Aguarde o chat...' : 'Finalizar Consulta'}</span>
                   </button>
                 </div>
               )}

@@ -1,6 +1,8 @@
 // Shared components
 export { default as MainMenu } from './MainMenu';
 export { default as SoapForm } from './SoapForm';
+export { default as ExamModal } from './ExamModal';
+export { default as CID10Modal } from './CID10Modal';
 export { default as TipsCarousel } from './TipsCarousel';
 export { default as Tooltip } from './Tooltip';
 export { default as PreviewNavigator } from './PreviewNavigator';

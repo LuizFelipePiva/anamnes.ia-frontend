@@ -36,7 +36,6 @@ export interface FreeCaseFromApi {
   summary: string | null;
   patient_prompt: string;
   form_data?: Record<string, unknown>;
-  available_until?: string | null;
   created_at: string | null;
 }
 
@@ -54,13 +53,11 @@ export interface AvailableCase {
   specialty: string | null;
   difficulty: string;
   summary: string | null;
-  available_until?: string | null;
   created_at: string | null;
   attempts_count: number;
   best_score: number | null;
   last_status: string | null;
   class_names: string[];
-  expires_at?: string | null;
 }
 
 export async function fetchAvailableCases(): Promise<AvailableCase[]> {
@@ -77,6 +74,7 @@ export interface CaseStartResult {
   conversation_id: string;
   patient_prompt: string;
   case_id?: string;  // retornado pelo /ai/start
+  form_data?: Record<string, unknown>;
 }
 
 /** Inicia um Chat IA — cria caso placeholder + attempt no banco.
@@ -98,12 +96,8 @@ export async function fetchDailyQuota(): Promise<DailyQuota> {
   return res.json();
 }
 
-export async function startAiChat(specialty?: string): Promise<CaseStartResult> {
-  const res = await authFetch(api(API_ENDPOINTS.CASES_AI_START), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ specialty: specialty || null }),
-  });
+export async function startAiChat(): Promise<CaseStartResult> {
+  const res = await authFetch(api(API_ENDPOINTS.CASES_AI_START), { method: 'POST' });
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: 'Erro ao iniciar Chat IA' }));
     throw new Error(err.detail || 'Erro ao iniciar Chat IA');
@@ -122,25 +116,11 @@ export async function startCaseAttempt(caseId: string): Promise<CaseStartResult>
   return res.json();
 }
 
-export interface SoapBreakdownSection {
-  score: number;
-  weight: number;
-  feedback: string;
-}
-
-export interface SoapBreakdown {
-  subjetivo: SoapBreakdownSection;
-  objetivo: SoapBreakdownSection;
-  avaliacao: SoapBreakdownSection;
-  plano: SoapBreakdownSection;
-}
-
 export interface CaseCompleteResult {
   attempt_id: string;
   score: number | null;
   feedback: string;
   duration_seconds: number;
-  breakdown?: SoapBreakdown | null;
 }
 
 export async function completeCaseAttempt(caseId: string, soapContent: string): Promise<CaseCompleteResult> {
