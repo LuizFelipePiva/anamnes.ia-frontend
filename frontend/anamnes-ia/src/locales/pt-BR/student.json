@@ -1,0 +1,161 @@
+{
+  "role": "Aluno",
+  "loading": "Carregando…",
+  "profile_not_found": "Perfil não encontrado.",
+  "load_error": "Erro ao carregar perfil",
+  "try_again": "Tentar novamente",
+  "train_now": "Treinar agora",
+  "limit_reached": "Limite atingido",
+  "back_to_menu": "Voltar ao menu",
+  "no_data": "Sem dados ainda",
+  "initial_listen": "Escuta inicial",
+  "chat_ai": "Chat IA",
+  "start_now": "Começar agora →",
+  "pts": "pts",
+  "tabs": {
+    "overview": "Visão Geral",
+    "classes": "Minhas Turmas",
+    "history": "Histórico",
+    "performance": "Desempenho",
+    "achievements": "Conquistas",
+    "flashcards": "Flashcards"
+  },
+  "difficulty": {
+    "basico": "Básico",
+    "medio": "Médio",
+    "avancado": "Avançado"
+  },
+  "status": {
+    "completed": "Concluído",
+    "abandoned": "Abandonado",
+    "in_progress": "Em andamento"
+  },
+  "expiry": {
+    "today": "Expira hoje",
+    "hours": "Expira em {{count}}h",
+    "days_one": "Expira em 1 dia",
+    "days_other": "Expira em {{count}} dias",
+    "date": "Expira: {{date}}"
+  },
+  "stats": {
+    "cases_started": "Casos iniciados",
+    "completed": "Concluídos",
+    "avg_score": "Nota média",
+    "best_score": "Melhor nota",
+    "avg_time": "Tempo médio",
+    "classes": "Turmas",
+    "completion_rate": "Taxa de conclusão"
+  },
+  "overview": {
+    "greeting": "Olá, {{name}}",
+    "greeting_fallback": "aluno",
+    "greeting_subtitle": "Aqui está um resumo do seu progresso",
+    "recent_activity": "Atividade recente",
+    "see_all": "Ver tudo →",
+    "no_activity": "Nenhuma atividade ainda.",
+    "weekly_evolution": "Evolução semanal",
+    "details": "Detalhes →",
+    "cta_title": "Pronto para treinar?",
+    "cta_subtitle": "Escolha um caso e comece agora",
+    "quota_cases": "{{used}}/{{limit}} casos hoje",
+    "quota_ai": "{{used}}/{{limit}} Chat IA hoje",
+    "join_class": "Entrar em turma",
+    "start_case": "Iniciar caso",
+    "plan_free": "Plano free"
+  },
+  "classes": {
+    "title": "Minhas Turmas",
+    "count_one": "{{count}} turma matriculada",
+    "count_other": "{{count}} turmas matriculadas",
+    "empty": "Você não está matriculado em nenhuma turma ainda.",
+    "join_full": "Entrar em uma Turma",
+    "join": "Entrar em turma",
+    "joined_at": "Entrou em {{date}}",
+    "hide_cases": "Ocultar casos",
+    "see_cases": "Ver casos disponíveis",
+    "see_cases_count": "Ver casos disponíveis ({{count}})",
+    "no_cases": "Nenhum caso disponível nesta turma ainda.",
+    "start": "Iniciar",
+    "limit": "Limite"
+  },
+  "history": {
+    "title": "Histórico",
+    "count_one": "{{count}} atividade realizada",
+    "count_other": "{{count}} atividades realizadas",
+    "empty": "Nenhum histórico ainda.",
+    "start_chat": "Iniciar um chat →"
+  },
+  "performance": {
+    "title": "Desempenho",
+    "subtitle": "Análise completa do seu progresso",
+    "by_specialty": "Por especialidade",
+    "case_count_one": "{{count}} caso",
+    "case_count_other": "{{count}} casos",
+    "pts_value": "{{score}} pts"
+  },
+  "achievements": {
+    "title": "Conquistas",
+    "coming_soon_desc": "Este recurso estará disponível em breve!",
+    "coming_soon_detail": "Badges, streaks e marcos de progresso.",
+    "coming_soon": "Em breve"
+  },
+  "join": {
+    "title": "Entrar na Turma",
+    "desc": "Digite o código de convite fornecido pelo seu professor.",
+    "placeholder": "Ex: A3K9M2",
+    "joining": "Entrando...",
+    "submit": "Entrar",
+    "success": "Entrou na turma \"{{name}}\" com sucesso!",
+    "error": "Erro ao entrar na turma"
+  },
+  "flashcards": {
+    "my_decks": "Meus Decks",
+    "deck_count_one": "{{count}} deck pessoal",
+    "deck_count_other": "{{count}} decks pessoais",
+    "new_deck": "Novo Deck",
+    "no_decks": "Nenhum deck criado ainda.",
+    "create_first_deck": "Criar primeiro deck",
+    "no_specialty": "Sem especialidade",
+    "card_count_one": "{{count}} card",
+    "card_count_other": "{{count}} cards",
+    "new_card": "Novo Card",
+    "no_cards": "Este deck ainda não tem cards.",
+    "add_first_card": "Adicionar primeiro card",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "create": "Criar",
+    "save_error": "Erro ao salvar",
+    "deck_modal": {
+      "edit_title": "Editar Deck",
+      "new_title": "Novo Deck",
+      "name": "Nome *",
+      "name_placeholder": "Ex: Cardiologia — Bases",
+      "specialty": "Especialidade",
+      "select": "Selecionar…",
+      "description": "Descrição",
+      "optional": "Opcional",
+      "name_required": "Nome obrigatório"
+    },
+    "card_modal": {
+      "edit_title": "Editar Card",
+      "new_title": "Novo Card",
+      "front": "Frente *",
+      "front_placeholder": "Pergunta ou estímulo",
+      "back": "Verso *",
+      "back_placeholder": "Resposta / explicação",
+      "hint": "Dica (opcional)",
+      "hint_placeholder": "Uma pista para revisar",
+      "difficulty": "Dificuldade",
+      "front_required": "Frente obrigatória",
+      "back_required": "Verso obrigatório",
+      "easy": "Fácil",
+      "medium": "Médio",
+      "hard": "Difícil"
+    },
+    "delete": {
+      "title": "Confirmar exclusão",
+      "body": "Tem certeza que deseja excluir \"{{label}}\"? Esta ação não pode ser desfeita.",
+      "confirm": "Excluir"
+    }
+  }
+}

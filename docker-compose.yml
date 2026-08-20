@@ -1,0 +1,48 @@
+# =============================================
+# docker-compose.yml — Ambiente de DESENVOLVIMENTO
+# uso: docker compose up
+# =============================================
+
+name: anamnes-ai-dev
+
+services:
+
+  # ─── Backend (FastAPI) ────────────────────
+  backend:
+    build:
+      context: ./backend
+      target: development
+    container_name: anamnes-backend-dev
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      - WATCHFILES_FORCE_POLLING=true
+    volumes:
+      - ./backend:/app            # hot reload — código montado
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ─── Frontend (Vite dev server) ───────────
+  frontend:
+    build:
+      context: ./frontend/anamnes-ia
+      target: development
+    container_name: anamnes-frontend-dev
+    restart: unless-stopped
+    env_file:
+      - ./frontend/anamnes-ia/.env
+    volumes:
+      - ./frontend/anamnes-ia:/app           # hot reload
+      - /app/node_modules                    # evita sobrescrever node_modules do container
+    ports:
+      - "5173:5173"
+    depends_on:
+      backend:
+        condition: service_healthy

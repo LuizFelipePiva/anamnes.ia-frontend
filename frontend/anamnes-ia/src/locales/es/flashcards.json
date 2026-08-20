@@ -1,0 +1,62 @@
+{
+  "header": {
+    "title": "Flashcards",
+    "subtitle": "Repaso espaciado",
+    "due_today": "{{count}} para repasar hoy",
+    "create": "Crear flashcard"
+  },
+  "decks": {
+    "section_title": "MIS MAZOS",
+    "summary_one": "{{count}} mazo · {{cards}} tarjetas en total",
+    "summary_other": "{{count}} mazos · {{cards}} tarjetas en total",
+    "free": "Libres",
+    "free_hint": "· disponible para todos",
+    "class_hint": "· exclusivo de la clase",
+    "class_fallback": "Clase",
+    "empty": "Aún no hay mazos disponibles.",
+    "error_decks": "No se pudieron cargar los mazos.",
+    "error_cards": "No se pudieron cargar las tarjetas.",
+    "retry": "Intentar de nuevo"
+  },
+  "card": {
+    "source": {
+      "ai": "IA",
+      "case": "Caso",
+      "soap": "SOAP",
+      "manual": "Manual"
+    },
+    "total_one": "{{count}} tarjeta",
+    "total_other": "{{count}} tarjetas",
+    "due_one": "{{count}} para hoy",
+    "due_other": "{{count}} para hoy",
+    "up_to_date": "Al día ✓"
+  },
+  "review": {
+    "question": "Pregunta",
+    "answer": "Respuesta",
+    "reveal": "Haz clic para revelar →",
+    "remaining": "{{count}} restantes",
+    "skip": "Saltar",
+    "ratings": {
+      "again": "Repetir",
+      "again_hint": "< 1 min",
+      "hard": "Difícil",
+      "hard_hint": "~1 día",
+      "good": "Bien",
+      "good_hint": "~3 días",
+      "easy": "Fácil",
+      "easy_hint": "~7 días"
+    },
+    "done": {
+      "title": "¡Mazo completado!",
+      "subtitle_one": "Repasaste 1 tarjeta de <1>{{deck}}</1>",
+      "subtitle_other": "Repasaste las {{count}} tarjetas de <1>{{deck}}</1>",
+      "stat_again": "↺ Repetir: {{count}}",
+      "stat_hard": "✗ Difícil: {{count}}",
+      "stat_good": "◎ Bien: {{count}}",
+      "stat_easy": "✓ Fácil: {{count}}",
+      "review_again": "Repasar de nuevo",
+      "back_to_decks": "Volver a los mazos"
+    }
+  }
+}

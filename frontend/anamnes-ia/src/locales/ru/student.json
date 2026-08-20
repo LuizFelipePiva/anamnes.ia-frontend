@@ -1,0 +1,173 @@
+{
+  "role": "Студент",
+  "loading": "Загрузка…",
+  "profile_not_found": "Профиль не найден.",
+  "load_error": "Ошибка загрузки профиля",
+  "try_again": "Попробовать снова",
+  "train_now": "Тренироваться сейчас",
+  "limit_reached": "Лимит достигнут",
+  "back_to_menu": "Вернуться в меню",
+  "no_data": "Пока нет данных",
+  "initial_listen": "Первичное прослушивание",
+  "chat_ai": "Чат с ИИ",
+  "start_now": "Начать сейчас →",
+  "pts": "баллов",
+  "tabs": {
+    "overview": "Обзор",
+    "classes": "Мои группы",
+    "history": "История",
+    "performance": "Успеваемость",
+    "achievements": "Достижения",
+    "flashcards": "Флеш-карточки"
+  },
+  "difficulty": {
+    "basico": "Базовый",
+    "medio": "Средний",
+    "avancado": "Продвинутый"
+  },
+  "status": {
+    "completed": "Завершено",
+    "abandoned": "Брошено",
+    "in_progress": "В процессе"
+  },
+  "expiry": {
+    "today": "Истекает сегодня",
+    "hours": "Истекает через {{count}}ч",
+    "days_one": "Истекает через {{count}} день",
+    "days_few": "Истекает через {{count}} дня",
+    "days_many": "Истекает через {{count}} дней",
+    "days_other": "Истекает через {{count}} дня",
+    "date": "Истекает: {{date}}"
+  },
+  "stats": {
+    "cases_started": "Начатые случаи",
+    "completed": "Завершено",
+    "avg_score": "Средний балл",
+    "best_score": "Лучший балл",
+    "avg_time": "Среднее время",
+    "classes": "Группы",
+    "completion_rate": "Процент завершения"
+  },
+  "overview": {
+    "greeting": "Привет, {{name}}",
+    "greeting_fallback": "студент",
+    "greeting_subtitle": "Вот сводка вашего прогресса",
+    "recent_activity": "Недавняя активность",
+    "see_all": "Смотреть всё →",
+    "no_activity": "Пока нет активности.",
+    "weekly_evolution": "Недельная динамика",
+    "details": "Подробнее →",
+    "cta_title": "Готовы потренироваться?",
+    "cta_subtitle": "Выберите случай и начните прямо сейчас",
+    "quota_cases": "{{used}}/{{limit}} случаев сегодня",
+    "quota_ai": "{{used}}/{{limit}} чатов с ИИ сегодня",
+    "join_class": "Присоединиться к группе",
+    "start_case": "Начать случай",
+    "plan_free": "Бесплатный тариф"
+  },
+  "classes": {
+    "title": "Мои группы",
+    "count_one": "{{count}} группа, в которой вы участвуете",
+    "count_few": "{{count}} группы, в которых вы участвуете",
+    "count_many": "{{count}} групп, в которых вы участвуете",
+    "count_other": "{{count}} группы, в которых вы участвуете",
+    "empty": "Вы пока не состоите ни в одной группе.",
+    "join_full": "Присоединиться к группе",
+    "join": "Присоединиться к группе",
+    "joined_at": "Присоединились {{date}}",
+    "hide_cases": "Скрыть случаи",
+    "see_cases": "Смотреть доступные случаи",
+    "see_cases_count": "Смотреть доступные случаи ({{count}})",
+    "no_cases": "В этой группе пока нет доступных случаев.",
+    "start": "Начать",
+    "limit": "Лимит"
+  },
+  "history": {
+    "title": "История",
+    "count_one": "{{count}} выполненное действие",
+    "count_few": "{{count}} выполненных действия",
+    "count_many": "{{count}} выполненных действий",
+    "count_other": "{{count}} выполненных действия",
+    "empty": "Пока нет истории.",
+    "start_chat": "Начать чат →"
+  },
+  "performance": {
+    "title": "Успеваемость",
+    "subtitle": "Полный анализ вашего прогресса",
+    "by_specialty": "По специальности",
+    "case_count_one": "{{count}} случай",
+    "case_count_few": "{{count}} случая",
+    "case_count_many": "{{count}} случаев",
+    "case_count_other": "{{count}} случая",
+    "pts_value": "{{score}} баллов"
+  },
+  "achievements": {
+    "title": "Достижения",
+    "coming_soon_desc": "Эта функция скоро появится!",
+    "coming_soon_detail": "Значки, серии и вехи прогресса.",
+    "coming_soon": "Скоро"
+  },
+  "join": {
+    "title": "Присоединиться к группе",
+    "desc": "Введите код приглашения, полученный от преподавателя.",
+    "placeholder": "Напр.: A3K9M2",
+    "joining": "Присоединение...",
+    "submit": "Присоединиться",
+    "success": "Вы успешно присоединились к группе «{{name}}»!",
+    "error": "Ошибка при присоединении к группе"
+  },
+  "flashcards": {
+    "my_decks": "Мои наборы",
+    "deck_count_one": "{{count}} личный набор",
+    "deck_count_few": "{{count}} личных набора",
+    "deck_count_many": "{{count}} личных наборов",
+    "deck_count_other": "{{count}} личных набора",
+    "new_deck": "Новый набор",
+    "no_decks": "Пока не создано ни одного набора.",
+    "create_first_deck": "Создать первый набор",
+    "no_specialty": "Без специальности",
+    "card_count_one": "{{count}} карточка",
+    "card_count_few": "{{count}} карточки",
+    "card_count_many": "{{count}} карточек",
+    "card_count_other": "{{count}} карточки",
+    "new_card": "Новая карточка",
+    "no_cards": "В этом наборе пока нет карточек.",
+    "add_first_card": "Добавить первую карточку",
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "create": "Создать",
+    "save_error": "Ошибка при сохранении",
+    "deck_modal": {
+      "edit_title": "Редактировать набор",
+      "new_title": "Новый набор",
+      "name": "Название *",
+      "name_placeholder": "Напр.: Кардиология — Основы",
+      "specialty": "Специальность",
+      "select": "Выбрать…",
+      "description": "Описание",
+      "optional": "Необязательно",
+      "name_required": "Название обязательно"
+    },
+    "card_modal": {
+      "edit_title": "Редактировать карточку",
+      "new_title": "Новая карточка",
+      "front": "Лицевая сторона *",
+      "front_placeholder": "Вопрос или подсказка",
+      "back": "Обратная сторона *",
+      "back_placeholder": "Ответ / объяснение",
+      "hint": "Подсказка (необязательно)",
+      "hint_placeholder": "Подсказка для повторения",
+      "difficulty": "Сложность",
+      "front_required": "Лицевая сторона обязательна",
+      "back_required": "Обратная сторона обязательна",
+      "easy": "Легко",
+      "medium": "Средне",
+      "hard": "Сложно"
+    },
+    "delete": {
+      "title": "Подтвердите удаление",
+      "body": "Вы уверены, что хотите удалить «{{label}}»? Это действие нельзя отменить.",
+      "confirm": "Удалить"
+    }
+  }
+}

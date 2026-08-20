@@ -1,0 +1,12 @@
+{
+  "title": "Choose an option",
+  "minigame": {
+    "title": "Exams Minigame",
+    "description": "Have fun and learn by playing!",
+    "logo_alt": "Minigame logo"
+  },
+  "anamnesis": {
+    "title": "Anamnesis Simulation",
+    "description": "Practice your clinical skills!"
+  }
+}

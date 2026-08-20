@@ -1,0 +1,81 @@
+{
+  "page_title": "Configuración",
+  "page_subtitle": "Ajusta tu experiencia: tema, idioma, notificaciones y privacidad.",
+  "status_label": "Estado actual",
+  "saved": "Guardado automáticamente",
+  "section_active": "Sección activa",
+  "adjustments": "Ajustes aplicados solo a tu cuenta.",
+  "visual_summary": "Resumen visual",
+  "tabs": {
+    "appearance": "Apariencia",
+    "language": "Idioma",
+    "notifications": "Notificaciones",
+    "privacy": "Privacidad",
+    "subscription": "Suscripción",
+    "advanced": "Avanzado"
+  },
+  "theme": {
+    "title": "Tema de la app",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "active": "Activo",
+    "light_mode": "Modo claro",
+    "dark_mode": "Modo oscuro"
+  },
+  "accent": {
+    "title": "Color de acento",
+    "purple": "Morado clínico",
+    "blue": "Azul confianza",
+    "green": "Verde vital",
+    "red": "Rojo alerta"
+  },
+  "density": {
+    "title": "Densidad de la UI",
+    "comfortable": "Cómodo",
+    "compact": "Compacto"
+  },
+  "language": {
+    "title": "Idioma de la interfaz",
+    "wip": "Traducción en desarrollo: partes de la plataforma aún aparecen en portugués."
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "email_label": "Correo",
+    "email_sub": "Resumen semanal por email",
+    "push_label": "Notificación push",
+    "push_sub": "Notificaciones push (nuevos casos)"
+  },
+  "privacy": {
+    "title": "Privacidad de datos",
+    "analytics": "Datos anónimos de uso",
+    "analytics_sub": "Ayuda a mejorar la app",
+    "share": "Compartir progreso",
+    "share_sub": "Los profesores pueden ver tus notas"
+  },
+  "subscription": {
+    "title": "Plan actual",
+    "plan_name": "Premium Estudiante",
+    "active_badge": "ACTIVO",
+    "unlimited_desc": "Acceso ilimitado a todos los casos y feedback del Profesor IA.",
+    "manage": "Gestionar Suscripción"
+  },
+  "advanced": {
+    "title": "Opciones avanzadas",
+    "danger_title": "Zona de Peligro",
+    "danger_desc": "Esto borrará todas tus preferencias visuales guardadas.",
+    "reset_btn": "Restablecer preferencias",
+    "reset_confirm": "¿Deseas restablecer todas las preferencias visuales de esta cuenta?",
+    "account_info": "Tu cuenta",
+    "name": "Nombre",
+    "email": "Correo",
+    "role": "Rol",
+    "debug": "Debug State"
+  },
+  "summary": {
+    "account": "Cuenta",
+    "theme": "Tema",
+    "accent": "Color de acento",
+    "density": "Densidad",
+    "language": "Idioma"
+  }
+}

@@ -1,0 +1,6 @@
+-- Aplicada via painel do Supabase (não pelo CLI). Arquivo criado apenas para
+-- alinhar o histórico local com o remoto (reconciliação de 2026-07-24). Já
+-- consta em supabase_migrations.schema_migrations, então o CLI NÃO reexecuta.
+--
+-- Intenção (pelo nome): remover a policy que permitia LISTAR o bucket de
+-- imagens de questões (storage.objects). A fonte da verdade é produção.

@@ -1,0 +1,81 @@
+{
+  "page_title": "Settings",
+  "page_subtitle": "Tune your experience: theme, language, notifications and privacy.",
+  "status_label": "Current state",
+  "saved": "Saved automatically",
+  "section_active": "Active section",
+  "adjustments": "Adjustments applied to your account only.",
+  "visual_summary": "Visual summary",
+  "tabs": {
+    "appearance": "Appearance",
+    "language": "Language",
+    "notifications": "Notifications",
+    "privacy": "Privacy",
+    "subscription": "Subscription",
+    "advanced": "Advanced"
+  },
+  "theme": {
+    "title": "App theme",
+    "light": "Light",
+    "dark": "Dark",
+    "active": "Active",
+    "light_mode": "Light mode",
+    "dark_mode": "Dark mode"
+  },
+  "accent": {
+    "title": "Accent color",
+    "purple": "Clinical purple",
+    "blue": "Trust blue",
+    "green": "Vital green",
+    "red": "Alert red"
+  },
+  "density": {
+    "title": "UI density",
+    "comfortable": "Comfortable",
+    "compact": "Compact"
+  },
+  "language": {
+    "title": "Interface language",
+    "wip": "Translation in progress: parts of the platform still appear in Portuguese."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "email_label": "Email",
+    "email_sub": "Weekly email summary",
+    "push_label": "Push Notification",
+    "push_sub": "Push notifications (new cases)"
+  },
+  "privacy": {
+    "title": "Data privacy",
+    "analytics": "Anonymous usage data",
+    "analytics_sub": "Helps improve the app",
+    "share": "Share progress",
+    "share_sub": "Teachers can see your scores"
+  },
+  "subscription": {
+    "title": "Current plan",
+    "plan_name": "Premium Student",
+    "active_badge": "ACTIVE",
+    "unlimited_desc": "Unlimited access to all cases and AI Teacher feedback.",
+    "manage": "Manage Subscription"
+  },
+  "advanced": {
+    "title": "Advanced options",
+    "danger_title": "Danger Zone",
+    "danger_desc": "This will erase all your saved visual preferences (theme, language, accent color).",
+    "reset_btn": "Reset preferences",
+    "reset_confirm": "Do you want to reset all visual preferences for this account?",
+    "account_info": "Your account",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "debug": "Debug State"
+  },
+  "summary": {
+    "account": "Account",
+    "theme": "Theme",
+    "accent": "Accent color",
+    "density": "Density",
+    "language": "Language"
+  }
+}

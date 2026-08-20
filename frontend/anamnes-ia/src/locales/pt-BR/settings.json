@@ -1,0 +1,81 @@
+{
+  "page_title": "Configurações",
+  "page_subtitle": "Ajuste sua experiência no aplicativo: tema, idioma, notificações e privacidade.",
+  "status_label": "Estado atual",
+  "saved": "Salvo automaticamente",
+  "section_active": "Seção ativa",
+  "adjustments": "Ajustes aplicados apenas para sua conta.",
+  "visual_summary": "Resumo visual",
+  "tabs": {
+    "appearance": "Aparência",
+    "language": "Idioma",
+    "notifications": "Notificações",
+    "privacy": "Privacidade",
+    "subscription": "Assinatura",
+    "advanced": "Avançado"
+  },
+  "theme": {
+    "title": "Tema do aplicativo",
+    "light": "Claro",
+    "dark": "Escuro",
+    "active": "Ativo",
+    "light_mode": "Modo claro",
+    "dark_mode": "Modo escuro"
+  },
+  "accent": {
+    "title": "Cor de destaque",
+    "purple": "Roxo clínico",
+    "blue": "Azul confiança",
+    "green": "Verde vital",
+    "red": "Vermelho alerta"
+  },
+  "density": {
+    "title": "Densidade da UI",
+    "comfortable": "Confortável",
+    "compact": "Compacta"
+  },
+  "language": {
+    "title": "Idioma da interface",
+    "wip": "Tradução em desenvolvimento: partes da plataforma ainda aparecem em português."
+  },
+  "notifications": {
+    "title": "Notificações",
+    "email_label": "E-mail",
+    "email_sub": "Resumo semanal por e-mail",
+    "push_label": "Push Notification",
+    "push_sub": "Notificações push (novos casos)"
+  },
+  "privacy": {
+    "title": "Privacidade de dados",
+    "analytics": "Dados anônimos de uso",
+    "analytics_sub": "Ajuda a melhorar o app",
+    "share": "Compartilhar progresso",
+    "share_sub": "Professores podem ver suas notas"
+  },
+  "subscription": {
+    "title": "Plano atual",
+    "plan_name": "Premium Student",
+    "active_badge": "ATIVO",
+    "unlimited_desc": "Acesso ilimitado a todos os casos e feedback do Professor IA.",
+    "manage": "Gerenciar Assinatura"
+  },
+  "advanced": {
+    "title": "Opções avançadas",
+    "danger_title": "Zona de Perigo",
+    "danger_desc": "Isso irá apagar todas as suas preferências visuais salvas (tema, idioma, cor de destaque).",
+    "reset_btn": "Resetar preferências",
+    "reset_confirm": "Deseja resetar todas as preferências visuais desta conta?",
+    "account_info": "Sua conta",
+    "name": "Nome",
+    "email": "Email",
+    "role": "Papel",
+    "debug": "Debug State"
+  },
+  "summary": {
+    "account": "Conta",
+    "theme": "Tema",
+    "accent": "Cor de destaque",
+    "density": "Densidade",
+    "language": "Idioma"
+  }
+}

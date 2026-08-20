@@ -1,0 +1,140 @@
+{
+  "gpt_error": "Erro ao comunicar com o GPT.",
+  "clinical_data": "Dados clínicos",
+  "typing": "Digitando...",
+  "duration": "{{min}}min {{sec}}s",
+  "input_placeholder": {
+    "finished": "Chat finalizado",
+    "waiting_patient": "Aguardando paciente...",
+    "waiting_response": "Aguarde a resposta...",
+    "default": "Digite sua mensagem..."
+  },
+  "history": {
+    "title": "Histórico de Chats",
+    "load_error": "Erro ao carregar histórico",
+    "load_error_detail": "Erro ao carregar histórico: {{error}}",
+    "empty_line1": "Nenhuma conversa ainda.",
+    "empty_line2": "Inicie um caso para ver o histórico aqui.",
+    "start_now": "Começar agora →",
+    "see_all": "Ver todos →",
+    "open_aria": "Abrir conversa: {{title}}",
+    "untitled": "Conversa de {{date}}",
+    "today": "Hoje, {{time}}",
+    "yesterday": "Ontem, {{time}}"
+  },
+  "conversation": {
+    "not_found": "Conversa não encontrada ou acesso negado.",
+    "back": "Voltar",
+    "untitled": "Conversa {{id}}",
+    "no_messages": "Sem mensagens nessa conversa.",
+    "view_only": "Visualização apenas — não é possível enviar mensagens nesta página.",
+    "view_evaluation": "Ver avaliação",
+    "generate_flashcards": "Gerar Flashcards"
+  },
+  "evaluation": {
+    "title": "Avaliação",
+    "of_100": "de 100 pontos",
+    "unavailable": "Nota indisponível",
+    "abandoned_line1": "Esta tentativa foi abandonada antes da conclusão.",
+    "abandoned_line2": "Nenhum SOAP foi enviado.",
+    "none_line1": "Esta conversa não possui avaliação registrada.",
+    "none_line2": "Apenas conversas com SOAP enviado possuem avaliação.",
+    "soap_submitted": "SOAP Enviado",
+    "not_filled": "Não preenchido",
+    "feedback": "Feedback do avaliador",
+    "close": "Fechar"
+  },
+  "soap": {
+    "subjective": "Subjetivo",
+    "objective": "Objetivo",
+    "assessment": "Avaliação",
+    "plan": "Plano"
+  },
+  "flashcard_modal": {
+    "title": "Gerar Flashcards com IA",
+    "success_one": "{{count}} flashcard criado!",
+    "success_other": "{{count}} flashcards criados!",
+    "deck_label": "Deck:",
+    "see_mine": "Ver meus flashcards",
+    "duplicate_title": "Deck já existe",
+    "duplicate_body_one": "Já existe um deck chamado \"{{name}}\" com {{count}} card. Deseja adicionar os novos flashcards a ele?",
+    "duplicate_body_other": "Já existe um deck chamado \"{{name}}\" com {{count}} cards. Deseja adicionar os novos flashcards a ele?",
+    "add_to_existing": "Adicionar ao deck existente",
+    "rename_new": "Renomear e criar novo",
+    "deck_name_label": "Nome do deck",
+    "deck_name_placeholder": "Ex: Revisão — Cardiologia",
+    "hint": "A IA analisará a conversa e gerará entre 8 e 15 flashcards automaticamente.",
+    "cancel": "Cancelar",
+    "generating": "Gerando…",
+    "generate": "Gerar flashcards",
+    "suggested_deck": "Revisão — {{title}}",
+    "default_anamnesis": "Anamnese",
+    "error": "Erro ao gerar flashcards"
+  },
+  "header": {
+    "simulation": "Simulação",
+    "teacher_case": "Caso do professor",
+    "free_case": "Caso gratuito",
+    "mode_standard": "Modo Padrão",
+    "mode_memorization": "Modo Memorização"
+  },
+  "confirm": {
+    "title": "Finalizar atendimento?",
+    "body": "Isso irá encerrar o atendimento simulado e enviar seu SOAP para avaliação. Esta ação não pode ser desfeita.",
+    "back_edit": "Voltar e editar",
+    "yes_finish": "Sim, finalizar"
+  },
+  "evaluating": {
+    "title": "Avaliando seu SOAP...",
+    "body": "O avaliador está analisando sua resposta. Isso pode levar alguns segundos."
+  },
+  "result": {
+    "of_100": "de 100 pontos",
+    "unavailable": "Nota indisponível",
+    "section_scores": "Nota por seção",
+    "soap_s": "S — Subjetivo",
+    "soap_o": "O — Objetivo",
+    "soap_a": "A — Avaliação",
+    "soap_p": "P — Plano",
+    "feedback": "Feedback do avaliador",
+    "back_home": "Voltar ao início",
+    "view_conversation": "Ver conversa",
+    "eval_fallback": "Não foi possível avaliar."
+  },
+  "loading_patient": "Preparando seu paciente virtual...",
+  "ai_error_title": "Erro ao iniciar Chat IA",
+  "back_home": "Voltar ao início",
+  "specialty": {
+    "title": "Escolha a especialidade",
+    "subtitle": "O paciente virtual será gerado nessa área. Ou deixe aleatório.",
+    "random": "Aleatório",
+    "continue_with": "Continuar com {{specialty}} →",
+    "continue_random": "Continuar (aleatório) →"
+  },
+  "mode": {
+    "title": "Escolha o modo de treino",
+    "subtitle": "Como você quer praticar este caso clínico?",
+    "standard_title": "Modo Padrão",
+    "standard_desc": "O formulário SOAP fica visível ao lado do chat. Você pode consultar a conversa enquanto preenche.",
+    "standard_badge": "Recomendado para iniciantes",
+    "memorization_title": "Modo Memorização",
+    "memorization_desc": "O SOAP só aparece ao finalizar. Você não poderá consultar o chat enquanto preenche.",
+    "memorization_badge": "Simula exame real"
+  },
+  "soap_panel": {
+    "fill": "Preencha o SOAP",
+    "consult_chat": "Consulte o chat à direita",
+    "wait_patient": "Aguarde o paciente responder antes de preencher o SOAP",
+    "fill_title": "Preencher SOAP"
+  },
+  "finish": {
+    "evaluating": "Avaliando...",
+    "wait_chat": "Aguarde o chat...",
+    "finish_consult": "Finalizar Consulta"
+  },
+  "errors": {
+    "complete_case": "Erro ao completar caso",
+    "evaluate_soap": "Erro ao avaliar SOAP"
+  },
+  "leave_confirm": "Você tem um caso em andamento. Se sair agora, a tentativa será marcada como abandonada.\n\nDeseja sair mesmo assim?"
+}

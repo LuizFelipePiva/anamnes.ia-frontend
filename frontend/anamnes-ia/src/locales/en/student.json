@@ -1,0 +1,161 @@
+{
+  "role": "Student",
+  "loading": "Loading…",
+  "profile_not_found": "Profile not found.",
+  "load_error": "Failed to load profile",
+  "try_again": "Try again",
+  "train_now": "Train now",
+  "limit_reached": "Limit reached",
+  "back_to_menu": "Back to menu",
+  "no_data": "No data yet",
+  "initial_listen": "Initial listening",
+  "chat_ai": "AI Chat",
+  "start_now": "Start now →",
+  "pts": "pts",
+  "tabs": {
+    "overview": "Overview",
+    "classes": "My Classes",
+    "history": "History",
+    "performance": "Performance",
+    "achievements": "Achievements",
+    "flashcards": "Flashcards"
+  },
+  "difficulty": {
+    "basico": "Basic",
+    "medio": "Medium",
+    "avancado": "Advanced"
+  },
+  "status": {
+    "completed": "Completed",
+    "abandoned": "Abandoned",
+    "in_progress": "In progress"
+  },
+  "expiry": {
+    "today": "Expires today",
+    "hours": "Expires in {{count}}h",
+    "days_one": "Expires in 1 day",
+    "days_other": "Expires in {{count}} days",
+    "date": "Expires: {{date}}"
+  },
+  "stats": {
+    "cases_started": "Cases started",
+    "completed": "Completed",
+    "avg_score": "Average score",
+    "best_score": "Best score",
+    "avg_time": "Average time",
+    "classes": "Classes",
+    "completion_rate": "Completion rate"
+  },
+  "overview": {
+    "greeting": "Hi, {{name}}",
+    "greeting_fallback": "student",
+    "greeting_subtitle": "Here's a summary of your progress",
+    "recent_activity": "Recent activity",
+    "see_all": "See all →",
+    "no_activity": "No activity yet.",
+    "weekly_evolution": "Weekly progress",
+    "details": "Details →",
+    "cta_title": "Ready to practice?",
+    "cta_subtitle": "Pick a case and start now",
+    "quota_cases": "{{used}}/{{limit}} cases today",
+    "quota_ai": "{{used}}/{{limit}} AI Chat today",
+    "join_class": "Join class",
+    "start_case": "Start case",
+    "plan_free": "Free plan"
+  },
+  "classes": {
+    "title": "My Classes",
+    "count_one": "{{count}} class enrolled",
+    "count_other": "{{count}} classes enrolled",
+    "empty": "You are not enrolled in any class yet.",
+    "join_full": "Join a Class",
+    "join": "Join class",
+    "joined_at": "Joined on {{date}}",
+    "hide_cases": "Hide cases",
+    "see_cases": "See available cases",
+    "see_cases_count": "See available cases ({{count}})",
+    "no_cases": "No cases available in this class yet.",
+    "start": "Start",
+    "limit": "Limit"
+  },
+  "history": {
+    "title": "History",
+    "count_one": "{{count}} activity completed",
+    "count_other": "{{count}} activities completed",
+    "empty": "No history yet.",
+    "start_chat": "Start a chat →"
+  },
+  "performance": {
+    "title": "Performance",
+    "subtitle": "Full analysis of your progress",
+    "by_specialty": "By specialty",
+    "case_count_one": "{{count}} case",
+    "case_count_other": "{{count}} cases",
+    "pts_value": "{{score}} pts"
+  },
+  "achievements": {
+    "title": "Achievements",
+    "coming_soon_desc": "This feature will be available soon!",
+    "coming_soon_detail": "Badges, streaks and progress milestones.",
+    "coming_soon": "Coming soon"
+  },
+  "join": {
+    "title": "Join Class",
+    "desc": "Enter the invite code provided by your teacher.",
+    "placeholder": "e.g. A3K9M2",
+    "joining": "Joining...",
+    "submit": "Join",
+    "success": "Joined the class \"{{name}}\" successfully!",
+    "error": "Failed to join the class"
+  },
+  "flashcards": {
+    "my_decks": "My Decks",
+    "deck_count_one": "{{count}} personal deck",
+    "deck_count_other": "{{count}} personal decks",
+    "new_deck": "New Deck",
+    "no_decks": "No decks created yet.",
+    "create_first_deck": "Create your first deck",
+    "no_specialty": "No specialty",
+    "card_count_one": "{{count}} card",
+    "card_count_other": "{{count}} cards",
+    "new_card": "New Card",
+    "no_cards": "This deck has no cards yet.",
+    "add_first_card": "Add your first card",
+    "cancel": "Cancel",
+    "save": "Save",
+    "create": "Create",
+    "save_error": "Failed to save",
+    "deck_modal": {
+      "edit_title": "Edit Deck",
+      "new_title": "New Deck",
+      "name": "Name *",
+      "name_placeholder": "e.g. Cardiology — Basics",
+      "specialty": "Specialty",
+      "select": "Select…",
+      "description": "Description",
+      "optional": "Optional",
+      "name_required": "Name is required"
+    },
+    "card_modal": {
+      "edit_title": "Edit Card",
+      "new_title": "New Card",
+      "front": "Front *",
+      "front_placeholder": "Question or prompt",
+      "back": "Back *",
+      "back_placeholder": "Answer / explanation",
+      "hint": "Hint (optional)",
+      "hint_placeholder": "A cue for review",
+      "difficulty": "Difficulty",
+      "front_required": "Front is required",
+      "back_required": "Back is required",
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "delete": {
+      "title": "Confirm deletion",
+      "body": "Are you sure you want to delete \"{{label}}\"? This action cannot be undone.",
+      "confirm": "Delete"
+    }
+  }
+}
