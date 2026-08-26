@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate, useBlocker } from 'react-router-dom';
-import { History, Clock, X } from 'lucide-react';
+import { History, Clock, X, ShieldAlert } from 'lucide-react';
 import { MainMenu, SoapForm } from '@/shared/components';
 import { ThreadProvider, ChatGPT } from '@/features/chat';
 import { completeCaseAttempt, startAiChat, startCaseAttempt, abandonAttempt } from '@/features/chat/services/studentService';
@@ -101,6 +101,7 @@ const StudentChat: React.FC = () => {
 
   // Mode selector — mesma UX para todos os tipos de caso
   const [chatMode, setChatMode] = useState<ChatMode>(null);
+  const [focusWarningAccepted, setFocusWarningAccepted] = useState(false);
 
   const handleSelectMode = (mode: ChatMode) => {
     if (mode === null) return;
@@ -215,6 +216,35 @@ const StudentChat: React.FC = () => {
       }
     };
   }, []);
+
+  // Modo prova: qualquer troca de aba ou perda de foco encerra a simulacao.
+  useEffect(() => {
+    const redirectOnFocusLoss = () => {
+      if (isCompletedRef.current) return;
+
+      isCompletedRef.current = true;
+      setIsCompleted(true);
+      if (attemptIdRef.current) {
+        void abandonAttempt(attemptIdRef.current);
+      }
+      window.location.replace('/mainpage');
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        redirectOnFocusLoss();
+      }
+    };
+
+    window.addEventListener('blur', redirectOnFocusLoss);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('blur', redirectOnFocusLoss);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [navigate]);
+
   const [conversationId, setConversationId] = useState<string | null>(
     caseAttempt?.conversationId ?? currentFreeCase?.conversationId ?? null
   );
@@ -592,8 +622,31 @@ ${soapContent}
 
         <div className="flex-1 flex flex-col overflow-hidden relative w-full min-h-0">
 
+          {/* Aviso inicial do modo prova */}
+          {chatMode === null && !focusWarningAccepted && (
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-[#2a2635]/95 backdrop-blur-sm p-4">
+              <div className="w-full max-w-md rounded-2xl border border-amber-500/30 bg-[#393542] p-6 shadow-2xl">
+                <div className="mb-5 flex justify-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/15 text-amber-300">
+                    <ShieldAlert className="h-8 w-8" />
+                  </div>
+                </div>
+                <h2 className="mb-3 text-center text-xl font-bold text-gray-100">Modo prova</h2>
+                <p className="text-center text-sm leading-relaxed text-gray-300">
+                  Durante a simulacao, nao saia desta tela nem troque de aba. Se a pagina perder o foco, a simulacao sera encerrada e voce sera redirecionado para o inicio.
+                </p>
+                <button
+                  onClick={() => setFocusWarningAccepted(true)}
+                  className="mt-6 w-full rounded-xl bg-violet-600 py-3 text-sm font-semibold text-white transition-all hover:bg-violet-700"
+                >
+                  Entendi, continuar
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Seletor de modo */}
-          {chatMode === null && (
+          {chatMode === null && focusWarningAccepted && (
             <div className="absolute inset-0 z-40 flex items-center justify-center bg-[#2a2635]/95 backdrop-blur-sm p-4">
               <div className="w-full max-w-lg">
                 <div className="text-center mb-8">

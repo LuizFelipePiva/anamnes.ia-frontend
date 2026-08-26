@@ -4,7 +4,6 @@ import {
   ChevronRight, 
   AlertCircle,
   CheckCircle2,
-  ClipboardList
 } from 'lucide-react';
 import type { Suggestions, ExameFisicoSistema } from '../../features/teacher/data/suggestionsData';
 
@@ -241,74 +240,48 @@ const ExamModal: React.FC<ExamModalProps> = ({
       
       <div className="relative w-full max-w-6xl bg-[#0f1115] border border-white/10 rounded-[2.5rem] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/5 bg-white/2">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-violet-500/20 flex items-center justify-center text-violet-400 border border-violet-500/20">
-              <ClipboardList size={24} />
-            </div>
+        <div className="p-8 border-b border-white/5">
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <h3 className="text-xl font-bold text-white tracking-tight">Exame Físico Dirigido</h3>
-              <p className="text-sm text-gray-500">
-                {!selectedSistema
-                  ? 'Selecione os sistemas para realizar as manobras'
-                  : !selectedSubCategory
-                  ? `${currentSistema?.label} — Escolha a manobra/região`
-                  : `${currentSistema?.label} — ${subCategories.find(sc => sc.key === selectedSubCategory)?.label}`}
-              </p>
+              <h2 className="text-2xl font-bold text-white">Exame físico</h2>
+              <p className="text-gray-400 text-sm mt-1">Selecione a etapa que deseja registrar</p>
             </div>
+            <button 
+              onClick={onClose}
+              className="w-10 h-10 rounded-lg bg-white/5 hover:bg-red-500/20 hover:text-red-400 text-gray-400 flex items-center justify-center transition-all duration-200 flex-shrink-0"
+            >
+              <X size={20} />
+            </button>
           </div>
-          
-          <button 
-            onClick={onClose}
-            className="w-10 h-10 rounded-xl bg-white/5 hover:bg-red-500/20 hover:text-red-400 text-gray-400 flex items-center justify-center transition-all duration-200"
-          >
-            <X size={20} />
-          </button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-8">
           {/* Level 1: System Selection */}
           {!selectedSistema ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {sistemas.map((s) => {
-                const specific = achadosPorSistema[s.key] || [];
-                const defaults = [
-                  { item: 'Estado geral preservado', normal: true },
-                  { item: 'Sinais vitais estáveis', normal: true }
-                ];
-                
-                const extraInspecao = s.key === 'inspecao' 
-                  ? [...(achadosPorSistema['geral'] || []), ...(achadosPorSistema['dermatologico'] || [])]
-                  : [];
-                
-                const combinedSpecific = [...specific, ...extraInspecao];
-                
-                const uniqueItems = new Set([
-                  ...defaults.map(d => d.item.toLowerCase()),
-                  ...combinedSpecific.map(sp => sp.item.toLowerCase())
-                ]);
-                
-                const totalCount = uniqueItems.size;
-                
-                return (
-                  <button
-                    key={s.key}
-                    onClick={() => handleSelectSistema(s.key)}
-                    className={`group relative flex items-center gap-5 p-6 rounded-2xl border ${s.border} ${s.bg} ${s.hover} transition-all duration-300 text-left overflow-hidden`}
-                  >
-                    <div className="absolute top-0 right-0 w-32 h-32 -mr-10 -mt-10 bg-white/5 rounded-full blur-2xl group-hover:bg-white/10 transition-colors" />
-                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-lg border border-white/5 transition-transform group-hover:scale-110 duration-300`}>
-                      {s.icon}
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-lg font-bold text-gray-100 group-hover:text-white transition-colors">{s.label}</h4>
-                      <p className="text-sm text-gray-400 mt-1">{totalCount} procedimentos de exame</p>
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-white transition-colors" />
-                  </button>
-                );
-              })}
+            <div className="space-y-3">
+              {sistemas.map((s) => (
+                <button
+                  key={s.key}
+                  onClick={() => handleSelectSistema(s.key)}
+                  className="w-full group flex items-center gap-4 p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-200 text-left"
+                >
+                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center text-xl group-hover:bg-white/10 transition-colors">
+                    {s.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base font-semibold text-white group-hover:text-violet-300 transition-colors">
+                      {s.label}
+                    </h3>
+                    <p className="text-sm text-gray-400 mt-0.5">
+                      Selecione para explorar os achados
+                    </p>
+                  </div>
+                  <div className="flex-shrink-0 flex items-center justify-center">
+                    <ChevronRight className="w-6 h-6 text-gray-500 group-hover:text-white transition-colors" />
+                  </div>
+                </button>
+              ))}
             </div>
           ) : !selectedSubCategory ? (
             /* Level 2: Sub-Category / Maneuver Selection */
@@ -463,24 +436,32 @@ const ExamModal: React.FC<ExamModalProps> = ({
 
         {/* Footer */}
         <div className="p-6 border-t border-white/5 bg-white/2 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm text-gray-500">
-            <span className="text-violet-400 font-bold">{selectedItems.length}</span> achados selecionados para o SOAP
-          </div>
+          {!selectedSistema ? (
+            <p className="text-xs text-gray-400">
+              Ao clicar em uma opção, o sistema abre os campos específicos dessa etapa do exame físico.
+            </p>
+          ) : (
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <span className="text-violet-400 font-bold">{selectedItems.length}</span> achados selecionados para o SOAP
+            </div>
+          )}
           
           <div className="flex items-center gap-4">
             <button 
               onClick={onClose}
               className="px-6 py-2 rounded-xl text-gray-400 hover:text-white transition"
             >
-              Cancelar
+              {!selectedSistema ? 'Fechar' : 'Cancelar'}
             </button>
-            <button 
-              onClick={handleConfirm}
-              className="px-8 py-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold shadow-lg shadow-violet-600/20 transition-all flex items-center gap-2"
-            >
-              Salvar Exame
-              <CheckCircle2 size={18} />
-            </button>
+            {selectedSistema && (
+              <button 
+                onClick={handleConfirm}
+                className="px-8 py-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold shadow-lg shadow-violet-600/20 transition-all flex items-center gap-2"
+              >
+                Salvar Exame
+                <CheckCircle2 size={18} />
+              </button>
+            )}
           </div>
         </div>
       </div>

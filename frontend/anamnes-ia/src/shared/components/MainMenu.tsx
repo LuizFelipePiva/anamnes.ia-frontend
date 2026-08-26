@@ -18,7 +18,10 @@ import {
   ClipboardList,
   Route,
   BookOpenCheck,
+  Baby,
 } from 'lucide-react';
+
+import { FaPersonPregnant } from 'react-icons/fa6';
 
 const getInitials = (name?: string | null, email?: string | null): string => {
   if (name && name.trim()) {
@@ -33,8 +36,8 @@ const getInitials = (name?: string | null, email?: string | null): string => {
 /** Chaves de `menu.*` no namespace `common` — mantém o `t()` tipado */
 type MenuLabelKey =
   | 'menu.home' | 'menu.cases' | 'menu.simulation' | 'menu.teacher' | 'menu.admin'
-  | 'menu.student_page' | 'menu.flashcards' | 'menu.simulados' | 'menu.minigame'
-  | 'menu.settings' | 'menu.trilhas';
+  | 'menu.student_page' | 'menu.flashcards' | 'menu.questoes' | 'menu.simulados' | 'menu.minigame'
+  | 'menu.settings' | 'menu.trilhas' | 'menu.puericultura' | 'menu.preNatal';
 
 interface NavItem {
   icon: React.ReactNode;
@@ -74,6 +77,8 @@ const MainMenu: React.FC<{ mobile?: boolean }> = ({ mobile = false }) => {
     { icon: <ClipboardList size={20} />, activeIcon: <ClipboardList size={20} />, labelKey: 'menu.simulados',    route: '/simulados',     color: 'text-cyan-400' },
     { icon: <Route size={20} />,         activeIcon: <Route size={20} />,         labelKey: 'menu.trilhas',      route: '/trilhas',       color: 'text-rose-400' },
     { icon: <Gamepad2 size={20} />,      activeIcon: <Gamepad2 size={20} />,      labelKey: 'menu.minigame',     route: '/minigame',      color: 'text-teal-400' },
+    { icon: <Baby size={20} />,         activeIcon: <Baby size={20} />,          labelKey: 'menu.puericultura',  route: '/puericultura',  color: 'text-fuchsia-400' },
+    { icon: <FaPersonPregnant size={20} />, activeIcon: <FaPersonPregnant size={20} />, labelKey: 'menu.preNatal', route: '/preNatal', color: 'text-purple-400' },
     { icon: <Settings size={20} />,      activeIcon: <Settings size={20} />,      labelKey: 'menu.settings',     route: '/settings',      color: 'text-slate-400' },
   ], [isTeacherOrAdmin, user?.role]);
 

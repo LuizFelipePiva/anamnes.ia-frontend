@@ -21,6 +21,8 @@ import { QuestionsPage } from '@/features/questoes';
 import QuestionsAdminPage from '@/features/admin/pages/QuestionsAdminPage';
 import { SimuladosListPage, SimuladoRunPage, SimuladoReportPage } from '@/features/simulados';
 import { TrilhasPage, TrilhaMapaPage, LicaoPage, RevisaoPage } from '@/features/trilhas';
+import { PuericulturaPage } from '@/features/puericultura';
+import { PreNatalPage } from '@/features/preNatal';
 
 const router = createBrowserRouter([
   // Rotas públicas (redireciona para /mainpage se já autenticado)
@@ -43,6 +45,8 @@ const router = createBrowserRouter([
   { path: '/flashcards', element: <RoleRoute roles={['student', 'teacher']}><FlashcardsPage /></RoleRoute> },
   { path: '/payments', element: <ProtectedRoute><PaymentsPage /></ProtectedRoute> },
   { path: '/questoes', element: <ProtectedRoute><QuestionsPage /></ProtectedRoute> },
+  { path: '/puericultura', element: <ProtectedRoute><PuericulturaPage /></ProtectedRoute> },
+  { path: '/preNatal', element: <ProtectedRoute><PreNatalPage /></ProtectedRoute> },
 
   // Rotas de SIMULADOS
   { path: '/simulados', element: <ProtectedRoute><SimuladosListPage /></ProtectedRoute> },

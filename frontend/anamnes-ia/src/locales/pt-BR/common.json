@@ -18,8 +18,45 @@
     "settings": "Configurações",
     "trilhas": "Trilhas",
     "questoes": "Banco de Questões",
+    "puericultura": "Puericultura",
+    "preNatal": "Pré-Natal",
     "logout": "Sair",
     "profile": "Perfil"
+  },
+  "clinical": {
+    "back": "Voltar para o início",
+    "form_label": "Módulo clínico",
+    "patient_data": "Dados do paciente",
+    "patient_name": "Nome completo",
+    "patient_name_placeholder": "Digite o nome do paciente",
+    "birth_date": "Data de nascimento",
+    "record_number": "Número do prontuário",
+    "weight": "Peso",
+    "height": "Altura",
+    "bmi": "IMC",
+    "optional": "Opcional",
+    "notes": "Observações iniciais",
+    "notes_placeholder": "Registre informações relevantes para este atendimento...",
+    "next_steps": "Próximas etapas",
+    "save": "Salvar atendimento",
+    "cancel": "Cancelar",
+    "saved": "Atendimento salvo localmente",
+    "puericultura": {
+      "title": "Puericultura",
+      "subtitle": "Acompanhamento da saúde e do desenvolvimento infantil",
+      "heading": "Novo acompanhamento infantil",
+      "description": "Registre os dados essenciais para acompanhar o crescimento, o desenvolvimento e a saúde da criança.",
+      "step_one": "Complete a identificação da criança.",
+      "step_two": "Adicione a data e as observações da consulta."
+    },
+    "preNatal": {
+      "title": "Pré-natal",
+      "subtitle": "Acompanhamento da saúde materna e fetal",
+      "heading": "Novo acompanhamento pré-natal",
+      "description": "Organize as informações da gestante para acompanhar cada etapa do cuidado pré-natal.",
+      "step_one": "Complete a identificação da gestante.",
+      "step_two": "Adicione a data e as observações da consulta."
+    }
   },
   "home": {
     "tagline": "Simule · Pratique · Evolua",
