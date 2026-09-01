@@ -23,6 +23,17 @@
     "logout": "Sair",
     "profile": "Perfil"
   },
+  "questions_hub": {
+    "eyebrow": "ESTUDAR",
+    "title": "Banco de Questões e Simulados",
+    "subtitle": "Escolha como você quer praticar e revisar os conteúdos clínicos.",
+    "single_title": "Banco de Questões",
+    "single_description": "Pratique questões isoladas com revisão imediata e explicações.",
+    "single_action": "Abrir banco",
+    "simulado_title": "Simulados",
+    "simulado_description": "Teste seu desempenho em provas e acompanhe sua evolução.",
+    "simulado_action": "Abrir simulados"
+  },
   "clinical": {
     "back": "Voltar para o início",
     "form_label": "Módulo clínico",

@@ -23,6 +23,17 @@
     "logout": "Salir",
     "profile": "Perfil"
   },
+  "questions_hub": {
+    "eyebrow": "ESTUDIAR",
+    "title": "Banco de Preguntas y Simulacros",
+    "subtitle": "Elige cómo quieres practicar y revisar el contenido clínico.",
+    "single_title": "Banco de Preguntas",
+    "single_description": "Practica preguntas aisladas con revisión inmediata y explicaciones.",
+    "single_action": "Abrir banco",
+    "simulado_title": "Simulacros",
+    "simulado_description": "Evalúa tu rendimiento en exámenes y sigue tu progreso.",
+    "simulado_action": "Abrir simulacros"
+  },
   "clinical": {
     "back": "Volver al inicio",
     "form_label": "Módulo clínico",

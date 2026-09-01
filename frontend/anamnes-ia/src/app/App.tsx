@@ -17,7 +17,7 @@ import AdminPanel from '@/features/admin/pages/AdminPanel';
 import ProfilePage from '@/features/profile/pages/ProfilePage';
 import StudentDashboard from '@/features/student/pages/StudentDashboard';
 import supabase from '@/core/lib/supabaseClient';
-import { QuestionsPage } from '@/features/questoes';
+import { QuestionsPage, QuestionsHubPage } from '@/features/questoes';
 import QuestionsAdminPage from '@/features/admin/pages/QuestionsAdminPage';
 import { SimuladosListPage, SimuladoRunPage, SimuladoReportPage } from '@/features/simulados';
 import { TrilhasPage, TrilhaMapaPage, LicaoPage, RevisaoPage } from '@/features/trilhas';
@@ -44,7 +44,8 @@ const router = createBrowserRouter([
   { path: '/play/*', element: <RoleRoute roles={['student', 'teacher']}><GameWrapper /></RoleRoute> },
   { path: '/flashcards', element: <RoleRoute roles={['student', 'teacher']}><FlashcardsPage /></RoleRoute> },
   { path: '/payments', element: <ProtectedRoute><PaymentsPage /></ProtectedRoute> },
-  { path: '/questoes', element: <ProtectedRoute><QuestionsPage /></ProtectedRoute> },
+  { path: '/questoes', element: <ProtectedRoute><QuestionsHubPage /></ProtectedRoute> },
+  { path: '/questoes/unica', element: <ProtectedRoute><QuestionsPage /></ProtectedRoute> },
   { path: '/puericultura', element: <ProtectedRoute><PuericulturaPage /></ProtectedRoute> },
   { path: '/preNatal', element: <ProtectedRoute><PreNatalPage /></ProtectedRoute> },
 

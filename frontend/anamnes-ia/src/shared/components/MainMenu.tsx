@@ -74,7 +74,6 @@ const MainMenu: React.FC<{ mobile?: boolean }> = ({ mobile = false }) => {
     }] as NavItem[] : []),
     { icon: <Layers size={20} />,        activeIcon: <Layers size={20} />,        labelKey: 'menu.flashcards',   route: '/flashcards',    color: 'text-pink-400' },
     { icon: <BookOpenCheck size={20} />,  activeIcon: <BookOpenCheck size={20} />,  labelKey: 'menu.questoes',    route: '/questoes',      color: 'text-orange-400' },
-    { icon: <ClipboardList size={20} />, activeIcon: <ClipboardList size={20} />, labelKey: 'menu.simulados',    route: '/simulados',     color: 'text-cyan-400' },
     { icon: <Route size={20} />,         activeIcon: <Route size={20} />,         labelKey: 'menu.trilhas',      route: '/trilhas',       color: 'text-rose-400' },
     { icon: <Gamepad2 size={20} />,      activeIcon: <Gamepad2 size={20} />,      labelKey: 'menu.minigame',     route: '/minigame',      color: 'text-teal-400' },
     { icon: <Baby size={20} />,         activeIcon: <Baby size={20} />,          labelKey: 'menu.puericultura',  route: '/puericultura',  color: 'text-fuchsia-400' },

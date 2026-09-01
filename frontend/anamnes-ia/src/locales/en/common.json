@@ -23,6 +23,17 @@
     "logout": "Log out",
     "profile": "Profile"
   },
+  "questions_hub": {
+    "eyebrow": "STUDY",
+    "title": "Question Bank and Mock Exams",
+    "subtitle": "Choose how you want to practice and review clinical content.",
+    "single_title": "Question Bank",
+    "single_description": "Practice isolated questions with immediate review and explanations.",
+    "single_action": "Open bank",
+    "simulado_title": "Mock Exams",
+    "simulado_description": "Test your performance in exams and track your progress.",
+    "simulado_action": "Open mock exams"
+  },
   "clinical": {
     "back": "Back to home",
     "form_label": "Clinical module",
