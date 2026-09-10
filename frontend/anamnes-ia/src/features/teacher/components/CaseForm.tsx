@@ -4,7 +4,8 @@ import type { CaseFormData, CaseCreate, CaseUpdate, CaseInfo, ClassInfo } from '
 import { createCase, updateCase, assignCase } from '../services/teacherService';
 import { SUGGESTIONS_DATA, type Suggestions } from '../data/suggestionsData';
 import ChipInput from './ChipInput';
-import ExamSuggestionsModal from './ExamSuggestionsModal';
+import ExamModal from '@/shared/components/ExamModal';
+import ComplementaryExamModal from '@/shared/components/ComplementaryExamModal';
 
 interface CaseFormProps {
   classes: ClassInfo[];
@@ -434,10 +435,21 @@ const CaseForm: React.FC<CaseFormProps> = ({ classes, onCaseCreated, onClose, sh
   const [generatedSummary, setGeneratedSummary] = useState(editingCase?.summary ?? '');
   const [selectedClassId, setSelectedClassId] = useState('');
   const [publishNow, setPublishNow] = useState(editingCase?.published ?? false);
-  const [showExamSuggestions, setShowExamSuggestions] = useState(false);
+  const [showPhysicalExamModal, setShowPhysicalExamModal] = useState(false);
+  const [showComplementaryExamModal, setShowComplementaryExamModal] = useState(false);
 
   const up = <K extends keyof CaseFormData>(key: K, value: CaseFormData[K]) => {
     setForm(prev => ({ ...prev, [key]: value }));
+  };
+
+  const selectedItems = (value: string) => (value.includes('\n') ? value.split('\n') : value.split(','))
+    .map(item => item.trim())
+    .filter(Boolean);
+
+  const examSummary = (value: string, emptyLabel: string) => {
+    const items = selectedItems(value);
+    if (!items.length) return emptyLabel;
+    return items.length === 1 ? items[0] : `${items.length} itens selecionados`;
   };
 
   const handleGeneratePrompt = () => {
@@ -565,37 +577,24 @@ const CaseForm: React.FC<CaseFormProps> = ({ classes, onCaseCreated, onClose, sh
 
           <div className="grid grid-cols-2 gap-3 items-start">
             <Field 
-              label="Exame físico" 
-              hasSuggestions 
-              fieldKey="exame_fisico"
-              currentSpecialty={form.especialidade}
-              currentValue={form.exame_fisico}
-              currentPatologia={form.patologia}
-              onSuggestionSelect={val => up('exame_fisico', val)}
-              onLightbulbClick={() => setShowExamSuggestions(true)}
-              showExploration
+              label="Exame físico"
             >
-              <ChipInput 
-                value={form.exame_fisico} 
-                onChange={val => up('exame_fisico', val)} 
-                placeholder="Ex: PA 120/80, Ausculta cardíaca..." 
-              />
+              <div className="rounded-xl border border-[#e5e2ef] bg-white p-3">
+                <p className="min-h-10 text-xs leading-relaxed text-[#6b6880]">{examSummary(form.exame_fisico, 'Nenhum exame definido')}</p>
+                <button type="button" className={`${twBtnPri} mt-2 w-full`} onClick={() => setShowPhysicalExamModal(true)}>
+                  Abrir exame físico
+                </button>
+              </div>
             </Field>
             <Field 
-              label="Exames complementares" 
-              hasSuggestions 
-              fieldKey="exames"
-              currentSpecialty={form.especialidade}
-              currentValue={form.exames}
-              currentPatologia={form.patologia}
-              onSuggestionSelect={val => up('exames', val)}
-              showExploration
+              label="Exames complementares"
             >
-              <ChipInput 
-                value={form.exames} 
-                onChange={val => up('exames', val)} 
-                placeholder="Ex: Hemograma, Raio-X..." 
-              />
+              <div className="rounded-xl border border-[#e5e2ef] bg-white p-3">
+                <p className="min-h-10 text-xs leading-relaxed text-[#6b6880]">{examSummary(form.exames, 'Nenhum exame definido')}</p>
+                <button type="button" className={`${twBtnPri} mt-2 w-full`} onClick={() => setShowComplementaryExamModal(true)}>
+                  Abrir exames
+                </button>
+              </div>
             </Field>
           </div>
 
@@ -700,26 +699,19 @@ const CaseForm: React.FC<CaseFormProps> = ({ classes, onCaseCreated, onClose, sh
           </div>
         </div>
 
-        <ExamSuggestionsModal
-          isOpen={showExamSuggestions}
-          onClose={() => setShowExamSuggestions(false)}
-          patologia={form.patologia}
-          currentItems={form.exame_fisico}
-          onSelectItem={(item) => {
-            const current = form.exame_fisico || '';
-            if (!current.toLowerCase().includes(item.toLowerCase())) {
-              up('exame_fisico', current ? `${current}, ${item}` : item);
-            }
-          }}
-          onAutoFill={(items) => {
-            let current = form.exame_fisico || '';
-            items.forEach(item => {
-              if (!current.toLowerCase().includes(item.toLowerCase())) {
-                current = current ? `${current}, ${item}` : item;
-              }
-            });
-            up('exame_fisico', current);
-          }}
+        <ExamModal
+          isOpen={showPhysicalExamModal}
+          onClose={() => setShowPhysicalExamModal(false)}
+          pathologyData={null}
+          mode="case-builder"
+          selectedItems={selectedItems(form.exame_fisico)}
+          onFindingsSelected={items => up('exame_fisico', items.join('\n'))}
+        />
+        <ComplementaryExamModal
+          isOpen={showComplementaryExamModal}
+          onClose={() => setShowComplementaryExamModal(false)}
+          selectedItems={selectedItems(form.exames)}
+          onExamsSelected={items => up('exames', items.join('\n'))}
         />
       </>
     );
