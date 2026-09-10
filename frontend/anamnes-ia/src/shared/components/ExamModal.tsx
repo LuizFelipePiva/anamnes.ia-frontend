@@ -16,6 +16,11 @@ interface ExamModalProps {
   onFindingsSelected: (findings: string[]) => void;
   selectedItems: string[];
   customExameFisico?: string;
+  /**
+   * O modo de consulta é usado no chat do aluno. O construtor permite que o
+   * professor descreva os achados que ficarão disponíveis naquele caso.
+   */
+  mode?: 'consultation' | 'case-builder';
 }
 
 interface SubCategory {
@@ -75,13 +80,293 @@ const FALLBACK_SUBCATEGORIES: SubCategory[] = [
   { key: 'percussao', label: 'Percussão', icon: '🔨' },
 ];
 
+type CaseExamArea = {
+  key: string;
+  label: string;
+  icon: string;
+  assessments: SubCategory[];
+};
+
+const STANDARD_ASSESSMENTS: SubCategory[] = [
+  { key: 'ectoscopia', label: 'Ectoscopia', icon: '👁️' },
+  { key: 'ausculta', label: 'Ausculta', icon: '🩺' },
+  { key: 'percussao', label: 'Percussão', icon: '🔨' },
+  { key: 'palpacao', label: 'Palpação', icon: '🤲' },
+  { key: 'exames_especiais', label: 'Exames especiais', icon: '✨' },
+];
+
+const EXTREMITIES_ASSESSMENTS = STANDARD_ASSESSMENTS.filter(
+  assessment => assessment.key !== 'ausculta' && assessment.key !== 'percussao',
+);
+
+const CASE_EXAM_AREAS: CaseExamArea[] = [
+  { key: 'torax_anterior', label: 'Tórax anterior', icon: '🫁', assessments: STANDARD_ASSESSMENTS },
+  { key: 'torax_posterior', label: 'Tórax posterior', icon: '🔙', assessments: STANDARD_ASSESSMENTS },
+  { key: 'abdominal', label: 'Abdominal', icon: '🫄', assessments: STANDARD_ASSESSMENTS },
+  { key: 'extremidades', label: 'Extremidades', icon: '🦵', assessments: EXTREMITIES_ASSESSMENTS },
+  { key: 'exames_especiais', label: 'Exames especiais', icon: '🧪', assessments: STANDARD_ASSESSMENTS },
+];
+
+const SPECIAL_EXAM_AREAS: CaseExamArea[] = [
+  { key: 'membros_superiores', label: 'Membros superiores', icon: '💪', assessments: STANDARD_ASSESSMENTS },
+  { key: 'membros_inferiores', label: 'Membros inferiores', icon: '🦵', assessments: STANDARD_ASSESSMENTS },
+];
+
+interface CaseBuilderExamModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onFindingsSelected: (findings: string[]) => void;
+  initialSelectedItems: string[];
+}
+
+/**
+ * Fluxo usado na criação de casos. Ele mantém a aparência da modal do chat,
+ * mas troca o ponto de vista: o professor registra o que o aluno encontrará.
+ */
+const CaseBuilderExamModal: React.FC<CaseBuilderExamModalProps> = ({
+  isOpen,
+  onClose,
+  onFindingsSelected,
+  initialSelectedItems,
+}) => {
+  const [selectedAreaKey, setSelectedAreaKey] = useState<string | null>(null);
+  const [selectedSpecialAreaKey, setSelectedSpecialAreaKey] = useState<string | null>(null);
+  const [selectedAssessmentKey, setSelectedAssessmentKey] = useState<string | null>(null);
+  const [finding, setFinding] = useState('');
+  const [selectedItems, setSelectedItems] = useState<string[]>(initialSelectedItems);
+
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedAreaKey(null);
+      setSelectedSpecialAreaKey(null);
+      setSelectedAssessmentKey(null);
+      setFinding('');
+      setSelectedItems(initialSelectedItems);
+    }
+  }, [isOpen, initialSelectedItems]);
+
+  if (!isOpen) return null;
+
+  const selectedArea = CASE_EXAM_AREAS.find(area => area.key === selectedAreaKey) ?? null;
+  const selectedSpecialArea = SPECIAL_EXAM_AREAS.find(area => area.key === selectedSpecialAreaKey) ?? null;
+  const activeArea = selectedSpecialArea ?? selectedArea;
+  const selectedAssessment = activeArea?.assessments.find(
+    assessment => assessment.key === selectedAssessmentKey,
+  ) ?? null;
+
+  const returnToPreviousStep = () => {
+    if (selectedAssessmentKey) {
+      setSelectedAssessmentKey(null);
+      setFinding('');
+      return;
+    }
+    if (selectedSpecialAreaKey) {
+      setSelectedSpecialAreaKey(null);
+      return;
+    }
+    setSelectedAreaKey(null);
+  };
+
+  const addFinding = () => {
+    if (!activeArea || !selectedAssessment || !finding.trim()) return;
+
+    const item = `${activeArea.label} — ${selectedAssessment.label}: ${finding.trim()}`;
+    setSelectedItems(current => current.includes(item) ? current : [...current, item]);
+    setFinding('');
+    setSelectedAssessmentKey(null);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+
+      <div className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#0f1115] shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b border-white/5 p-8">
+          <div>
+            <h2 className="text-2xl font-bold text-white">Exame físico</h2>
+            <p className="mt-1 text-sm text-gray-400">
+              Defina os achados que o aluno poderá obter em cada etapa do exame.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-white/5 text-gray-400 transition-all hover:bg-red-500/20 hover:text-red-400"
+            aria-label="Fechar exame físico"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="grid flex-1 gap-6 overflow-y-auto p-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+          <div>
+            {!selectedArea ? (
+              <>
+                <p className="mb-4 text-sm font-medium text-gray-300">Selecione uma área para continuar</p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {CASE_EXAM_AREAS.map(area => (
+                    <button
+                      key={area.key}
+                      type="button"
+                      onClick={() => setSelectedAreaKey(area.key)}
+                      className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 text-left transition-all hover:border-violet-500/40 hover:bg-white/10"
+                    >
+                      <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-violet-500/20 bg-violet-500/10 text-2xl">
+                        {area.icon}
+                      </span>
+                      <span className="flex-1">
+                        <span className="block text-sm font-bold text-gray-100 group-hover:text-white">{area.label}</span>
+                        <span className="mt-1 block text-xs text-gray-500">
+                          {area.key === 'extremidades'
+                            ? 'Ectoscopia, palpação e exames especiais'
+                            : area.key === 'exames_especiais'
+                              ? 'Membros superiores e inferiores'
+                              : 'Cinco etapas de avaliação'}
+                        </span>
+                      </span>
+                      <ChevronRight className="h-5 w-5 text-gray-600 transition-colors group-hover:text-violet-400" />
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : selectedArea.key === 'exames_especiais' && !selectedSpecialArea ? (
+              <>
+                <button type="button" onClick={returnToPreviousStep} className="mb-5 flex items-center gap-2 text-sm text-gray-400 transition hover:text-white">
+                  <ChevronRight className="h-4 w-4 rotate-180" /> Voltar para áreas
+                </button>
+                <h3 className="text-xl font-bold text-white">Exames especiais</h3>
+                <p className="mt-1 text-sm text-gray-400">Escolha o segmento a ser avaliado.</p>
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  {SPECIAL_EXAM_AREAS.map(area => (
+                    <button
+                      key={area.key}
+                      type="button"
+                      onClick={() => setSelectedSpecialAreaKey(area.key)}
+                      className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 text-left transition-all hover:border-violet-500/40 hover:bg-white/10"
+                    >
+                      <span className="text-3xl">{area.icon}</span>
+                      <span className="flex-1 text-sm font-bold text-gray-100">{area.label}</span>
+                      <ChevronRight className="h-5 w-5 text-gray-600 transition-colors group-hover:text-violet-400" />
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : !selectedAssessment ? (
+              <>
+                <button type="button" onClick={returnToPreviousStep} className="mb-5 flex items-center gap-2 text-sm text-gray-400 transition hover:text-white">
+                  <ChevronRight className="h-4 w-4 rotate-180" /> Voltar
+                </button>
+                <div className="mb-6 flex items-center gap-3">
+                  <span className="text-3xl">{activeArea?.icon}</span>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">{activeArea?.label}</h3>
+                    <p className="text-sm text-gray-400">Selecione a etapa da avaliação.</p>
+                  </div>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {activeArea?.assessments.map(assessment => (
+                    <button
+                      key={assessment.key}
+                      type="button"
+                      onClick={() => setSelectedAssessmentKey(assessment.key)}
+                      className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 text-left transition-all hover:border-violet-500/40 hover:bg-white/10"
+                    >
+                      <span className="text-2xl">{assessment.icon}</span>
+                      <span className="flex-1 text-sm font-bold text-gray-100">{assessment.label}</span>
+                      <ChevronRight className="h-5 w-5 text-gray-600 transition-colors group-hover:text-violet-400" />
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <button type="button" onClick={returnToPreviousStep} className="mb-5 flex items-center gap-2 text-sm text-gray-400 transition hover:text-white">
+                  <ChevronRight className="h-4 w-4 rotate-180" /> Voltar para avaliações
+                </button>
+                <div className="rounded-2xl border border-violet-500/20 bg-violet-500/10 p-5">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-violet-300">{activeArea?.label}</p>
+                  <h3 className="mt-1 text-xl font-bold text-white">{selectedAssessment.label}</h3>
+                  <p className="mt-2 text-sm text-gray-400">Descreva o achado esperado para este caso clínico.</p>
+                </div>
+                <label className="mt-5 block text-sm font-medium text-gray-200" htmlFor="case-exam-finding">
+                  Achado ou resultado esperado
+                </label>
+                <textarea
+                  id="case-exam-finding"
+                  value={finding}
+                  onChange={event => setFinding(event.target.value)}
+                  rows={5}
+                  autoFocus
+                  placeholder="Ex.: murmúrio vesicular diminuído em base direita"
+                  className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-gray-100 outline-none placeholder:text-gray-600 focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/20"
+                />
+                <button
+                  type="button"
+                  onClick={addFinding}
+                  disabled={!finding.trim()}
+                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  <CheckCircle2 size={17} /> Adicionar avaliação
+                </button>
+              </>
+            )}
+          </div>
+
+          <aside className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <div className="flex items-center justify-between gap-3">
+              <h3 className="text-sm font-bold text-gray-100">Achados definidos</h3>
+              <span className="rounded-full bg-violet-500/15 px-2 py-0.5 text-xs font-bold text-violet-300">{selectedItems.length}</span>
+            </div>
+            {selectedItems.length ? (
+              <ul className="mt-4 space-y-2">
+                {selectedItems.map(item => (
+                  <li key={item} className="flex gap-2 rounded-xl bg-white/5 p-3 text-xs leading-relaxed text-gray-300">
+                    <span className="flex-1">{item}</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedItems(items => items.filter(selected => selected !== item))}
+                      className="h-5 w-5 flex-shrink-0 rounded text-gray-500 transition hover:bg-red-500/20 hover:text-red-300"
+                      aria-label={`Remover ${item}`}
+                    >
+                      <X size={14} />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-4 text-sm leading-relaxed text-gray-500">Nenhum achado foi definido ainda.</p>
+            )}
+          </aside>
+        </div>
+
+        <div className="flex items-center justify-between gap-4 border-t border-white/5 bg-white/[0.02] p-6">
+          <p className="text-xs text-gray-500">Os achados serão associados ao caso e apresentados no exame do aluno.</p>
+          <div className="flex gap-3">
+            <button type="button" onClick={onClose} className="rounded-xl px-5 py-2.5 text-sm font-semibold text-gray-400 transition hover:text-white">
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={() => { onFindingsSelected(selectedItems); onClose(); }}
+              className="rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-violet-500"
+            >
+              Salvar exame físico
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ExamModal: React.FC<ExamModalProps> = ({ 
   isOpen, 
   onClose, 
   pathologyData, 
   onFindingsSelected,
   selectedItems: initialSelectedItems = [],
-  customExameFisico
+  customExameFisico,
+  mode = 'consultation',
 }) => {
   const [selectedSistema, setSelectedSistema] = useState<string | null>(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
@@ -226,6 +511,17 @@ const ExamModal: React.FC<ExamModalProps> = ({
     if (!selectedSistema || !selectedSubCategory) return [];
     return getFindingsForSub(selectedSubCategory);
   }, [selectedSistema, selectedSubCategory, getFindingsForSub]);
+
+  if (mode === 'case-builder') {
+    return (
+      <CaseBuilderExamModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onFindingsSelected={onFindingsSelected}
+        initialSelectedItems={initialSelectedItems}
+      />
+    );
+  }
 
   if (!isOpen) return null;
 
