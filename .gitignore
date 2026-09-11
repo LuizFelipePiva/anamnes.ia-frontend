@@ -34,3 +34,8 @@ env/
 __pycache__/
 *.pyc
 .pytest_cache/
+
+
+# BACKEND - REMOVER DEPOIS
+
+backend/
