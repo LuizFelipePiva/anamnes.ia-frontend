@@ -2,8 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const BASE_URL = 'https://anamnes-ia-mainpage-exam-pro.base44.app';
-
 interface ModuleStats {
   bestScore: number | null;
   bestAccuracy: number | null;

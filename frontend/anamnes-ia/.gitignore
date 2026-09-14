@@ -113,3 +113,11 @@ temp/
 
 # CSV de revisão de traduções (gerado por npm run i18n:export)
 i18n-review.csv
+i18n-review/
+
+# Playwright (E2E) — artefatos de execução
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+playwright/.cache/

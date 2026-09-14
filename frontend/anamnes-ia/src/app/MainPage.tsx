@@ -2,18 +2,33 @@ import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation, Trans } from 'react-i18next';
 import { MainMenu, TipsCarousel } from '@/shared/components';
-import { ChatHistoryCarousel } from '@/features/chat';
 import TrainingModules from '@/features/minigame/components/TrainingModules';
+import { ChatHistoryCarousel } from '@/features/chat';
 import { freeCases, type FreeCase } from '@/features/case/mocks/freeCases';
 import { fetchAvailableCases, fetchFreeCases, fetchDailyQuota } from '@/features/chat/services/studentService';
 import type { AvailableCase, DailyQuota } from '@/features/chat/services/studentService';
 import { useAuth } from '@/features/auth';
-import { ArrowRight, ChevronLeft, ChevronRight, GraduationCap, Sparkles, Target, Building2, BookOpen, CheckCircle, Star, X, Clock, Gamepad2, MessageSquare, Stethoscope } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, GraduationCap, Sparkles, Target, Building2, BookOpen, CheckCircle, Star, X, Clock, TrendingUp, TrendingDown, Minus, Gamepad2, MessageSquare, Stethoscope } from 'lucide-react';
 import { fetchMyProfile } from '@/features/profile/services/profileService';
 import type { StudentProfile } from '@/features/profile/types/profile';
+import { fetchDecks } from '@/features/flashcards/services/flashcardService';
+import {
+  useStudyPlan,
+  RecommendationsCard,
+  MasteryCard,
+  SoapCard,
+  StreakCard,
+  WeeklyGoalCard,
+  PendingCard,
+  SummaryCard,
+  useWeeklySummary,
+  type Recommendation,
+} from '@/features/student';
 import useEmblaCarousel from 'embla-carousel-react';
 import logoImg from '@/assets/anamnesia_logo.png';
 import { specialtyLabel } from '@/shared/utils/specialties';
+import { fetchRecommendedSimulados } from '@/features/simulados/services/simuladosService';
+import type { Simulado } from '@/features/simulados/types/simulado';
 
 // ── Saudação baseada no horário ──────────────────────────────────────────────
 // Devolve a chave do dicionário, não o texto — a tradução acontece no render.
@@ -53,6 +68,7 @@ type PreviewCase =
   | ({ kind: 'free' } & FreeCase);
 
 const MainPage: React.FC = () => {
+  const { t: tUi } = useTranslation('common');
   const navigate = useNavigate();
   const { t } = useTranslation('common');
   const { user } = useAuth();
@@ -78,26 +94,23 @@ const MainPage: React.FC = () => {
 
   // ── Cota diária ──
   const [quota, setQuota] = useState<DailyQuota | null>(null);
-  useEffect(() => { fetchDailyQuota().then(setQuota).catch(() => { }); }, []);
+  useEffect(() => { fetchDailyQuota().then(setQuota).catch(() => {}); }, []);
 
   // ── Perfil (estatísticas + mapa de notas) ──
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   useEffect(() => {
     if (!user) return;
-    fetchMyProfile().then(setProfile).catch(() => { });
+    fetchMyProfile().then(setProfile).catch(() => {});
   }, [user]);
 
-  const weeklyStats = useMemo(() => {
-    if (!profile) return null;
-    const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - 7);
-    const thisWeek = profile.history.filter(a => new Date(a.started_at) >= cutoff);
-    const attempts = thisWeek.length;
-    const completed = thisWeek.filter(a => a.status === 'completed').length;
-    const scores = thisWeek.filter(a => a.score !== null && !a.is_ai_chat).map(a => a.score as number);
-    const avgScore = scores.length > 0 ? Math.round(scores.reduce((s, v) => s + v, 0) / scores.length) : null;
-    return { attempts, completed, avgScore };
-  }, [profile]);
+  // ── Flashcards vencidos (pendências) ──
+  const [dueFlashcards, setDueFlashcards] = useState(0);
+  useEffect(() => {
+    if (!user) return;
+    fetchDecks()
+      .then(decks => setDueFlashcards(decks.reduce((sum, d) => sum + (d.due_count ?? 0), 0)))
+      .catch(() => setDueFlashcards(0));
+  }, [user]);
 
   // ── Casos gratuitos (API + fallback para mock) ──
   const [apiFreeCases, setApiFreeCases] = useState<FreeCase[]>([]);
@@ -209,6 +222,71 @@ const MainPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [availableCases, baseFree.length, user?.id]);
 
+  // ── Preview popup state ──
+  const [previewCase, setPreviewCase] = useState<PreviewCase | null>(null);
+
+  // ── Plano de estudos (SPEC-013) ────────────────────────────────────────────
+  // `now` congelado no mount: sem isso todo render recalcularia streak e semana.
+  const now = useMemo(() => new Date(), []);
+  const plan = useStudyPlan({ profile, availableCases, freeCases: baseFree, now });
+  const weeklyStats = plan?.weekly ?? null;
+  // Resumo por IA (§6.9): com `WEEKLY_SUMMARY_ENABLED = false` o hook não busca
+  // nada e devolve null — o card não renderiza e nenhum token é gasto.
+  const weeklySummary = useWeeklySummary(!!user);
+  const weakSpecialty = weeklySummary?.weakSpecialties[0]?.specialty ?? null;
+  const [recommendedSimulado, setRecommendedSimulado] = useState<Simulado | null>(null);
+  const [recommendationResolved, setRecommendationResolved] = useState(false);
+  const quotaExhausted = !!(quota && quota.regular_available <= 0);
+
+  useEffect(() => {
+    if (!weakSpecialty) {
+      setRecommendedSimulado(null);
+      setRecommendationResolved(false);
+      return;
+    }
+
+    let alive = true;
+    setRecommendationResolved(false);
+
+    fetchRecommendedSimulados(weakSpecialty)
+      .then(data => {
+        if (alive) setRecommendedSimulado(data.items[0] ?? null);
+      })
+      .catch(() => {
+        if (alive) setRecommendedSimulado(null);
+      })
+      .finally(() => {
+        if (alive) setRecommendationResolved(true);
+      });
+
+    return () => {
+      alive = false;
+    };
+  }, [weakSpecialty]);
+
+  const handleTrainWeakSpecialty = () => {
+    if (!weakSpecialty) return;
+
+    if (recommendedSimulado) {
+      navigate(`/simulados/${recommendedSimulado.id}/run`);
+      return;
+    }
+
+    const params = new URLSearchParams({ specialty: weakSpecialty, intent: 'create' });
+    navigate(`/simulados?${params.toString()}`);
+  };
+
+  /** A recomendação abre o mesmo popup de preview dos casos do carrossel. */
+  const handleSelectRecommendation = (reco: Recommendation) => {
+    if (reco.caseKind === 'class') {
+      const found = availableCases.find(c => c.id === reco.caseId);
+      if (found) setPreviewCase({ kind: 'class', ...found });
+      return;
+    }
+    const found = baseFree.find(c => c.id === reco.caseId);
+    if (found) setPreviewCase({ kind: 'free', ...found });
+  };
+
   const handleStartFreeCase = (freeCase: FreeCase) => {
     if (quota && quota.regular_available <= 0) return;
     navigate('/student-chat', {
@@ -225,9 +303,6 @@ const MainPage: React.FC = () => {
     });
   };
 
-  // ── Preview popup state ──
-  const [previewCase, setPreviewCase] = useState<PreviewCase | null>(null);
-
   const handleConfirmStart = () => {
     if (!previewCase) return;
     if (previewCase.kind === 'class') handleStartCase(previewCase);
@@ -238,27 +313,13 @@ const MainPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#f7f6fa] text-[#20202a] w-full">
-      {/* ── Aurora nos cantos ── */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0"
-        style={{
-          background: [
-            'radial-gradient(ellipse 65% 55% at 0% 0%, rgba(138,91,255,0.20) 0%, transparent 70%)',
-            'radial-gradient(ellipse 55% 50% at 100% 0%, rgba(99,179,237,0.16) 0%, transparent 70%)',
-            'radial-gradient(ellipse 45% 40% at 100% 100%, rgba(122,85,255,0.13) 0%, transparent 70%)',
-          ].join(', '),
-        }}
-      />
-      {/* ── Grid de pontos ── */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0"
-        style={{
-          backgroundImage: 'radial-gradient(circle, rgba(122,85,255,0.18) 1px, transparent 1px)',
-          backgroundSize: '28px 28px',
-        }}
-      />
+      {/* ── Aurora nos cantos + grid de pontos ──
+          Definidos em `index.css` (`.home-aurora` / `.home-dots`) e não inline:
+          as opacidades foram calibradas para o fundo lilás claro e, sobre o
+          fundo escuro, o mesmo valor vira borrão. O tema escuro reescreve as
+          duas classes com versões bem mais contidas. */}
+      <div aria-hidden="true" className="home-aurora pointer-events-none fixed inset-0 z-0" />
+      <div aria-hidden="true" className="home-dots pointer-events-none fixed inset-0 z-0" />
       <div className="lg:grid lg:grid-cols-[80px_1fr] min-h-screen w-full relative z-10">
 
         {/* Menu lateral */}
@@ -334,7 +395,9 @@ const MainPage: React.FC = () => {
                       />
                     </p>
                     <p className="text-[12px] text-[#9a9aab] mt-0.5">
-                      {weeklyStats ? t('home.week_summary') : t('home.ready_prompt')}
+                      {plan && plan.goal.done > 0
+                        ? t('home.plan_progress', { pct: plan.goal.pct })
+                        : t('home.ready_prompt')}
                     </p>
                   </div>
                   <button
@@ -360,8 +423,20 @@ const MainPage: React.FC = () => {
                     </div>
                     <div className="flex flex-col items-center justify-center gap-1 py-4 px-3">
                       <div className="flex items-center gap-1.5 text-amber-400 mb-1"><Star size={14} /></div>
-                      <p className="text-[26px] font-extrabold text-[#20202a] leading-none">
+                      <p className="text-[26px] font-extrabold text-[#20202a] leading-none flex items-center gap-1.5">
                         {weeklyStats.avgScore != null ? weeklyStats.avgScore : '—'}
+                        {/* Tendência só aparece com nota nas duas janelas; 0 é
+                            valor válido e usa o ícone neutro (P2). */}
+                        {plan?.trend != null && (
+                          <span
+                            className="inline-flex items-center gap-0.5 text-[12px] font-bold"
+                            style={{ color: plan.trend > 0 ? 'var(--tone-green)' : plan.trend < 0 ? 'var(--tone-pink)' : 'var(--text-muted)' }}
+                            aria-label={t('home.trend_aria', { delta: plan.trend })}
+                          >
+                            {plan.trend > 0 ? <TrendingUp size={13} /> : plan.trend < 0 ? <TrendingDown size={13} /> : <Minus size={13} />}
+                            {Math.abs(plan.trend)}
+                          </span>
+                        )}
                       </p>
                       <p className="text-[11px] text-[#9a9aab] font-medium text-center">{t('home.stat_avg_score')}</p>
                     </div>
@@ -384,7 +459,52 @@ const MainPage: React.FC = () => {
               </div>
             )}
 
-            {/* Atalhos de produtividade */}
+            {/* ── RESUMO DA SEMANA (SPEC-013 §6.9) ──
+                Faixa de largura cheia entre o hero e o grid: é o único bloco de
+                texto corrido da home e na coluna lateral ficava estreito demais.
+                Sem resumo o componente devolve `null` — o `gap-10` do container
+                não abre buraco, porque nada é renderizado. */}
+            <SummaryCard
+              summary={weeklySummary?.summary ?? null}
+              weakSpecialty={weakSpecialty}
+              trainingMode={
+                recommendationResolved
+                  ? (recommendedSimulado ? 'recommended' : 'create')
+                  : null
+              }
+              onTrain={weakSpecialty ? handleTrainWeakSpecialty : undefined}
+            />
+
+            {/* ── PLANO DE ESTUDOS (SPEC-013) ──
+                O slot do bloco "Retomar" fica logo aqui, acima do grid, quando a
+                SPEC-014 sair — nada renderiza no lugar dele até lá. */}
+            {plan && (
+              <div className="grid grid-cols-1 min-[820px]:grid-cols-[1.65fr_1fr] gap-[18px] items-start">
+                <div className="flex flex-col gap-[18px]">
+                  <RecommendationsCard
+                    items={plan.recommendations}
+                    disabled={quotaExhausted}
+                    onSelect={handleSelectRecommendation}
+                    onExplore={() => navigate('/cases')}
+                  />
+                  {/* Histórico de chats — mora dentro da coluna do "Recomendado",
+                      por isso o carrossel precisa caber em largura reduzida. */}
+                  <div className="min-w-0">
+                    <ChatHistoryCarousel />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-[18px]">
+                  <MasteryCard rows={plan.mastery} />
+                  {/* Perfil SOAP: só aparece com ≥3 tentativas avaliadas depois da
+                      migration do `breakdown` — `plan.soap` vem vazio antes disso. */}
+                  <SoapCard rows={plan.soap} attempts={profile?.soap_profile?.attempts ?? 0} />
+                  {!plan.isEmpty && <StreakCard streak={plan.streak} now={now} />}
+                  <WeeklyGoalCard goal={plan.goal} />
+                  <PendingCard dueFlashcards={dueFlashcards} onFlashcards={() => navigate('/flashcards')} />
+                </div>
+              </div>
+            )}
+
             <section className="w-full flex flex-col gap-3">
               <div className="flex items-center justify-between gap-2">
                 <div>
@@ -392,11 +512,11 @@ const MainPage: React.FC = () => {
                     PRÓXIMO PASSO
                   </p>
                   <p className="text-sm text-[#6b6885] mt-1">
-                    Escolha o caminho mais útil para continuar hoje.
+                    {tUi('clinical_tools.quick_hint')}
                   </p>
                 </div>
                 <span className="hidden sm:inline-flex items-center rounded-full bg-[#f3f1ff] px-3 py-1 text-[10px] font-semibold text-[#7a55ff]">
-                  Acesso rápido
+                  {tUi('clinical_tools.quick_access')}
                 </span>
               </div>
               <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
@@ -421,9 +541,6 @@ const MainPage: React.FC = () => {
             </section>
 
 
-            {/* Histórico */}
-            <ChatHistoryCarousel />
-
             {/* ── CASOS DE HOJE ── */}
             <section className="w-full flex flex-col gap-4">
               {/* Header row */}
@@ -437,10 +554,11 @@ const MainPage: React.FC = () => {
                   </span>
                   {/* Cota diária */}
                   {quota && (
-                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${quota.regular_available === 0
+                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
+                      quota.regular_available === 0
                         ? 'bg-rose-50 text-rose-500 border border-rose-200'
                         : 'bg-emerald-50 text-emerald-600 border border-emerald-200'
-                      }`}>
+                    }`}>
                       {t('home.quota_used', { used: quota.regular_used, limit: quota.regular_limit })}
                     </span>
                   )}
@@ -497,69 +615,66 @@ const MainPage: React.FC = () => {
                   )}
                   <div className="overflow-hidden" ref={emblaRef}>
                     <div className="flex gap-3.5">
-                      {dailyCases.map(caseItem => {
-                        const isClass = caseItem.kind === 'class';
-                        const diffLabel = isClass ? caseItem.difficulty : caseItem.level;
-                        const specialty = isClass ? caseItem.specialty : caseItem.area;
-                        const gradient = difficultyGradient(isClass ? caseItem.difficulty : caseItem.difficulty);
-                        const handleClick = () => setPreviewCase(caseItem);
-                        return (
-                          <div
-                            key={caseItem.id}
-                            className="flex-[0_0_230px] rounded-2xl overflow-hidden bg-white hover:-translate-y-0.5 transition-all duration-200 cursor-pointer select-none flex flex-col border border-[#f0edf8]"
-                            onClick={handleClick}
-                          >
-                            <div className={`relative bg-gradient-to-br ${gradient} px-4 pt-4 pb-4 text-white flex flex-col justify-between min-h-[136px]`}>
-                              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(255,255,255,.18),transparent_65%)] pointer-events-none rounded-t-2xl" />
-                              <div className="relative z-10">
-                                <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-black/15 rounded-full px-2 py-0.5 mb-2 tracking-wide">
-                                  {isClass
-                                    ? <><GraduationCap size={10} /> {t('home.badge_teacher')}</>
-                                    : <><Sparkles size={10} /> {t('home.badge_free')}</>}
-                                </span>
-                                <p className="text-[14px] font-bold leading-snug line-clamp-2">{caseItem.title}</p>
-                              </div>
-                              <div className="relative z-10 flex items-center gap-1.5 mt-3">
-                                <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-black/15 rounded-full px-2 py-0.5"><Target size={10} /> {diffLabel}</span>
-                                {specialty && (
-                                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-black/15 rounded-full px-2 py-0.5 truncate max-w-[90px]"><Building2 size={10} /> {specialtyLabel(specialty)}</span>
-                                )}
-                              </div>
+                    {dailyCases.map(caseItem => {
+                      const isClass = caseItem.kind === 'class';
+                      const diffLabel = isClass ? caseItem.difficulty : caseItem.level;
+                      const specialty = isClass ? caseItem.specialty : caseItem.area;
+                      const gradient = difficultyGradient(isClass ? caseItem.difficulty : caseItem.difficulty);
+                      const handleClick = () => setPreviewCase(caseItem);
+                      return (
+                        <div
+                          key={caseItem.id}
+                          className="flex-[0_0_230px] rounded-2xl overflow-hidden bg-white hover:-translate-y-0.5 transition-all duration-200 cursor-pointer select-none flex flex-col border border-[#f0edf8]"
+                          onClick={handleClick}
+                        >
+                          <div className={`relative bg-gradient-to-br ${gradient} px-4 pt-4 pb-4 text-white flex flex-col justify-between min-h-[136px]`}>
+                            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(255,255,255,.18),transparent_65%)] pointer-events-none rounded-t-2xl" />
+                            <div className="relative z-10">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-black/15 rounded-full px-2 py-0.5 mb-2 tracking-wide">
+                                {isClass
+                                  ? <><GraduationCap size={10} /> {t('home.badge_teacher')}</>
+                                  : <><Sparkles size={10} /> {t('home.badge_free')}</>}
+                              </span>
+                              <p className="text-[14px] font-bold leading-snug line-clamp-2">{caseItem.title}</p>
                             </div>
-                            <div className="px-3 py-2.5 bg-white">
-                              <button
-                                type="button"
-                                onClick={e => { e.stopPropagation(); handleClick(); }}
-                                disabled={!!(quota && quota.regular_available <= 0)}
-                                className="inline-flex items-center justify-center w-full rounded-xl text-xs font-semibold py-2 transition-all bg-[#7a55ff] hover:bg-[#6040e0] active:scale-[.97] text-white shadow-[0_2px_8px_rgba(122,85,255,.30)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#7a55ff]"
-                              >
-                                {quota && quota.regular_available <= 0 ? t('home.limit_reached') : t('home.see_case')}
-                              </button>
+                            <div className="relative z-10 flex items-center gap-1.5 mt-3">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-black/15 rounded-full px-2 py-0.5"><Target size={10} /> {diffLabel}</span>
+                              {specialty && (
+                                <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-black/15 rounded-full px-2 py-0.5 truncate max-w-[90px]"><Building2 size={10} /> {specialtyLabel(specialty)}</span>
+                              )}
                             </div>
                           </div>
-                        );
-                      })}
-                      {/* CTA card */}
-                      <div
-                        className="flex-[0_0_160px] rounded-2xl border border-dashed border-[#d6cffa] bg-[#faf9ff] flex flex-col items-center justify-center gap-2.5 px-4 py-6 cursor-pointer hover:border-[#7a55ff] hover:bg-[#f3f1ff] transition-colors"
-                        onClick={() => navigate('/cases')}
-                        role="button" tabIndex={0}
-                        onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && navigate('/cases')}
-                      >
-                        <span className="text-[26px]">🩺</span>
-                        <p className="text-[11px] font-bold text-[#7a55ff] text-center leading-snug">{t('home.full_library')}</p>
-                        <ArrowRight size={13} className="text-[#b0aac8]" />
-                      </div>
+                          <div className="px-3 py-2.5 bg-white">
+                            <button
+                              type="button"
+                              onClick={e => { e.stopPropagation(); handleClick(); }}
+                              disabled={!!(quota && quota.regular_available <= 0)}
+                              className="inline-flex items-center justify-center w-full rounded-xl text-xs font-semibold py-2 transition-all bg-[#7a55ff] hover:bg-[#6040e0] active:scale-[.97] text-white shadow-[0_2px_8px_rgba(122,85,255,.30)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#7a55ff]"
+                            >
+                              {quota && quota.regular_available <= 0 ? t('home.limit_reached') : t('home.see_case')}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {/* CTA card */}
+                    <div
+                      className="flex-[0_0_160px] rounded-2xl border border-dashed border-[#d6cffa] bg-[#faf9ff] flex flex-col items-center justify-center gap-2.5 px-4 py-6 cursor-pointer hover:border-[#7a55ff] hover:bg-[#f3f1ff] transition-colors"
+                      onClick={() => navigate('/cases')}
+                      role="button" tabIndex={0}
+                      onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && navigate('/cases')}
+                    >
+                      <span className="text-[26px]">🩺</span>
+                      <p className="text-[11px] font-bold text-[#7a55ff] text-center leading-snug">{t('home.full_library')}</p>
+                      <ArrowRight size={13} className="text-[#b0aac8]" />
                     </div>
                   </div>
+                </div>
                 </div>
               )}
             </section>
 
-            {/* Módulos de Exame Físico */}
             <TrainingModules />
-
-            {/* Dicas Clínicas */}
             <TipsCarousel />
 
             {/* Footer */}

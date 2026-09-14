@@ -69,7 +69,6 @@
     "symptoms": "Associated symptoms",
     "symptoms_placeholder": "e.g.: Cold sweat, nausea, radiating to left arm",
     "exams": "Complementary exams",
-    "exams_placeholder": "e.g.: ECG, troponin, echocardiogram",
     "difficulty": "Difficulty",
     "specifics": "Specifics",
     "specifics_placeholder": "e.g.: ASA allergy, pacemaker use",
@@ -123,7 +122,9 @@
     "saved_success": "Case \"{{title}}\" saved successfully!",
     "updated_success": "Case \"{{title}}\" updated successfully!",
     "err_save": "Error saving case.",
-    "err_update": "Error updating case."
+    "err_update": "Error updating case.",
+    "err_exams": "Case saved, but error attaching the complementary exams.",
+    "physical_exam": "Physical examination"
   },
   "flashcards": {
     "my_decks": "My Decks",

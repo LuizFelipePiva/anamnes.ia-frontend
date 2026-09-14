@@ -17,11 +17,12 @@
     "minigame": "Minigame",
     "settings": "Settings",
     "trilhas": "Learning Paths",
-    "questoes": "Questions Bank",
+    "questoes": "Question Bank",
     "puericultura": "Childcare",
     "preNatal": "Prenatal Care",
     "logout": "Log out",
-    "profile": "Profile"
+    "profile": "Profile",
+    "treinamento": "Training"
   },
   "questions_hub": {
     "eyebrow": "STUDY",
@@ -52,8 +53,22 @@
     "save": "Save visit",
     "cancel": "Cancel",
     "saved": "Visit saved locally",
-    "puericultura": { "title": "Childcare", "subtitle": "Child health and development follow-up", "heading": "New child follow-up", "description": "Record essential information to follow the child's growth, development, and health.", "step_one": "Complete the child's identification.", "step_two": "Add the visit date and notes." },
-    "preNatal": { "title": "Prenatal Care", "subtitle": "Maternal and fetal health follow-up", "heading": "New prenatal follow-up", "description": "Organize the pregnant patient's information throughout prenatal care.", "step_one": "Complete the pregnant patient's identification.", "step_two": "Add the visit date and notes." }
+    "puericultura": {
+      "title": "Childcare",
+      "subtitle": "Child health and development follow-up",
+      "heading": "New child follow-up",
+      "description": "Record essential information to follow the child's growth, development, and health.",
+      "step_first": "Complete the child's identification.",
+      "step_second": "Add the visit date and notes."
+    },
+    "preNatal": {
+      "title": "Prenatal Care",
+      "subtitle": "Maternal and fetal health follow-up",
+      "heading": "New prenatal follow-up",
+      "description": "Organize the pregnant patient's information throughout prenatal care.",
+      "step_first": "Complete the pregnant patient's identification.",
+      "step_second": "Add the visit date and notes."
+    }
   },
   "home": {
     "tagline": "Simulate · Practice · Evolve",
@@ -63,7 +78,6 @@
     "greeting_evening": "Good evening",
     "greeting_line": "{{greeting}}, <1>{{name}}</1>! 👋",
     "student_fallback": "student",
-    "week_summary": "Summary of the last 7 days",
     "ready_prompt": "Ready for another case today?",
     "ready_cta": "Ready to train?",
     "stat_started": "cases started",
@@ -87,7 +101,66 @@
     "initial_listening": "Initial listening",
     "estimated_time": "Estimated time",
     "cancel": "Cancel",
-    "start_case": "Start case"
+    "start_case": "Start case",
+    "plan_progress": "Your plan for this week is {{pct}}% complete",
+    "trend_aria": "Change of {{delta}} points compared with last week",
+    "reco": {
+      "title": "RECOMMENDED FOR YOU",
+      "empty": "Complete your first case to get recommendations",
+      "empty_cta": "Browse cases",
+      "cta": "Start",
+      "weak_label": "Weak spot detected",
+      "weak_one": "Average score {{score}} across {{count}} attempt",
+      "weak_other": "Average score {{score}} across {{count}} attempts",
+      "stale_label": "Out of practice",
+      "stale_one": "{{count}} day without practice",
+      "stale_other": "{{count}} days without practice",
+      "class_label": "From your class",
+      "class": "Next case released by your teacher",
+      "streak_label": "Keep the pace",
+      "streak_one": "{{count}} day in a row — don't stop today",
+      "streak_other": "{{count}} days in a row — don't stop today"
+    },
+    "mastery": {
+      "title": "MASTERY BY SPECIALTY",
+      "aria": "{{specialty}}: average score {{score}} out of 100"
+    },
+    "soap": {
+      "title": "SOAP PROFILE",
+      "dim": {
+        "subjetivo": "Subjective",
+        "objetivo": "Objective",
+        "avaliacao": "Assessment",
+        "plano": "Plan"
+      },
+      "aria": "{{dimension}}: average score {{score}} out of 100",
+      "footer_one": "Average of {{count}} graded attempt",
+      "footer_other": "Average of the last {{count}} graded attempts"
+    },
+    "summary": {
+      "title": "YOUR WEEK",
+      "train_specialty": "Practice {{specialty}}",
+      "create_training": "Create {{specialty}} practice"
+    },
+    "streak": {
+      "title": "STREAK",
+      "day_done": "{{day}}: practiced",
+      "day_empty": "{{day}}: no practice",
+      "footer_one": "{{count}} day in a row · your best is {{best}}",
+      "footer_other": "{{count}} days in a row · your best is {{best}}"
+    },
+    "goal": {
+      "title": "WEEKLY GOAL",
+      "progress_one": "{{count}} of {{goal}} case completed",
+      "progress_other": "{{count}} of {{goal}} cases completed",
+      "aria": "Weekly goal: {{pct}}% complete"
+    },
+    "pending": {
+      "title": "PENDING",
+      "flashcards": "Flashcards to review",
+      "flashcards_meta_one": "{{count}} card waiting for review",
+      "flashcards_meta_other": "{{count}} cards waiting for review"
+    }
   },
   "tips": {
     "title": "CLINICAL TIPS",
@@ -117,7 +190,11 @@
     "plan_ph": "Treatment plan...",
     "fill_all": "Fill in all the fields!",
     "sending": "Sending...",
-    "send": "Send"
+    "send": "Send",
+    "physical_exam": "Perform physical examination",
+    "complementary_exam": "Request additional tests",
+    "add_cid": "Add ICD-10 code",
+    "add_medicine": "Add prescription"
   },
   "actions": {
     "prev": "Previous",
@@ -150,5 +227,50 @@
   },
   "errors": {
     "session_expired": "Your session has expired. Please log in again."
+  },
+  "clinical_tools": {
+    "quick_hint": "Choose how to continue studying today.",
+    "quick_access": "Quick access",
+    "exam_mode": "Exam mode",
+    "exam_warning": "During the simulation, stay on this page. Switching tabs or leaving the window ends the attempt and returns you to the home page.",
+    "findings_added": "The findings have been added to the O section of SOAP",
+    "no_pathology_findings": "No specific findings for this condition in this category.",
+    "codes_available": "codes available",
+    "expand_all": "Expand all",
+    "no_icd": "No ICD-10 code found for \"",
+    "additional_tests": "Additional tests",
+    "select_case_tests": "Select the tests that can be requested for this case.",
+    "pathology_suggestions": "Suggestions for this condition",
+    "toggle_suggestion": "Click to add or remove a suggestion.",
+    "common_options": "common options",
+    "back_categories": "Back to categories",
+    "select_student_tests": "Select the tests available to the student.",
+    "no_tests": "No additional tests selected.",
+    "tests_available": "These tests will be available to request during the case.",
+    "define_findings": "Define the findings available at each examination step.",
+    "select_area": "Select an area to continue",
+    "back_areas": "Back to areas",
+    "special_exams": "Special examinations",
+    "select_assessment": "Select the assessment step.",
+    "back_assessments": "Back to assessments",
+    "describe_finding": "Describe the expected finding for this case.",
+    "expected_finding": "Expected finding or result",
+    "case_findings": "These findings will be linked to the case and shown during the examination.",
+    "explore_findings": "Select to explore findings",
+    "back_systems": "Back to systems",
+    "select_maneuver": "Select the maneuver or region to examine",
+    "back_maneuvers": "Back to maneuvers",
+    "select_findings": "Review the findings and select those present in your patient.",
+    "no_maneuver_findings": "No specific findings are available for this maneuver or region.",
+    "exam_step_hint": "Click an option to open the fields for that examination step.",
+    "findings_selected": "findings selected for SOAP"
+  },
+  "prescription": {
+    "title": "Medication prescription",
+    "subtitle": "Enter the prescription to include in your plan.",
+    "label": "Prescription",
+    "placeholder": "Medication, dose, route, frequency and duration.",
+    "cancel": "Cancel",
+    "confirm": "Add to plan"
   }
 }

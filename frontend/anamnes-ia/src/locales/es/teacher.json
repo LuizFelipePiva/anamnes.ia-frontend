@@ -69,7 +69,6 @@
     "symptoms": "Síntomas asociados",
     "symptoms_placeholder": "Ej: Sudor frío, náuseas, irradiación al brazo izquierdo",
     "exams": "Exámenes complementarios",
-    "exams_placeholder": "Ej: ECG, troponina, ecocardiograma",
     "difficulty": "Dificultad",
     "specifics": "Particularidades",
     "specifics_placeholder": "Ej: Alergia al AAS, uso de marcapasos",
@@ -123,7 +122,9 @@
     "saved_success": "¡Caso \"{{title}}\" guardado con éxito!",
     "updated_success": "¡Caso \"{{title}}\" actualizado con éxito!",
     "err_save": "Error al guardar el caso.",
-    "err_update": "Error al actualizar el caso."
+    "err_update": "Error al actualizar el caso.",
+    "err_exams": "Caso guardado, pero error al adjuntar los exámenes complementarios.",
+    "physical_exam": "Examen físico"
   },
   "flashcards": {
     "my_decks": "Mis Mazos",

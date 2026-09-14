@@ -2,6 +2,17 @@
  * Constantes da aplicação centralizadas
  */
 
+// Plano de estudos (SPEC-013)
+/** Meta semanal de casos concluídos — fixa para todos os alunos (D1). */
+export const WEEKLY_GOAL = 5;
+/**
+ * Resumo semanal por IA (SPEC-013 §6.9).
+ * O backend tem a flag equivalente (`WEEKLY_SUMMARY_ENABLED` no env) e responde
+ * 404 desligado — desligar **aqui** é o que evita a requisição; desligar lá é o
+ * que evita o custo. Para tirar a feature do ar de vez, desligue nos dois.
+ */
+export const WEEKLY_SUMMARY_ENABLED = true;
+
 // Timeouts e Limites
 export const TIMEOUTS = {
   API_REQUEST: 30000, // 30 segundos

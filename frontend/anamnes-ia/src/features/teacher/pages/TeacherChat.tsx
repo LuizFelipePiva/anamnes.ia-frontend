@@ -1573,7 +1573,7 @@ const TeacherChatPage: React.FC = () => {
     <>
       <div className="h-screen bg-[#f7f6fa]" style={{ fontFamily: "'Inter', -apple-system, sans-serif" }}>
         {/* Aurora */}
-        <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0" style={{
+        <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 page-aurora" style={{
           background: [
             'radial-gradient(ellipse 65% 55% at 0% 0%, rgba(138,91,255,0.20) 0%, transparent 70%)',
             'radial-gradient(ellipse 55% 50% at 100% 0%, rgba(99,179,237,0.16) 0%, transparent 70%)',
@@ -1581,7 +1581,7 @@ const TeacherChatPage: React.FC = () => {
           ].join(', '),
         }} />
         {/* Dot grid */}
-        <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0" style={{
+        <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 page-dots" style={{
           backgroundImage: 'radial-gradient(circle, rgba(122,85,255,0.18) 1px, transparent 1px)',
           backgroundSize: '28px 28px',
         }} />
@@ -1593,7 +1593,7 @@ const TeacherChatPage: React.FC = () => {
         )}
 
         {/* SIDEBAR */}
-        <aside className={`w-56 flex-shrink-0 flex flex-col border-r border-white/[.06] overflow-hidden fixed inset-y-0 left-0 z-40 transition-transform duration-300 ease-in-out md:static md:translate-x-0 md:z-auto ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`} style={{ background: '#1a1730' }}>
+        <aside className={`w-56 flex-shrink-0 flex flex-col border-r border-white/[.06] overflow-hidden fixed inset-y-0 left-0 z-40 transition-transform duration-300 ease-in-out md:static md:translate-x-0 md:z-auto ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`} style={{ background: 'var(--brand-surface)' }}>
           <div className="px-5 py-5 border-b border-white/[.06]">
             <div className="flex items-center gap-2.5">
               <div className="w-7 h-7 rounded-lg bg-[#844AF5] flex items-center justify-center flex-shrink-0">

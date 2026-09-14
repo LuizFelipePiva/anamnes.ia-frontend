@@ -13,6 +13,12 @@ export interface Simulado {
   created_at: string;
 }
 
+/** Simulados acessíveis recomendados para uma especialidade fraca. */
+export interface SimuladoRecommendation {
+  specialty: string;
+  items: Simulado[];
+}
+
 /** Payload para criar um simulado. */
 export interface SimuladoCreate {
   title: string;

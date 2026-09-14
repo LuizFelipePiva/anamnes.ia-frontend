@@ -7,7 +7,7 @@ Chat do aluno com o paciente IA (OpenAI Assistant API v2). Importar via `@/featu
 - `services/studentService.ts` — chamadas ao backend de chat via `authFetch`.
 - `components/ChatGPT.tsx` — componente principal de chat.
 - `components/ChatHistoryCarousel.tsx` — histórico de conversas.
-- `pages/StudentChat.tsx`, `ConversationView.tsx` — páginas.
+- `pages/StudentChat.tsx`, `ConversationView.tsx` — páginas. `StudentChat` monta o `ExamViewer` (`@/features/case`, SPEC-014) no header quando há `resolvedAttempt.attemptId`; o componente se esconde sozinho se o caso não tiver exames anexados, então não há condição extra a manter aqui.
 - `utils/chatUtils.ts` — helpers de formatação de mensagens.
 - `index.ts` — barrel export.
 

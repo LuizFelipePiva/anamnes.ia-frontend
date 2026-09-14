@@ -1,7 +1,7 @@
 // src/types/teacher.ts
-// Tipos centralizados para o módulo de professor — alinhados com backend
+// Tipos centralizados para o mÃ³dulo de professor â€” alinhados com backend
 
-// ─── CLASS (Turma) ────────────────────────
+// â”€â”€â”€ CLASS (Turma) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export interface ClassInfo {
   id: string;
   teacher_id: string;
@@ -58,7 +58,7 @@ export interface ClassUpdate {
   goal?: number;
 }
 
-// ─── CASE (Caso Clínico) ─────────────────
+// â”€â”€â”€ CASE (Caso ClÃ­nico) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export type CaseVisibility = "turma" | "privado";
 
 export interface CaseInfo {
@@ -72,8 +72,25 @@ export interface CaseInfo {
   form_data: Record<string, unknown> | null;
   published: boolean;
   visibility: CaseVisibility;
+  available_until: string | null;
   created_at: string | null;
   updated_at: string | null;
+}
+
+/** VÃ­nculo caso â†” turma (prazo por turma). O caso em si permanece no painel. */
+export interface CaseAssignmentDetail {
+  id: string;
+  case_id: string;
+  class_id: string;
+  due_date: string | null;
+  classes?: { id: string; name: string; code: string };
+}
+
+export interface SoapWeights {
+  S: number;
+  O: number;
+  A: number;
+  P: number;
 }
 
 export interface CaseFormData {
@@ -82,7 +99,7 @@ export interface CaseFormData {
   sintomas: string;
   especificidades: string;
   exames: string;
-  exame_fisico: string;
+  exame_fisico?: string;
   historico_familiar: string;
   habitos: string;
   dificuldade: string;
@@ -92,6 +109,7 @@ export interface CaseFormData {
   persona_profissao: string;
   persona_emocional: string;
   persona_contexto: string;
+  soap_weights: SoapWeights;
 }
 
 export interface CaseCreate {
@@ -103,9 +121,11 @@ export interface CaseCreate {
   form_data?: Record<string, unknown>;
   published?: boolean;
   visibility?: CaseVisibility;
+  available_until?: string | null;
 }
 
 export interface CaseUpdate {
+  form_data?: Record<string, unknown>;
   title?: string;
   specialty?: string;
   difficulty?: string;
@@ -113,9 +133,10 @@ export interface CaseUpdate {
   patient_prompt?: string;
   published?: boolean;
   visibility?: CaseVisibility;
+  available_until?: string | null;
 }
 
-// ─── DASHBOARD ────────────────────────────
+// â”€â”€â”€ DASHBOARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export interface DashboardStats {
   total_classes: number;
   total_students: number;
@@ -142,6 +163,7 @@ export interface StudentStats {
   email: string;
   attempts: number;
   completed: number;
+  completed_by_class: Record<string, number>;
   average_score: number;
   last_activity: string | null;
 }
@@ -166,7 +188,7 @@ export interface StudentHistoryItem {
 
 export type StudentHistory = Record<string, StudentHistoryItem[]>;
 
-// ─── CASE ATTEMPTS (professor view) ──────
+// â”€â”€â”€ CASE ATTEMPTS (professor view) â”€â”€â”€â”€â”€â”€
 export interface CaseAttemptItem {
   id: string;
   student_id: string;
@@ -191,13 +213,13 @@ export interface ConversationMessage {
   timestamp: string | null;
 }
 
-// ─── WEEKLY STATS ─────────────────────────
+// â”€â”€â”€ WEEKLY STATS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export interface WeeklyStats {
   week: string;      // ex: "2026-W10"
   avg_score: number;
   attempts: number;
 }
 
-// ─── VIEW ─────────────────────────────────
-export type ViewType = 'reports' | 'classes' | 'students' | 'cases' | 'content' | 'free-cases';
+// â”€â”€â”€ VIEW â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+export type ViewType = 'reports' | 'classes' | 'students' | 'cases' | 'content' | 'free-cases' | 'flashcards';
 

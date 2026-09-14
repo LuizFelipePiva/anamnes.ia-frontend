@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   X, 
   ChevronRight, 
   AlertCircle,
   CheckCircle2,
+  ClipboardList,
 } from 'lucide-react';
 import type { Suggestions, ExameFisicoSistema } from '../../features/teacher/data/suggestionsData';
 
@@ -16,6 +18,11 @@ interface ExamModalProps {
   onFindingsSelected: (findings: string[]) => void;
   selectedItems: string[];
   customExameFisico?: string;
+  /**
+   * O modo de consulta é usado no chat do aluno. O construtor permite que o
+   * professor descreva os achados que ficarão disponíveis naquele caso.
+   */
+  mode?: 'consultation' | 'case-builder';
 }
 
 interface SubCategory {
@@ -75,14 +82,296 @@ const FALLBACK_SUBCATEGORIES: SubCategory[] = [
   { key: 'percussao', label: 'Percussão', icon: '🔨' },
 ];
 
+type CaseExamArea = {
+  key: string;
+  label: string;
+  icon: string;
+  assessments: SubCategory[];
+};
+
+const STANDARD_ASSESSMENTS: SubCategory[] = [
+  { key: 'ectoscopia', label: 'Ectoscopia', icon: '👁️' },
+  { key: 'ausculta', label: 'Ausculta', icon: '🩺' },
+  { key: 'percussao', label: 'Percussão', icon: '🔨' },
+  { key: 'palpacao', label: 'Palpação', icon: '🤲' },
+  { key: 'exames_especiais', label: 'Exames especiais', icon: '✨' },
+];
+
+const EXTREMITIES_ASSESSMENTS = STANDARD_ASSESSMENTS.filter(
+  assessment => assessment.key !== 'ausculta' && assessment.key !== 'percussao',
+);
+
+const CASE_EXAM_AREAS: CaseExamArea[] = [
+  { key: 'torax_anterior', label: 'Tórax anterior', icon: '🫁', assessments: STANDARD_ASSESSMENTS },
+  { key: 'torax_posterior', label: 'Tórax posterior', icon: '🔙', assessments: STANDARD_ASSESSMENTS },
+  { key: 'abdominal', label: 'Abdominal', icon: '🫄', assessments: STANDARD_ASSESSMENTS },
+  { key: 'extremidades', label: 'Extremidades', icon: '🦵', assessments: EXTREMITIES_ASSESSMENTS },
+  { key: 'exames_especiais', label: 'Exames especiais', icon: '🧪', assessments: STANDARD_ASSESSMENTS },
+];
+
+const SPECIAL_EXAM_AREAS: CaseExamArea[] = [
+  { key: 'membros_superiores', label: 'Membros superiores', icon: '💪', assessments: STANDARD_ASSESSMENTS },
+  { key: 'membros_inferiores', label: 'Membros inferiores', icon: '🦵', assessments: STANDARD_ASSESSMENTS },
+];
+
+interface CaseBuilderExamModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onFindingsSelected: (findings: string[]) => void;
+  initialSelectedItems: string[];
+}
+
+/**
+ * Fluxo usado na criação de casos. Ele mantém a aparência da modal do chat,
+ * mas troca o ponto de vista: o professor registra o que o aluno encontrará.
+ */
+const CaseBuilderExamModal: React.FC<CaseBuilderExamModalProps> = ({
+  isOpen,
+  onClose,
+  onFindingsSelected,
+  initialSelectedItems,
+}) => {
+  const { t: tUi } = useTranslation('common');
+  const [selectedAreaKey, setSelectedAreaKey] = useState<string | null>(null);
+  const [selectedSpecialAreaKey, setSelectedSpecialAreaKey] = useState<string | null>(null);
+  const [selectedAssessmentKey, setSelectedAssessmentKey] = useState<string | null>(null);
+  const [finding, setFinding] = useState('');
+  const [selectedItems, setSelectedItems] = useState<string[]>(initialSelectedItems);
+
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedAreaKey(null);
+      setSelectedSpecialAreaKey(null);
+      setSelectedAssessmentKey(null);
+      setFinding('');
+      setSelectedItems(initialSelectedItems);
+    }
+  }, [isOpen, initialSelectedItems]);
+
+  if (!isOpen) return null;
+
+  const selectedArea = CASE_EXAM_AREAS.find(area => area.key === selectedAreaKey) ?? null;
+  const selectedSpecialArea = SPECIAL_EXAM_AREAS.find(area => area.key === selectedSpecialAreaKey) ?? null;
+  const activeArea = selectedSpecialArea ?? selectedArea;
+  const selectedAssessment = activeArea?.assessments.find(
+    assessment => assessment.key === selectedAssessmentKey,
+  ) ?? null;
+
+  const returnToPreviousStep = () => {
+    if (selectedAssessmentKey) {
+      setSelectedAssessmentKey(null);
+      setFinding('');
+      return;
+    }
+    if (selectedSpecialAreaKey) {
+      setSelectedSpecialAreaKey(null);
+      return;
+    }
+    setSelectedAreaKey(null);
+  };
+
+  const addFinding = () => {
+    if (!activeArea || !selectedAssessment || !finding.trim()) return;
+
+    const item = `${activeArea.label} — ${selectedAssessment.label}: ${finding.trim()}`;
+    setSelectedItems(current => current.includes(item) ? current : [...current, item]);
+    setFinding('');
+    setSelectedAssessmentKey(null);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+
+      <div className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#0f1115] shadow-2xl">
+        <div className="flex items-start justify-between gap-4 border-b border-white/5 p-8">
+          <div>
+            <h2 className="text-2xl font-bold text-white">Exame físico</h2>
+            <p className="mt-1 text-sm text-gray-400">
+              {tUi('clinical_tools.define_findings')}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-white/5 text-gray-400 transition-all hover:bg-red-500/20 hover:text-red-400"
+            aria-label="Fechar exame físico"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="grid flex-1 gap-6 overflow-y-auto p-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+          <div>
+            {!selectedArea ? (
+              <>
+                <p className="mb-4 text-sm font-medium text-gray-300">{tUi('clinical_tools.select_area')}</p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {CASE_EXAM_AREAS.map(area => (
+                    <button
+                      key={area.key}
+                      type="button"
+                      onClick={() => setSelectedAreaKey(area.key)}
+                      className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 text-left transition-all hover:border-violet-500/40 hover:bg-white/10"
+                    >
+                      <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-violet-500/20 bg-violet-500/10 text-2xl">
+                        {area.icon}
+                      </span>
+                      <span className="flex-1">
+                        <span className="block text-sm font-bold text-gray-100 group-hover:text-white">{area.label}</span>
+                        <span className="mt-1 block text-xs text-gray-500">
+                          {area.key === 'extremidades'
+                            ? 'Ectoscopia, palpação e exames especiais'
+                            : area.key === 'exames_especiais'
+                              ? 'Membros superiores e inferiores'
+                              : 'Cinco etapas de avaliação'}
+                        </span>
+                      </span>
+                      <ChevronRight className="h-5 w-5 text-gray-600 transition-colors group-hover:text-violet-400" />
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : selectedArea.key === 'exames_especiais' && !selectedSpecialArea ? (
+              <>
+                <button type="button" onClick={returnToPreviousStep} className="mb-5 flex items-center gap-2 text-sm text-gray-400 transition hover:text-white">
+                  <ChevronRight className="h-4 w-4 rotate-180" /> {tUi('clinical_tools.back_areas')}
+                </button>
+                <h3 className="text-xl font-bold text-white">{tUi('clinical_tools.special_exams')}</h3>
+                <p className="mt-1 text-sm text-gray-400">Escolha o segmento a ser avaliado.</p>
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  {SPECIAL_EXAM_AREAS.map(area => (
+                    <button
+                      key={area.key}
+                      type="button"
+                      onClick={() => setSelectedSpecialAreaKey(area.key)}
+                      className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 text-left transition-all hover:border-violet-500/40 hover:bg-white/10"
+                    >
+                      <span className="text-3xl">{area.icon}</span>
+                      <span className="flex-1 text-sm font-bold text-gray-100">{area.label}</span>
+                      <ChevronRight className="h-5 w-5 text-gray-600 transition-colors group-hover:text-violet-400" />
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : !selectedAssessment ? (
+              <>
+                <button type="button" onClick={returnToPreviousStep} className="mb-5 flex items-center gap-2 text-sm text-gray-400 transition hover:text-white">
+                  <ChevronRight className="h-4 w-4 rotate-180" /> Voltar
+                </button>
+                <div className="mb-6 flex items-center gap-3">
+                  <span className="text-3xl">{activeArea?.icon}</span>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">{activeArea?.label}</h3>
+                    <p className="text-sm text-gray-400">{tUi('clinical_tools.select_assessment')}</p>
+                  </div>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {activeArea?.assessments.map(assessment => (
+                    <button
+                      key={assessment.key}
+                      type="button"
+                      onClick={() => setSelectedAssessmentKey(assessment.key)}
+                      className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 text-left transition-all hover:border-violet-500/40 hover:bg-white/10"
+                    >
+                      <span className="text-2xl">{assessment.icon}</span>
+                      <span className="flex-1 text-sm font-bold text-gray-100">{assessment.label}</span>
+                      <ChevronRight className="h-5 w-5 text-gray-600 transition-colors group-hover:text-violet-400" />
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <button type="button" onClick={returnToPreviousStep} className="mb-5 flex items-center gap-2 text-sm text-gray-400 transition hover:text-white">
+                  <ChevronRight className="h-4 w-4 rotate-180" /> {tUi('clinical_tools.back_assessments')}
+                </button>
+                <div className="rounded-2xl border border-violet-500/20 bg-violet-500/10 p-5">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-violet-300">{activeArea?.label}</p>
+                  <h3 className="mt-1 text-xl font-bold text-white">{selectedAssessment.label}</h3>
+                  <p className="mt-2 text-sm text-gray-400">{tUi('clinical_tools.describe_finding')}</p>
+                </div>
+                <label className="mt-5 block text-sm font-medium text-gray-200" htmlFor="case-exam-finding">
+                  {tUi('clinical_tools.expected_finding')}
+                </label>
+                <textarea
+                  id="case-exam-finding"
+                  value={finding}
+                  onChange={event => setFinding(event.target.value)}
+                  rows={5}
+                  autoFocus
+                  placeholder="Ex.: murmúrio vesicular diminuído em base direita"
+                  className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-gray-100 outline-none placeholder:text-gray-600 focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/20"
+                />
+                <button
+                  type="button"
+                  onClick={addFinding}
+                  disabled={!finding.trim()}
+                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  <CheckCircle2 size={17} /> Adicionar avaliação
+                </button>
+              </>
+            )}
+          </div>
+
+          <aside className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <div className="flex items-center justify-between gap-3">
+              <h3 className="text-sm font-bold text-gray-100">Achados definidos</h3>
+              <span className="rounded-full bg-violet-500/15 px-2 py-0.5 text-xs font-bold text-violet-300">{selectedItems.length}</span>
+            </div>
+            {selectedItems.length ? (
+              <ul className="mt-4 space-y-2">
+                {selectedItems.map(item => (
+                  <li key={item} className="flex gap-2 rounded-xl bg-white/5 p-3 text-xs leading-relaxed text-gray-300">
+                    <span className="flex-1">{item}</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedItems(items => items.filter(selected => selected !== item))}
+                      className="h-5 w-5 flex-shrink-0 rounded text-gray-500 transition hover:bg-red-500/20 hover:text-red-300"
+                      aria-label={`Remover ${item}`}
+                    >
+                      <X size={14} />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-4 text-sm leading-relaxed text-gray-500">Nenhum achado foi definido ainda.</p>
+            )}
+          </aside>
+        </div>
+
+        <div className="flex items-center justify-between gap-4 border-t border-white/5 bg-white/[0.02] p-6">
+          <p className="text-xs text-gray-500">{tUi('clinical_tools.case_findings')}</p>
+          <div className="flex gap-3">
+            <button type="button" onClick={onClose} className="rounded-xl px-5 py-2.5 text-sm font-semibold text-gray-400 transition hover:text-white">
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={() => { onFindingsSelected(selectedItems); onClose(); }}
+              className="rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-violet-500"
+            >
+              Salvar exame físico
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ExamModal: React.FC<ExamModalProps> = ({ 
   isOpen, 
   onClose, 
   pathologyData, 
   onFindingsSelected,
   selectedItems: initialSelectedItems = [],
-  customExameFisico
+  customExameFisico,
+  mode = 'consultation',
 }) => {
+  const { t: tUi } = useTranslation('common');
   const [selectedSistema, setSelectedSistema] = useState<string | null>(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<string[]>(initialSelectedItems);
@@ -166,7 +455,7 @@ const ExamModal: React.FC<ExamModalProps> = ({
   const achadosPorSistema = useMemo(() => {
     const base = pathologyData?.exame_fisico ? JSON.parse(JSON.stringify(pathologyData.exame_fisico)) : {};
     if (customExameFisico && typeof customExameFisico === 'string' && customExameFisico.trim().length > 0) {
-      const items = customExameFisico.split(',').map(s => s.trim()).filter(Boolean);
+      const items = customExameFisico.split('\n').map(s => s.trim()).filter(Boolean);
       base['achados_caso'] = items.map((item: string) => ({
         item: item,
         normal: false,
@@ -227,6 +516,17 @@ const ExamModal: React.FC<ExamModalProps> = ({
     return getFindingsForSub(selectedSubCategory);
   }, [selectedSistema, selectedSubCategory, getFindingsForSub]);
 
+  if (mode === 'case-builder') {
+    return (
+      <CaseBuilderExamModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onFindingsSelected={onFindingsSelected}
+        initialSelectedItems={initialSelectedItems}
+      />
+    );
+  }
+
   if (!isOpen) return null;
 
   const currentSistema = sistemas.find(s => s.key === selectedSistema);
@@ -240,19 +540,30 @@ const ExamModal: React.FC<ExamModalProps> = ({
       
       <div className="relative w-full max-w-6xl bg-[#0f1115] border border-white/10 rounded-[2.5rem] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="p-8 border-b border-white/5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-bold text-white">Exame físico</h2>
-              <p className="text-gray-400 text-sm mt-1">Selecione a etapa que deseja registrar</p>
+        <div className="flex items-center justify-between p-6 border-b border-white/5 bg-white/2">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-violet-500/20 flex items-center justify-center text-violet-400 border border-violet-500/20">
+              <ClipboardList size={24} />
             </div>
-            <button 
-              onClick={onClose}
-              className="w-10 h-10 rounded-lg bg-white/5 hover:bg-red-500/20 hover:text-red-400 text-gray-400 flex items-center justify-center transition-all duration-200 flex-shrink-0"
-            >
-              <X size={20} />
-            </button>
+            <div>
+              <h3 className="text-xl font-bold text-white tracking-tight">Exame Físico Dirigido</h3>
+              <p className="text-sm text-gray-500">
+                {!selectedSistema
+                  ? 'Selecione os sistemas para realizar as manobras'
+                  : !selectedSubCategory
+                  ? `${currentSistema?.label} — Escolha a manobra/região`
+                  : `${currentSistema?.label} — ${subCategories.find(sc => sc.key === selectedSubCategory)?.label}`}
+              </p>
+            </div>
           </div>
+
+          <button
+            onClick={onClose}
+            className="w-10 h-10 rounded-xl bg-white/5 hover:bg-red-500/20 hover:text-red-400 text-gray-400 flex items-center justify-center transition-all duration-200"
+            aria-label="Fechar exame físico"
+          >
+            <X size={20} />
+          </button>
         </div>
 
         {/* Content */}
@@ -274,7 +585,7 @@ const ExamModal: React.FC<ExamModalProps> = ({
                       {s.label}
                     </h3>
                     <p className="text-sm text-gray-400 mt-0.5">
-                      Selecione para explorar os achados
+                      {tUi('clinical_tools.explore_findings')}
                     </p>
                   </div>
                   <div className="flex-shrink-0 flex items-center justify-center">
@@ -291,7 +602,7 @@ const ExamModal: React.FC<ExamModalProps> = ({
                 className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition mb-6"
               >
                 <ChevronRight className="w-4 h-4 rotate-180" />
-                Voltar para sistemas
+                {tUi('clinical_tools.back_systems')}
               </button>
 
               <div className="flex items-center gap-4 mb-8">
@@ -300,7 +611,7 @@ const ExamModal: React.FC<ExamModalProps> = ({
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-white">{currentSistema?.label}</h3>
-                  <p className="text-sm text-gray-400">Selecione a manobra ou região para examinar</p>
+                  <p className="text-sm text-gray-400">{tUi('clinical_tools.select_maneuver')}</p>
                 </div>
               </div>
 
@@ -374,7 +685,7 @@ const ExamModal: React.FC<ExamModalProps> = ({
                     className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition mb-6"
                   >
                     <ChevronRight className="w-4 h-4 rotate-180" />
-                    Voltar para manobras
+                    {tUi('clinical_tools.back_maneuvers')}
                   </button>
                   
                   <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-3xl mb-4 border border-white/5">
@@ -382,7 +693,7 @@ const ExamModal: React.FC<ExamModalProps> = ({
                   </div>
                   <h3 className="text-xl font-bold text-white mb-1">{currentSistema?.label}</h3>
                   <p className="text-sm text-violet-400 font-medium mb-2">{subCategories.find(sc => sc.key === selectedSubCategory)?.label}</p>
-                  <p className="text-sm text-gray-400">Verifique os achados clínicos e selecione aqueles presentes no exame do seu paciente.</p>
+                  <p className="text-sm text-gray-400">{tUi('clinical_tools.select_findings')}</p>
                 </div>
               </div>
               
@@ -425,7 +736,7 @@ const ExamModal: React.FC<ExamModalProps> = ({
                     <div className="p-12 text-center rounded-3xl border border-dashed border-white/5">
                       <AlertCircle className="mx-auto h-12 w-12 text-gray-600 mb-4" />
                       <h4 className="text-lg font-bold text-gray-400">Nenhum achado encontrado</h4>
-                      <p className="text-sm text-gray-500">Esta manobra/região não possui achados específicos para esta patologia.</p>
+                      <p className="text-sm text-gray-500">{tUi('clinical_tools.no_maneuver_findings')}</p>
                     </div>
                   )}
                 </div>
@@ -438,11 +749,11 @@ const ExamModal: React.FC<ExamModalProps> = ({
         <div className="p-6 border-t border-white/5 bg-white/2 flex items-center justify-between">
           {!selectedSistema ? (
             <p className="text-xs text-gray-400">
-              Ao clicar em uma opção, o sistema abre os campos específicos dessa etapa do exame físico.
+              {tUi('clinical_tools.exam_step_hint')}
             </p>
           ) : (
             <div className="flex items-center gap-2 text-sm text-gray-500">
-              <span className="text-violet-400 font-bold">{selectedItems.length}</span> achados selecionados para o SOAP
+              <span className="text-violet-400 font-bold">{selectedItems.length}</span> {tUi('clinical_tools.findings_selected')}
             </div>
           )}
           

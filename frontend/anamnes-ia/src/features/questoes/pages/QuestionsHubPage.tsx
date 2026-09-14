@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React from 'react';
 import { BookOpenText, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +7,7 @@ import { SimuladoConfigurator } from '@/features/simulados/components/SimuladoCo
 
 const QuestionsHubPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation('common');
   const sectionTitleClass =
     'mb-3 text-[1.35rem] sm:text-[1.45rem] font-black tracking-[-0.05em] text-[#1a1a22] leading-none';
 
@@ -33,10 +35,10 @@ const QuestionsHubPage: React.FC = () => {
                 </div>
                 <div className="min-w-0">
                   <p className="text-[1.05rem] sm:text-[1.1rem] font-black text-[#17181f] leading-none">
-                    Banco de Questões
+                    {t('questions_hub.title')}
                   </p>
                   <p className="mt-1 text-[0.9rem] text-[#667085]">
-                    Acesso rápido à questão única e ao configurador de simulados.
+                    {t('questions_hub.subtitle')}
                   </p>
                 </div>
               </div>
@@ -46,7 +48,7 @@ const QuestionsHubPage: React.FC = () => {
               
 
               <div className="mb-7">
-                <h2 className={sectionTitleClass}>Questão única</h2>
+                <h2 className={sectionTitleClass}>{t('questions_hub.single_title')}</h2>
 
                 <button
                   type="button"
@@ -59,15 +61,15 @@ const QuestionsHubPage: React.FC = () => {
                     </div>
 
                     <div className="flex-1">
-                      <div className="text-[1.05rem] font-bold text-[#1f212a]">Responder uma questão</div>
+                      <div className="text-[1.05rem] font-bold text-[#1f212a]">{t('questions_hub.single_action')}</div>
                       <div className="mt-1 text-[0.72rem] leading-4 text-[#596070]">
-                        Pratique com questões de múltipla escolha e confira sua resposta na hora.
+                        {t('questions_hub.single_description')}
                       </div>
                     </div>
                   </div>
 
                   <div className="mt-3 inline-flex items-center gap-1.5 text-[0.8rem] font-bold text-[#6f46b8] transition group-hover:translate-x-0.5">
-                    Começar questão
+                    {t('questions_hub.single_action')}
                     <ChevronRight className="h-4 w-4" />
                   </div>
                 </button>
@@ -75,6 +77,14 @@ const QuestionsHubPage: React.FC = () => {
             </section>
 
             <section className="w-full">
+              <p className="text-xs font-bold text-[#6f46b8]">{t('questions_hub.eyebrow')}</p>
+              <div className="flex items-center justify-between gap-4 mb-3">
+                <div><h2 className={sectionTitleClass}>{t('questions_hub.simulado_title')}</h2>
+                  <p className="text-sm text-[#667085]">{t('questions_hub.simulado_description')}</p></div>
+                <button type="button" onClick={() => navigate('/simulados')} className="text-sm font-bold text-[#6f46b8]">
+                  {t('questions_hub.simulado_action')}
+                </button>
+              </div>
               <div className="rounded-[1.6rem] border border-[#e6e1ee] bg-white shadow-[0_6px_20px_rgba(19,12,45,.04)]">
                 <div className="p-3 sm:p-4">
                   <div className="sl-page sl-page--embedded" style={{ backgroundColor: 'transparent' }}>

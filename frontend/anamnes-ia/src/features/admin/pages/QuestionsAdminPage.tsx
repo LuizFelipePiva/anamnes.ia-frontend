@@ -15,6 +15,7 @@ import { useToast } from '@/core/hooks/useToast';
 import { ToastContainer } from '@/shared/components/ui';
 import { SPECIALTIES, specialtyLabel } from '@/shared/utils/specialties';
 import './QuestionsAdminPage.css';
+import { serializeQuestionsExport } from '@/features/questoes/utils/questionExport';
 
 export const QuestionsAdminPage: React.FC = () => {
   const { t } = useTranslation('admin');
@@ -177,7 +178,7 @@ export const QuestionsAdminPage: React.FC = () => {
   };
 
   const handleExportJson = () => {
-    const blob = new Blob([JSON.stringify(questions, null, 2)], { type: 'application/json' });
+    const blob = new Blob([serializeQuestionsExport(questions)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;

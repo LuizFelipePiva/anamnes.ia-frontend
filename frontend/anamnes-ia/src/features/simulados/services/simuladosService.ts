@@ -6,6 +6,7 @@ import type {
   SimuladoCreate,
   SimuladoFilterOptions,
   SimuladoReport,
+  SimuladoRecommendation,
 } from '../types/simulado';
 
 const BASE = import.meta.env.VITE_API_URL ?? '';
@@ -37,6 +38,16 @@ export async function countAvailableQuestions(filters: Partial<SimuladoCreate>):
 export async function fetchSimulados(): Promise<Simulado[]> {
   const res = await authFetch(`${BASE}/simulados`);
   if (!res.ok) return parseError(res, 'Erro ao buscar simulados');
+  return res.json();
+}
+
+export async function fetchRecommendedSimulados(
+  specialty: string,
+  limit = 3,
+): Promise<SimuladoRecommendation> {
+  const params = new URLSearchParams({ specialty, limit: String(limit) });
+  const res = await authFetch(`${BASE}/simulados/recommended?${params.toString()}`);
+  if (!res.ok) return parseError(res, 'Erro ao buscar simulados recomendados');
   return res.json();
 }
 

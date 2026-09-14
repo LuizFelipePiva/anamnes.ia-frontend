@@ -129,29 +129,42 @@ export const SimuladoConfigurator: React.FC<SimuladoConfiguratorProps> = ({ comp
     return () => clearTimeout(timer);
   }, [form.specialties, form.temas, form.bancas, form.anos]);
 
-  const toggleSet = (field: 'specialties' | 'bancas' | 'temas' | 'anos', val: any) => {
+  type FilterField = 'specialties' | 'bancas' | 'temas' | 'anos';
+
+  const toggleSet = (field: FilterField, val: string | number) => {
     setForm(prev => {
-      const arr = prev[field] as any[];
-      const isSelected = arr.includes(val);
-      const nextArr = isSelected ? arr.filter(x => x !== val) : [...arr, val];
-
-      const newForm = { ...prev, [field]: nextArr };
-
-      if (field === 'specialties' && isSelected) {
-        const temasOfEsp = opts.temas_por_especialidade[val as string] || [];
-        newForm.temas = (newForm.temas || []).filter(t => !temasOfEsp.includes(t));
+      if (field === 'anos') {
+        const year = Number(val);
+        const arr = prev.anos || [];
+        const nextArr = arr.includes(year) ? arr.filter(x => x !== year) : [...arr, year];
+        return { ...prev, anos: nextArr };
       }
 
-      if (field === 'temas' && !isSelected && drillEsp && !newForm.specialties!.includes(drillEsp)) {
-        newForm.specialties = [...(newForm.specialties || []), drillEsp];
+      const value = String(val);
+      const arr = prev[field] || [];
+      const isSelected = arr.includes(value);
+      const nextArr = isSelected ? arr.filter(x => x !== value) : [...arr, value];
+      const newForm: SimuladoCreate = { ...prev, [field]: nextArr };
+
+      // Cascading logic
+      if (field === 'specialties' && isSelected) {
+        // Removed an specialty -> remove its temas
+        const temasOfEsp = opts.temas_por_especialidade[value] || [];
+        newForm.temas = (newForm.temas || []).filter(t => !temasOfEsp.includes(t));
+      }
+      if (field === 'temas' && !isSelected) {
+        // Added a tema -> ensure its specialty is added
+        if (drillEsp && !newForm.specialties!.includes(drillEsp)) {
+          newForm.specialties = [...(newForm.specialties || []), drillEsp];
+        }
       }
 
       return newForm;
     });
   };
 
-  const removeFilter = (field: keyof SimuladoCreate, val: any) => {
-    toggleSet(field as any, val);
+  const removeFilter = (field: FilterField, val: string | number) => {
+    toggleSet(field, val);
   };
 
   const handleCreate = async () => {
@@ -164,7 +177,7 @@ export const SimuladoConfigurator: React.FC<SimuladoConfiguratorProps> = ({ comp
         num_questions: form.num_questions || 10,
       });
       navigate(`/simulados/${sim.id}/run`);
-    } catch (error) {
+    } catch {
       alert('Erro ao criar simulado');
     }
   };

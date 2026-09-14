@@ -34,3 +34,8 @@ env/
 __pycache__/
 *.pyc
 .pytest_cache/
+
+
+# Configura??o e credenciais locais
+backend/.env
+backend/.env.e2e

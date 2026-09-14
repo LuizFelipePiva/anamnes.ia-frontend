@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React, { useState, useMemo } from 'react';
 import { X, Lightbulb, Zap, Check } from 'lucide-react';
 import { SUGGESTIONS_DATA, type ExameFisicoSistema } from '../data/suggestionsData';
@@ -29,6 +30,7 @@ const ExamSuggestionsModal: React.FC<ExamSuggestionsModalProps> = ({
   onSelectItem,
   currentItems,
 }) => {
+  const { t: tUi } = useTranslation('common');
   const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set());
 
   const patologiaData = useMemo(() => {
@@ -199,7 +201,7 @@ const ExamSuggestionsModal: React.FC<ExamSuggestionsModalProps> = ({
                         })
                       ) : (
                         <div className="text-center py-4 text-gray-500 text-sm">
-                          Sem achados específicos para esta patologia nesta categoria.
+                          {tUi('clinical_tools.no_pathology_findings')}
                         </div>
                       )}
 

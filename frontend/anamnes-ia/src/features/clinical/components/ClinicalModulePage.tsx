@@ -109,8 +109,8 @@ const ClinicalModulePage: React.FC<ClinicalModulePageProps> = ({ module }) => {
               <aside className="bg-[#1a1730] text-white rounded-2xl p-6 shadow-[0_8px_30px_rgba(26,23,48,.16)]">
                 <div className="flex items-center gap-3 mb-5"><HeartPulse size={20} style={{ color: accent }} /><h3 className="font-bold">{t('clinical.next_steps')}</h3></div>
                 <div className="space-y-4 text-sm text-[#c4bfd7]">
-                  <p className="flex gap-3"><ClipboardPlus size={17} className="shrink-0" style={{ color: accent }} />{t(`clinical.${module}.step_one`)}</p>
-                  <p className="flex gap-3"><CalendarDays size={17} className="shrink-0" style={{ color: accent }} />{t(`clinical.${module}.step_two`)}</p>
+                  <p className="flex gap-3"><ClipboardPlus size={17} className="shrink-0" style={{ color: accent }} />{t(`clinical.${module}.step_first`)}</p>
+                  <p className="flex gap-3"><CalendarDays size={17} className="shrink-0" style={{ color: accent }} />{t(`clinical.${module}.step_second`)}</p>
                 </div>
               </aside>
             </div>

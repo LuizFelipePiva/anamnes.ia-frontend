@@ -32,6 +32,23 @@ function fmtDate(iso: string, t: TFunction<'chat'>, locale: string) {
   return d.toLocaleDateString(locale, { day: '2-digit', month: '2-digit' }) + ` · ${hora}`;
 }
 
+/**
+ * Casca do bloco: título **dentro** do card branco, igual aos blocos da home
+ * (domínio, sequência, meta). O conteúdo sangra até a borda, então o padding
+ * mora no header, não no card.
+ */
+const HistoryShell: React.FC<{ title: string; action?: React.ReactNode; children: React.ReactNode }> = ({ title, action, children }) => (
+  <section className="w-full rounded-2xl bg-white border border-[var(--card-divide)] shadow-[0_4px_18px_rgba(19,12,45,.07)] overflow-hidden">
+    <div className="flex items-center justify-between gap-2 mx-5 my-4">
+      <h2 className="text-[11px] font-extrabold tracking-[.16em] text-[#7a55ff] uppercase m-0 pl-3 border-l-[3px] border-[#7a55ff]">
+        {title}
+      </h2>
+      {action}
+    </div>
+    {children}
+  </section>
+);
+
 const ChatHistoryCarousel: React.FC<{ scoreMap?: Record<string, ScoreMeta> }> = ({ scoreMap }) => {
   const [items, setItems] = useState<ChatItem[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -81,16 +98,11 @@ const ChatHistoryCarousel: React.FC<{ scoreMap?: Record<string, ScoreMeta> }> = 
     return () => { mounted = false; };
   }, [token, t]);
 
-  const titleClass = 'text-[11px] font-extrabold tracking-[.16em] text-[#7a55ff] uppercase pl-3 border-l-[3px] border-[#7a55ff]';
-
   /* ── Loading ── */
   if (loading) {
     return (
-      <div className="w-full">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className={titleClass}>{t('history.title')}</h2>
-        </div>
-        <div className="chat-history-list bg-white rounded-2xl border border-[var(--card-divide)] divide-y divide-[var(--card-divide)]">
+      <HistoryShell title={t('history.title')}>
+        <div className="chat-history-list border-t border-[var(--card-divide)] divide-y divide-[var(--card-divide)]">
           {Array.from({ length: PREVIEW_LIMIT }).map((_, i) => (
             <div key={i} className="flex items-center gap-3 p-4 animate-pulse">
               <div className="w-9 h-9 rounded-xl bg-[#f0eeff] flex-shrink-0" />
@@ -101,32 +113,26 @@ const ChatHistoryCarousel: React.FC<{ scoreMap?: Record<string, ScoreMeta> }> = 
             </div>
           ))}
         </div>
-      </div>
+      </HistoryShell>
     );
   }
 
   /* ── Erro ── */
   if (error) {
     return (
-      <div className="w-full">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className={titleClass}>{t('history.title')}</h2>
-        </div>
-        <div className="bg-white rounded-2xl border border-rose-100 p-5 text-sm text-rose-600">
+      <HistoryShell title={t('history.title')}>
+        <p className="px-5 pb-5 text-sm text-rose-600 m-0">
           {t('history.load_error_detail', { error })}
-        </div>
-      </div>
+        </p>
+      </HistoryShell>
     );
   }
 
   /* ── Vazio ── */
   if (!items || items.length === 0) {
     return (
-      <div className="w-full">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className={titleClass}>{t('history.title')}</h2>
-        </div>
-        <div className="chat-history-list bg-white rounded-2xl border border-[var(--card-divide)] p-8 flex flex-col items-center gap-3">
+      <HistoryShell title={t('history.title')}>
+        <div className="chat-history-list px-8 pb-8 flex flex-col items-center gap-3">
           <MessageSquare size={32} className="text-[#c4bfea]" />
           <p className="text-sm text-[#6a6a78] text-center leading-relaxed">
             {t('history.empty_line1')}<br />{t('history.empty_line2')}
@@ -138,7 +144,7 @@ const ChatHistoryCarousel: React.FC<{ scoreMap?: Record<string, ScoreMeta> }> = 
             {t('history.start_now')}
           </button>
         </div>
-      </div>
+      </HistoryShell>
     );
   }
 
@@ -147,20 +153,18 @@ const ChatHistoryCarousel: React.FC<{ scoreMap?: Record<string, ScoreMeta> }> = 
 
   /* ── Lista preview ── */
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className={titleClass}>{t('history.title')}</h2>
-        {hasMore && (
-          <button
-            onClick={() => navigate('/student-chat')}
-            className="text-[11px] font-semibold text-[#7a55ff] hover:text-[#5a2ad9] transition-colors whitespace-nowrap"
-          >
-            {t('history.see_all')}
-          </button>
-        )}
-      </div>
-
-      <div className="chat-history-list bg-white rounded-2xl border border-[var(--card-divide)] divide-y divide-[var(--card-divide)] overflow-hidden">
+    <HistoryShell
+      title={t('history.title')}
+      action={hasMore && (
+        <button
+          onClick={() => navigate('/student-chat')}
+          className="text-[11px] font-semibold text-[#7a55ff] hover:text-[#5a2ad9] transition-colors whitespace-nowrap"
+        >
+          {t('history.see_all')}
+        </button>
+      )}
+    >
+      <div className="chat-history-list border-t border-[var(--card-divide)] divide-y divide-[var(--card-divide)]">
         {preview.map((chat) => {
           // Prefere dados do API (score/status direto), cai no scoreMap como fallback
           const hasApiData = chat.attempt_status !== undefined;
@@ -201,7 +205,7 @@ const ChatHistoryCarousel: React.FC<{ scoreMap?: Record<string, ScoreMeta> }> = 
           );
         })}
       </div>
-    </div>
+    </HistoryShell>
   );
 };
 

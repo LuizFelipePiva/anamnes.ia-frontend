@@ -37,7 +37,7 @@ const getInitials = (name?: string | null, email?: string | null): string => {
 type MenuLabelKey =
   | 'menu.home' | 'menu.cases' | 'menu.simulation' | 'menu.teacher' | 'menu.admin'
   | 'menu.student_page' | 'menu.flashcards' | 'menu.questoes' | 'menu.simulados' | 'menu.minigame'
-  | 'menu.settings' | 'menu.trilhas' | 'menu.puericultura' | 'menu.preNatal';
+  | 'menu.treinamento' | 'menu.settings' | 'menu.trilhas' | 'menu.puericultura' | 'menu.preNatal';
 
 interface NavItem {
   icon: React.ReactNode;
@@ -45,6 +45,7 @@ interface NavItem {
   /** Chave do namespace `common` (ex.: `menu.home`) — resolvida na renderização */
   labelKey: MenuLabelKey;
   route?: string;
+  activeRoutes?: string[];
   href?: string;
   color: string;
 }
@@ -73,6 +74,7 @@ const MainMenu: React.FC<{ mobile?: boolean }> = ({ mobile = false }) => {
       icon: <User size={20} />,          activeIcon: <User size={20} />,          labelKey: 'menu.student_page', route: '/student',       color: 'text-amber-400',
     }] as NavItem[] : []),
     { icon: <Layers size={20} />,        activeIcon: <Layers size={20} />,        labelKey: 'menu.flashcards',   route: '/flashcards',    color: 'text-pink-400' },
+    { icon: <ClipboardList size={20} />, activeIcon: <ClipboardList size={20} />, labelKey: 'menu.treinamento', route: '/treinamento',  activeRoutes: ['/treinamento', '/simulados'], color: 'text-cyan-400' },
     { icon: <BookOpenCheck size={20} />,  activeIcon: <BookOpenCheck size={20} />,  labelKey: 'menu.questoes',    route: '/questoes',      color: 'text-orange-400' },
     { icon: <Route size={20} />,         activeIcon: <Route size={20} />,         labelKey: 'menu.trilhas',      route: '/trilhas',       color: 'text-rose-400' },
     { icon: <Gamepad2 size={20} />,      activeIcon: <Gamepad2 size={20} />,      labelKey: 'menu.minigame',     route: '/minigame',      color: 'text-teal-400' },
@@ -87,8 +89,10 @@ const MainMenu: React.FC<{ mobile?: boolean }> = ({ mobile = false }) => {
   };
 
   const isActive = (item: NavItem) => {
-    if (!item.route) return false;
-    return location.pathname === item.route || location.pathname.startsWith(item.route + '/');
+    const routes = item.activeRoutes ?? (item.route ? [item.route] : []);
+    return routes.some(route =>
+      location.pathname === route || location.pathname.startsWith(route + '/')
+    );
   };
 
   const handleNav = (item: NavItem) => {
