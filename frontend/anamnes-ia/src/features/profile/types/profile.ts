@@ -23,6 +23,20 @@ export interface SpecialtyStats {
   average_score: number;
 }
 
+/**
+ * SPEC-013 §6.8 — média por dimensão S/O/A/P nas últimas tentativas avaliadas
+ * (janela definida no backend, `profile.py::_SOAP_WINDOW`). `null` quando
+ * nenhuma tentativa do aluno tem `breakdown` gravado.
+ */
+export interface SoapProfile {
+  /** Quantas tentativas entraram na média (≤ janela do backend). */
+  attempts: number;
+  subjetivo: number;
+  objetivo: number;
+  avaliacao: number;
+  plano: number;
+}
+
 export interface WeeklyScore {
   week: string;
   avg_score: number;
@@ -60,6 +74,8 @@ export interface StudentProfile {
   user: ProfileUser;
   stats: ProfileStats;
   by_specialty: SpecialtyStats[];
+  /** Ausente em respostas de versões anteriores do backend. */
+  soap_profile?: SoapProfile | null;
   weekly_scores: WeeklyScore[];
   history: AttemptHistory[];
   classes: EnrolledClass[];

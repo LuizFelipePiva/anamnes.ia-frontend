@@ -17,11 +17,12 @@
     "minigame": "Minijuego",
     "settings": "Configuración",
     "trilhas": "Rutas de aprendizaje",
-    "questoes": "Banco de Preguntas",
+    "questoes": "Banco de preguntas",
     "puericultura": "Puericultura",
     "preNatal": "Prenatal",
     "logout": "Salir",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "treinamento": "Entrenamiento"
   },
   "questions_hub": {
     "eyebrow": "ESTUDIAR",
@@ -52,8 +53,22 @@
     "save": "Guardar consulta",
     "cancel": "Cancelar",
     "saved": "Consulta guardada localmente",
-    "puericultura": { "title": "Puericultura", "subtitle": "Seguimiento de la salud y el desarrollo infantil", "heading": "Nuevo seguimiento infantil", "description": "Registra los datos esenciales para acompañar el crecimiento, desarrollo y salud del niño.", "step_one": "Completa la identificación del niño.", "step_two": "Añade la fecha y las observaciones de la consulta." },
-    "preNatal": { "title": "Atención prenatal", "subtitle": "Seguimiento de la salud materna y fetal", "heading": "Nuevo seguimiento prenatal", "description": "Organiza la información de la gestante durante cada etapa del cuidado prenatal.", "step_one": "Completa la identificación de la gestante.", "step_two": "Añade la fecha y las observaciones de la consulta." }
+    "puericultura": {
+      "title": "Puericultura",
+      "subtitle": "Seguimiento de la salud y el desarrollo infantil",
+      "heading": "Nuevo seguimiento infantil",
+      "description": "Registra los datos esenciales para acompañar el crecimiento, desarrollo y salud del niño.",
+      "step_first": "Completa la identificación del niño.",
+      "step_second": "Añade la fecha y las observaciones de la consulta."
+    },
+    "preNatal": {
+      "title": "Atención prenatal",
+      "subtitle": "Seguimiento de la salud materna y fetal",
+      "heading": "Nuevo seguimiento prenatal",
+      "description": "Organiza la información de la gestante durante cada etapa del cuidado prenatal.",
+      "step_first": "Completa la identificación de la gestante.",
+      "step_second": "Añade la fecha y las observaciones de la consulta."
+    }
   },
   "home": {
     "tagline": "Simula · Practica · Evoluciona",
@@ -63,7 +78,6 @@
     "greeting_evening": "Buenas noches",
     "greeting_line": "{{greeting}}, <1>{{name}}</1>! 👋",
     "student_fallback": "alumno",
-    "week_summary": "Resumen de los últimos 7 días",
     "ready_prompt": "¿Listo para otro caso hoy?",
     "ready_cta": "¿Listo para entrenar?",
     "stat_started": "casos iniciados",
@@ -87,7 +101,66 @@
     "initial_listening": "Escucha inicial",
     "estimated_time": "Tiempo estimado",
     "cancel": "Cancelar",
-    "start_case": "Iniciar caso"
+    "start_case": "Iniciar caso",
+    "plan_progress": "Tu plan de esta semana está {{pct}}% completado",
+    "trend_aria": "Variación de {{delta}} puntos respecto a la semana anterior",
+    "reco": {
+      "title": "RECOMENDADO PARA TI",
+      "empty": "Completa tu primer caso para recibir recomendaciones",
+      "empty_cta": "Explorar casos",
+      "cta": "Empezar",
+      "weak_label": "Punto débil detectado",
+      "weak_one": "Nota media {{score}} en {{count}} intento",
+      "weak_other": "Nota media {{score}} en {{count}} intentos",
+      "stale_label": "Sin práctica",
+      "stale_one": "{{count}} día sin practicar",
+      "stale_other": "{{count}} días sin practicar",
+      "class_label": "De tu clase",
+      "class": "Próximo caso publicado por el profesor",
+      "streak_label": "Mantén el ritmo",
+      "streak_one": "{{count}} día seguido — no pares hoy",
+      "streak_other": "{{count}} días seguidos — no pares hoy"
+    },
+    "mastery": {
+      "title": "DOMINIO POR ESPECIALIDAD",
+      "aria": "{{specialty}}: nota media {{score}} sobre 100"
+    },
+    "soap": {
+      "title": "PERFIL SOAP",
+      "dim": {
+        "subjetivo": "Subjetivo",
+        "objetivo": "Objetivo",
+        "avaliacao": "Evaluación",
+        "plano": "Plan"
+      },
+      "aria": "{{dimension}}: nota media {{score}} sobre 100",
+      "footer_one": "Media de {{count}} intento evaluado",
+      "footer_other": "Media de los últimos {{count}} intentos evaluados"
+    },
+    "summary": {
+      "title": "RESUMEN DE LA SEMANA",
+      "train_specialty": "Practicar {{specialty}}",
+      "create_training": "Crear práctica de {{specialty}}"
+    },
+    "streak": {
+      "title": "RACHA",
+      "day_done": "{{day}}: con práctica",
+      "day_empty": "{{day}}: sin práctica",
+      "footer_one": "{{count}} día seguido · tu récord es {{best}}",
+      "footer_other": "{{count}} días seguidos · tu récord es {{best}}"
+    },
+    "goal": {
+      "title": "META DE LA SEMANA",
+      "progress_one": "{{count}} de {{goal}} caso completado",
+      "progress_other": "{{count}} de {{goal}} casos completados",
+      "aria": "Meta de la semana: {{pct}}% completada"
+    },
+    "pending": {
+      "title": "PENDIENTES",
+      "flashcards": "Flashcards para repasar",
+      "flashcards_meta_one": "{{count}} tarjeta pendiente de repaso",
+      "flashcards_meta_other": "{{count}} tarjetas pendientes de repaso"
+    }
   },
   "tips": {
     "title": "CONSEJOS CLÍNICOS",
@@ -117,7 +190,11 @@
     "plan_ph": "Plan terapéutico...",
     "fill_all": "¡Completa todos los campos!",
     "sending": "Enviando...",
-    "send": "Enviar"
+    "send": "Enviar",
+    "physical_exam": "Realizar examen físico",
+    "complementary_exam": "Solicitar pruebas complementarias",
+    "add_cid": "Añadir CIE-10",
+    "add_medicine": "Añadir prescripción"
   },
   "actions": {
     "prev": "Anterior",
@@ -150,5 +227,50 @@
   },
   "errors": {
     "session_expired": "Tu sesión ha expirado. Inicia sesión de nuevo."
+  },
+  "clinical_tools": {
+    "quick_hint": "Elige cómo continuar estudiando hoy.",
+    "quick_access": "Acceso rápido",
+    "exam_mode": "Modo examen",
+    "exam_warning": "Durante la simulación, permanece en esta página. Cambiar de pestaña o ventana finaliza el intento y te devuelve al inicio.",
+    "findings_added": "Los hallazgos se han añadido al campo O del SOAP",
+    "no_pathology_findings": "No hay hallazgos específicos para esta patología en esta categoría.",
+    "codes_available": "códigos disponibles",
+    "expand_all": "Expandir todo",
+    "no_icd": "No se encontró un código CIE-10 para \"",
+    "additional_tests": "Pruebas complementarias",
+    "select_case_tests": "Selecciona las pruebas que se podrán solicitar en este caso.",
+    "pathology_suggestions": "Sugerencias para esta patología",
+    "toggle_suggestion": "Haz clic para añadir o quitar una sugerencia.",
+    "common_options": "opciones frecuentes",
+    "back_categories": "Volver a categorías",
+    "select_student_tests": "Selecciona las pruebas disponibles para el alumno.",
+    "no_tests": "No se han seleccionado pruebas complementarias.",
+    "tests_available": "Estas pruebas se podrán solicitar durante el caso.",
+    "define_findings": "Define los hallazgos disponibles en cada etapa del examen.",
+    "select_area": "Selecciona un área para continuar",
+    "back_areas": "Volver a áreas",
+    "special_exams": "Exámenes especiales",
+    "select_assessment": "Selecciona la etapa de evaluación.",
+    "back_assessments": "Volver a evaluaciones",
+    "describe_finding": "Describe el hallazgo esperado para este caso.",
+    "expected_finding": "Hallazgo o resultado esperado",
+    "case_findings": "Estos hallazgos se asociarán al caso y se mostrarán durante el examen.",
+    "explore_findings": "Selecciona para explorar los hallazgos",
+    "back_systems": "Volver a sistemas",
+    "select_maneuver": "Selecciona la maniobra o región que quieres examinar",
+    "back_maneuvers": "Volver a maniobras",
+    "select_findings": "Revisa los hallazgos y selecciona los presentes en tu paciente.",
+    "no_maneuver_findings": "No hay hallazgos específicos para esta maniobra o región.",
+    "exam_step_hint": "Haz clic en una opción para abrir los campos de esa etapa del examen.",
+    "findings_selected": "hallazgos seleccionados para el SOAP"
+  },
+  "prescription": {
+    "title": "Prescripción de medicamentos",
+    "subtitle": "Registra la prescripción que deseas incluir en el plan.",
+    "label": "Prescripción",
+    "placeholder": "Medicamento, dosis, vía, frecuencia y duración.",
+    "cancel": "Cancelar",
+    "confirm": "Añadir al plan"
   }
 }

@@ -9,11 +9,18 @@ export interface Question {
   created_at?: string;
 }
 
+export interface ReviewFlashcardResult {
+  created: boolean;
+  deck_id: string;
+  flashcard_id: string;
+}
+
 /** Resultado da correção de uma resposta (retornado pelo backend). */
 export interface QuestionAnswerResult {
   correct: boolean;
   correct_answer: string;
   explanation: string | null;
+  review_flashcard?: ReviewFlashcardResult | null;
 }
 
 /** Questão completa (admin) — inclui gabarito. */

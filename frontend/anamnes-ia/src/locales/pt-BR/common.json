@@ -16,12 +16,13 @@
     "simulados": "Simulados",
     "minigame": "Minigame",
     "settings": "Configurações",
-    "trilhas": "Trilhas",
+    "trilhas": "Trilhas de aprendizagem",
     "questoes": "Banco de Questões",
     "puericultura": "Puericultura",
     "preNatal": "Pré-Natal",
     "logout": "Sair",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "treinamento": "Treinamento"
   },
   "questions_hub": {
     "eyebrow": "ESTUDAR",
@@ -57,16 +58,16 @@
       "subtitle": "Acompanhamento da saúde e do desenvolvimento infantil",
       "heading": "Novo acompanhamento infantil",
       "description": "Registre os dados essenciais para acompanhar o crescimento, o desenvolvimento e a saúde da criança.",
-      "step_one": "Complete a identificação da criança.",
-      "step_two": "Adicione a data e as observações da consulta."
+      "step_first": "Complete a identificação da criança.",
+      "step_second": "Adicione a data e as observações da consulta."
     },
     "preNatal": {
       "title": "Pré-natal",
       "subtitle": "Acompanhamento da saúde materna e fetal",
       "heading": "Novo acompanhamento pré-natal",
       "description": "Organize as informações da gestante para acompanhar cada etapa do cuidado pré-natal.",
-      "step_one": "Complete a identificação da gestante.",
-      "step_two": "Adicione a data e as observações da consulta."
+      "step_first": "Complete a identificação da gestante.",
+      "step_second": "Adicione a data e as observações da consulta."
     }
   },
   "home": {
@@ -77,7 +78,6 @@
     "greeting_evening": "Boa noite",
     "greeting_line": "{{greeting}}, <1>{{name}}</1>! 👋",
     "student_fallback": "aluno",
-    "week_summary": "Resumo dos últimos 7 dias",
     "ready_prompt": "Pronto para mais um caso hoje?",
     "ready_cta": "Pronto para treinar?",
     "stat_started": "casos iniciados",
@@ -101,7 +101,66 @@
     "initial_listening": "Escuta inicial",
     "estimated_time": "Tempo estimado",
     "cancel": "Cancelar",
-    "start_case": "Iniciar caso"
+    "start_case": "Iniciar caso",
+    "plan_progress": "Seu plano desta semana está {{pct}}% concluído",
+    "trend_aria": "Variação de {{delta}} pontos em relação à semana anterior",
+    "reco": {
+      "title": "RECOMENDADO PRA VOCÊ",
+      "empty": "Complete seu primeiro caso para receber recomendações",
+      "empty_cta": "Explorar casos",
+      "cta": "Começar",
+      "weak_label": "Ponto fraco detectado",
+      "weak_one": "Nota média {{score}} em {{count}} tentativa",
+      "weak_other": "Nota média {{score}} em {{count}} tentativas",
+      "stale_label": "Sem prática",
+      "stale_one": "{{count}} dia sem praticar",
+      "stale_other": "{{count}} dias sem praticar",
+      "class_label": "Da sua turma",
+      "class": "Próximo caso liberado pelo professor",
+      "streak_label": "Mantenha o ritmo",
+      "streak_one": "{{count}} dia seguido — não pare hoje",
+      "streak_other": "{{count}} dias seguidos — não pare hoje"
+    },
+    "mastery": {
+      "title": "DOMÍNIO POR ESPECIALIDADE",
+      "aria": "{{specialty}}: nota média {{score}} de 100"
+    },
+    "soap": {
+      "title": "PERFIL SOAP",
+      "dim": {
+        "subjetivo": "Subjetivo",
+        "objetivo": "Objetivo",
+        "avaliacao": "Avaliação",
+        "plano": "Plano"
+      },
+      "aria": "{{dimension}}: nota média {{score}} de 100",
+      "footer_one": "Média de {{count}} tentativa avaliada",
+      "footer_other": "Média das últimas {{count}} tentativas avaliadas"
+    },
+    "summary": {
+      "title": "RESUMO DA SEMANA",
+      "train_specialty": "Treinar {{specialty}}",
+      "create_training": "Criar treino de {{specialty}}"
+    },
+    "streak": {
+      "title": "SEQUÊNCIA",
+      "day_done": "{{day}}: com treino",
+      "day_empty": "{{day}}: sem treino",
+      "footer_one": "{{count}} dia seguido · sua marca é {{best}}",
+      "footer_other": "{{count}} dias seguidos · sua marca é {{best}}"
+    },
+    "goal": {
+      "title": "META DA SEMANA",
+      "progress_one": "{{count}} de {{goal}} caso concluído",
+      "progress_other": "{{count}} de {{goal}} casos concluídos",
+      "aria": "Meta da semana: {{pct}}% concluída"
+    },
+    "pending": {
+      "title": "PENDÊNCIAS",
+      "flashcards": "Flashcards para revisar",
+      "flashcards_meta_one": "{{count}} card aguardando revisão",
+      "flashcards_meta_other": "{{count}} cards aguardando revisão"
+    }
   },
   "tips": {
     "title": "DICAS CLÍNICAS",
@@ -131,7 +190,11 @@
     "plan_ph": "Plano terapêutico...",
     "fill_all": "Preencha todos os campos!",
     "sending": "Enviando...",
-    "send": "Enviar"
+    "send": "Enviar",
+    "physical_exam": "Realizar exame físico",
+    "complementary_exam": "Solicitar exames complementares",
+    "add_cid": "Adicionar CID-10",
+    "add_medicine": "Adicionar prescrição de medicamentos"
   },
   "actions": {
     "prev": "Anterior",
@@ -164,5 +227,50 @@
   },
   "errors": {
     "session_expired": "Sessão expirada. Faça login novamente."
+  },
+  "clinical_tools": {
+    "quick_hint": "Escolha o caminho mais útil para continuar hoje.",
+    "quick_access": "Acesso rápido",
+    "exam_mode": "Modo prova",
+    "exam_warning": "Durante a simulacao, nao saia desta tela nem troque de aba. Se a pagina perder o foco, a simulacao sera encerrada e voce sera redirecionado para o inicio.",
+    "findings_added": "Os achados já foram incluídos no campo O do SOAP",
+    "no_pathology_findings": "Sem achados específicos para esta patologia nesta categoria.",
+    "codes_available": "códigos disponíveis",
+    "expand_all": "Expandir todas",
+    "no_icd": "Nenhum CID-10 encontrado para \"",
+    "additional_tests": "Exames complementares",
+    "select_case_tests": "Selecione os exames que poderão ser solicitados neste caso.",
+    "pathology_suggestions": "Sugestões para esta patologia",
+    "toggle_suggestion": "Clique para incluir ou remover uma sugestão.",
+    "common_options": "opções frequentes",
+    "back_categories": "Voltar para categorias",
+    "select_student_tests": "Selecione os exames disponíveis para o aluno.",
+    "no_tests": "Nenhum exame complementar foi selecionado.",
+    "tests_available": "Os exames serão disponibilizados para o aluno solicitar durante o caso.",
+    "define_findings": "Defina os achados que o aluno poderá obter em cada etapa do exame.",
+    "select_area": "Selecione uma área para continuar",
+    "back_areas": "Voltar para áreas",
+    "special_exams": "Exames especiais",
+    "select_assessment": "Selecione a etapa da avaliação.",
+    "back_assessments": "Voltar para avaliações",
+    "describe_finding": "Descreva o achado esperado para este caso clínico.",
+    "expected_finding": "Achado ou resultado esperado",
+    "case_findings": "Os achados serão associados ao caso e apresentados no exame do aluno.",
+    "explore_findings": "Selecione para explorar os achados",
+    "back_systems": "Voltar para sistemas",
+    "select_maneuver": "Selecione a manobra ou região para examinar",
+    "back_maneuvers": "Voltar para manobras",
+    "select_findings": "Verifique os achados clínicos e selecione aqueles presentes no exame do seu paciente.",
+    "no_maneuver_findings": "Esta manobra/região não possui achados específicos para esta patologia.",
+    "exam_step_hint": "Ao clicar em uma opção, o sistema abre os campos específicos dessa etapa do exame físico.",
+    "findings_selected": "achados selecionados para o SOAP"
+  },
+  "prescription": {
+    "title": "Prescrição de medicamentos",
+    "subtitle": "Registre a prescrição que deseja incluir no plano.",
+    "label": "Prescrição",
+    "placeholder": "Medicamento, dose, via, frequência e duração.",
+    "cancel": "Cancelar",
+    "confirm": "Adicionar ao plano"
   }
 }

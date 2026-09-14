@@ -26,6 +26,19 @@
   /* Divisor interno de cards (entre itens/seções dentro de um card) */
   --card-divide: #f0eeff;
 
+  /* Cores semânticas de estado (fraco / médio / forte). Existem como token
+     porque aparecem em `style` inline (barras de domínio, SOAP, tendência),
+     que os overrides de classe do modo escuro não alcançam. */
+  --tone-pink: #f04b87;
+  --tone-amber: #f0a04b;
+  --tone-green: #18c39a;
+
+  /* Faixa de marca / menu lateral. Token porque três telas (`StudentDashboard`,
+     `AdminPanel`, `TeacherChat`) pintam a sidebar por `style` inline, que os
+     overrides de classe do escuro não alcançam — ali o hex literal ficava com o
+     roxo do tema claro mesmo no escuro. No claro o valor é o de sempre. */
+  --brand-surface: #1a1730;
+
   font-family: 'Lato', system-ui, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -40,14 +53,53 @@
   color-scheme: light;
 }
 
+/* Paleta escura: grafite **quase neutro**, não slate azulado nem roxo saturado.
+   O azul frio original (#0f172a/#1e293b) brigava com o roxo da marca; puxar o
+   fundo para violeta resolvia o conflito de matiz mas deixava a tela tingida —
+   o roxo tem que viver nos acentos, não no fundo. O leve desvio para violeta
+   que sobrou (r<g<b por poucos pontos) só evita o cinza morto e mantém a
+   família do chat, que tem cores fixas (#393542 / #4a4556 / #615B6D) e não
+   acompanha o tema. Luminosidade propositalmente acima do quase-preto: as
+   telas escuras estavam pesadas. Texto é off-white (#eae8ef), não branco puro
+   — #f8fafc dava contraste alto demais e cansava a leitura. */
 :root[data-theme="dark"] {
-  --bg-color: #0f172a;
-  --surface-color: #1e293b;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --border-main: #475569;
-  --border-subtle: #334155;
-  --card-divide: #263044;
+  --bg-color: #221f2c;
+  --surface-color: #322d42;
+  --text-main: #dedbe6;
+  --text-muted: #a09bab;
+  --border-main: #4b4560;
+  /* Borda de card. Precisa ser mais clara que a superfície o bastante para
+     desenhar o retângulo: com #38353f o card não tinha contorno e a tela virava
+     uma mancha só — foi metade da queixa de "cards mortos". */
+  --border-subtle: #423c54;
+  --card-divide: #3a3549;
+  /* Faixa de marca / menu lateral. No escuro a hierarquia entre planos não vem
+     de sombra (invisível sobre escuro) e sim de **luminosidade**: cada plano
+     acima do anterior é mais claro, em passos regulares. A escala aqui é
+     chrome 9,5% → fundo 15% → card 22% de luminosidade HSL, tratando a faixa de
+     marca como o plano de trás e o conteúdo como um painel apoiado sobre ela.
+     O valor antigo (#1e1a2b) ficava a 1,5 ponto do fundo — abaixo do limiar em
+     que o olho lê "dois planos", então o topo e o trilho não pareciam faixa de
+     marca, pareciam uma sujeira no fundo. Como escurecer sozinho já produziu
+     "buraco preto" antes (#1c1b21), a separação é feita em **duas** dimensões:
+     mais escuro *e* muito mais cromático (45% de saturação contra 18% do
+     fundo). Assim o chrome lê como roxo profundo da marca, não como preto. */
+  --brand-surface: #140d23;
+
+  /* Acentos do tema escuro. Estes tons aparecem em áreas **pequenas** (barras de
+     3px, ícones de 16px, filetes): ali saturação alta não vira néon, vira
+     pontuação — quem gritava eram os retângulos grandes, tratados separadamente
+     mais abaixo. Rebaixar estes junto foi o que deixou a tela "confortável mas
+     triste". Ficam quase na cor cheia, só clareados o bastante para não sumirem
+     contra o roxo escuro do fundo. */
+  --tone-pink: #ff5f96;
+  --tone-amber: #ffab55;
+  --tone-green: #1fd6ac;
+  /* Roxo da marca em títulos e filetes sobre fundo escuro. O #844AF5 puro tem
+     luminância baixa demais para texto pequeno aqui: clareia-se em vez de
+     dessaturar, mantendo o croma da marca. Só afeta o tema escuro; o accent do
+     usuário continua valendo em botões e superfícies preenchidas. */
+  --accent-soft: color-mix(in srgb, var(--accent-color) 74%, #ffffff);
   color-scheme: dark;
 }
 
@@ -153,6 +205,15 @@ button {
   background-color: var(--bg-color) !important;
 }
 
+/* Cabeçalhos de modal (`from-[#f3f1ff] to-white` em AdminPanel, CaseForm,
+   CreateClassModal, TeacherChat): gradiente claro escapa dos overrides de
+   `bg-*` pelo mesmo motivo do card de resumo — vira uma faixa branca no topo
+   do modal escuro. */
+:root[data-theme="dark"] .from-\[\#f3f1ff\].to-white {
+  background-image: none !important;
+  background-color: var(--surface-color) !important;
+}
+
 :root[data-theme="dark"] .bg-\[\#f7f5ff\] {
   background-color: var(--surface-color) !important;
 }
@@ -164,6 +225,23 @@ button {
 :root[data-theme="dark"] .bg-indigo-50,
 :root[data-theme="dark"] .bg-violet-50 {
   background-color: var(--surface-color) !important;
+}
+
+/* Relevo dos cards no escuro. A sombra do claro
+   (`shadow-[0_4px_18px_rgba(19,12,45,.07)]`) é invisível sobre grafite, então o
+   card ficava sendo um retângulo chapado quase da cor do fundo — sem volume,
+   sem foco. Aqui ele ganha três coisas de uma vez: um véu do roxo da marca
+   descendo do canto superior, uma linha de luz no topo (o `inset`, que simula a
+   quina iluminada) e uma sombra de verdade. Restrito aos cantos arredondados
+   grandes para não pintar botão nem input, que também usam `bg-white`. */
+:root[data-theme="dark"] .bg-white.rounded-2xl,
+:root[data-theme="dark"] .bg-white.rounded-3xl {
+  background-image: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--accent-color) 15%, transparent) 0%,
+    transparent 58%
+  ) !important;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, .38), inset 0 1px 0 rgba(255, 255, 255, .06) !important;
 }
 
 :root[data-theme="dark"] .hover\:bg-gray-50:hover,
@@ -178,14 +256,94 @@ button {
   background-color: color-mix(in srgb, var(--surface-color) 86%, white) !important;
 }
 
+/* Chapado, não gradiente. O `linear-gradient` anterior (roxo → #090d16) descia
+   em cada elemento que usa a classe — faixa de marca, coluna do menu e os chips
+   de filtro de `CasesPage` — então o mesmo degradê aparecia em três escalas
+   diferentes e nunca alinhava entre blocos vizinhos. */
 :root[data-theme="dark"] .bg-\[\#1a1730\] {
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--accent-dark) 35%, #1a1730), #090d16) !important;
+  background-color: var(--brand-surface) !important;
+  /* Filete de luz na quina interna. No claro a transição chrome→conteúdo é
+     violenta o bastante para dispensar aresta; no escuro dois planos escuros
+     encostados precisam de uma linha que diga onde um termina. 5% de branco é o
+     teto: acima disso vira moldura, que é o erro clássico do dark mode. */
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, .05);
 }
 
 :root[data-theme="dark"] .header-wave {
-  fill: #090d16 !important;
+  fill: var(--brand-surface) !important;
 }
 
+/* Anel do item ativo do menu lateral (`border-[3px] border-white`, MainMenu/
+   TeacherChat/AdminPanel/StudentDashboard). No claro o branco cheio contrasta
+   contra o roxo `#1a1730` do trilho; no escuro, ainda mais escuro, o mesmo
+   anel vira um risco branco isolado — foi a queixa de "select ficou mt claro".
+   O preenchimento em gradiente já entrega o estado ativo sozinho; o anel
+   passa a ser só reforço sutil. */
+:root[data-theme="dark"] .border-\[3px\].border-white {
+  border-color: rgba(255, 255, 255, .3) !important;
+}
+
+/* ── Acentos coloridos no escuro ────────────────────────────────────────────
+   Selo de dia cumprido do streak (`StreakCard`, único uso de `bg-[#18c39a]`
+   puro — as demais ocorrências são `from-[#18c39a]`, tratadas abaixo). Ao
+   contrário dos tokens `--tone-*` (que ficam em filetes/ícones de poucos
+   pixels e suportam cor cheia), aqui a cor preenche um quadrado de 28px
+   inteiro ao lado de seis quadrados escuros — a mesma regra dos cartões de
+   caso logo abaixo: retângulo grande precisa escurecer, não só saturar.
+   `var(--tone-green)` sozinho (quase cor cheia) virava um quadrado
+   fluorescente — foi a queixa de "sequência muito clara". */
+:root[data-theme="dark"] .bg-\[\#18c39a\] {
+  background-color: color-mix(in srgb, #18c39a 80%, #1b1727) !important;
+}
+
+/* Cartão de caso: a cor cobre um retângulo inteiro, então em tom cheio quatro
+   cartões lado a lado viram quatro painéis de luz sobre uma tela escura. A
+   solução é escurecer, **não** dessaturar: misturar o tom já dessaturado com
+   preto puro produzia mostarda e vinho barrentos (o "morto"). Aqui a cor cheia
+   original é rebaixada contra o roxo do fundo (#1b1727), que preserva a matiz e
+   mantém o cartão na família da tela. */
+:root[data-theme="dark"] .from-\[\#18c39a\] { --tw-gradient-from: color-mix(in srgb, #18c39a 88%, #1b1727) !important; }
+:root[data-theme="dark"] .to-\[\#12a37f\] { --tw-gradient-to: color-mix(in srgb, #12a37f 70%, #1b1727) !important; }
+:root[data-theme="dark"] .from-\[\#f0a04b\] { --tw-gradient-from: color-mix(in srgb, #f0a04b 88%, #1b1727) !important; }
+:root[data-theme="dark"] .to-\[\#d98e3a\] { --tw-gradient-to: color-mix(in srgb, #d98e3a 70%, #1b1727) !important; }
+:root[data-theme="dark"] .from-\[\#f04b87\] { --tw-gradient-from: color-mix(in srgb, #f04b87 88%, #1b1727) !important; }
+:root[data-theme="dark"] .to-\[\#d63a70\] { --tw-gradient-to: color-mix(in srgb, #d63a70 70%, #1b1727) !important; }
+/* Título do resumo semanal (gradiente aplicado ao próprio texto). */
+:root[data-theme="dark"] .to-\[\#f04b87\] { --tw-gradient-to: var(--tone-pink) !important; }
+
+/* Ícones da paleta Tailwind (métricas do hero, trilho do menu, badges). São
+   oito matizes em `-400`/`-500`, todas em saturação alta: contra o lilás claro
+   funcionavam como pontuação, contra o grafite viram néon e a tela inteira
+   pisca. Aqui cada uma mantém a matiz — é o que distingue um ícone do outro —
+   com croma e brilho equalizados entre si. */
+:root[data-theme="dark"] .text-sky-400 { color: #4ec2f0 !important; }
+:root[data-theme="dark"] .text-indigo-400 { color: #8b93f5 !important; }
+:root[data-theme="dark"] .text-violet-400 { color: #a98cfa !important; }
+:root[data-theme="dark"] .text-emerald-400 { color: #35cfa3 !important; }
+:root[data-theme="dark"] .text-amber-400 { color: #f5b93f !important; }
+:root[data-theme="dark"] .text-rose-400 { color: #f7748f !important; }
+:root[data-theme="dark"] .text-pink-400 { color: #ef79b4 !important; }
+:root[data-theme="dark"] .text-cyan-400 { color: #3fcde5 !important; }
+:root[data-theme="dark"] .text-teal-400 { color: #33cfbe !important; }
+
+/* Roxo da marca em texto/filete: versão suave (ver `--accent-soft`). Fica
+   depois das regras `:root .text-[#844AF5]` de propósito — as duas usam
+   `!important` e vence a última. Preenchimentos sólidos (botões, barra de
+   progresso) continuam no accent cheio: ali o roxo é a informação. */
+:root[data-theme="dark"] .text-\[\#844AF5\],
+:root[data-theme="dark"] .text-\[\#7a55ff\],
+:root[data-theme="dark"] .text-\[\#6d28d9\],
+:root[data-theme="dark"] .text-\[\#9b8fff\] {
+  color: var(--accent-soft) !important;
+}
+
+:root[data-theme="dark"] .border-\[\#7a55ff\],
+:root[data-theme="dark"] .border-\[\#844AF5\],
+:root[data-theme="dark"] .border-\[\#6d28d9\] {
+  border-color: color-mix(in srgb, var(--accent-color) 62%, transparent) !important;
+}
+
+:root[data-theme="dark"] .text-\[\#372f52\],
 :root[data-theme="dark"] .text-\[\#20202a\],
 :root[data-theme="dark"] .text-\[\#1f1b3a\],
 :root[data-theme="dark"] .text-\[\#111018\],
@@ -211,6 +369,7 @@ button {
 :root[data-theme="dark"] .text-\[\#6b6885\],
 :root[data-theme="dark"] .text-\[\#6b6880\],
 :root[data-theme="dark"] .text-\[\#6b6897\],
+:root[data-theme="dark"] .text-\[\#6b6b7b\],
 :root[data-theme="dark"] .text-\[\#475467\] {
   color: var(--text-muted) !important;
 }
@@ -265,14 +424,18 @@ button {
   border-color: var(--border-subtle) !important;
 }
 
-/* Fundos de trilhas de barras de progresso e chips de badge */
+/* Fundos de trilhas de barras de progresso e chips de badge. Vão para
+   `--border-subtle`, não `--surface-color`: no claro esses lilases contrastam
+   com o branco do card, mas mapeados para a superfície ficariam da mesma cor
+   do card e a trilha da barra desapareceria — sobrava só o pedaço preenchido,
+   sem referência de quanto falta. */
 :root[data-theme="dark"] .bg-\[\#ede8f9\],
 :root[data-theme="dark"] .bg-\[\#f0eeff\],
 :root[data-theme="dark"] .bg-\[\#f5f3ff\],
 :root[data-theme="dark"] .bg-\[\#f8f7fb\],
 :root[data-theme="dark"] .bg-\[\#f9f8fe\],
 :root[data-theme="dark"] .bg-\[\#f8fafc\] {
-  background-color: var(--surface-color) !important;
+  background-color: var(--border-subtle) !important;
 }
 
 :root[data-theme="dark"] .bg-slate-100,
@@ -335,6 +498,111 @@ button {
   to {
     opacity: 0;
   }
+}
+
+/* Moldura iridescente do resumo por IA (SPEC-013 §6.9). Vive aqui e não em
+   classes utilitárias porque precisa de keyframes + `background-size` maior que
+   o elemento — o deslocamento lento do gradiente é o que dá a "vida" do card.
+   Cores tiradas da própria home: roxo primário, violeta e o rosa dos cards de
+   recomendação. */
+@keyframes ai-shimmer {
+  from {
+    background-position: 0% 50%;
+  }
+
+  to {
+    background-position: 200% 50%;
+  }
+}
+
+/* As cores vão com alpha de propósito: em opacidade cheia a moldura competia
+   com o texto e virava o elemento mais forte da home. Translúcida, ela lê como
+   um brilho na borda do card, não como um contorno desenhado. */
+.ai-ring {
+  background-image: linear-gradient(
+    110deg,
+    rgba(132, 74, 245, 0.55),
+    rgba(169, 120, 255, 0.3),
+    rgba(240, 75, 135, 0.4),
+    rgba(107, 53, 255, 0.5),
+    rgba(132, 74, 245, 0.55)
+  );
+  background-size: 200% 100%;
+  animation: ai-shimmer 14s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-ring {
+    animation: none;
+  }
+}
+
+/* Fundo decorativo da home (`app/MainPage.tsx`). */
+.home-aurora {
+  background:
+    radial-gradient(ellipse 65% 55% at 0% 0%, rgba(138, 91, 255, 0.2) 0%, transparent 70%),
+    radial-gradient(ellipse 55% 50% at 100% 0%, rgba(99, 179, 237, 0.16) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 40% at 100% 100%, rgba(122, 85, 255, 0.13) 0%, transparent 70%);
+}
+
+.home-dots {
+  background-image: radial-gradient(circle, rgba(122, 85, 255, 0.18) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* No escuro não existe aurora nem trama de pontos. Sobre o lilás claro elas dão
+   profundidade; sobre grafite o alpha *acende* em vez de diluir e o resultado é
+   um borrão roxo no topo com uma trama por cima — decisão do dono do produto:
+   no escuro o fundo é chapado. Não reintroduza com alpha menor; já foi tentado. */
+:root[data-theme="dark"] .home-aurora,
+:root[data-theme="dark"] .home-dots {
+  background: none;
+}
+
+/* Mesmo motivo, mesma regra, em `ResetPassword.tsx`: as duas bolhas roxas de
+   fundo (`blur-3xl`) foram calibradas para o lilás claro e acendem sobre
+   grafite igual a aurora da home acendia. */
+:root[data-theme="dark"] .reset-bubble {
+  display: none;
+}
+
+/* Mesma aurora + trama de pontos da home, mas repetida como `style` inline em
+   outras telas (`CasesPage`, `TeacherChat`, `AdminPanel`,
+   `StudentDashboard`, `FlashcardsPage`) em vez de vir de uma
+   classe — por isso a regra do `.home-aurora` acima nunca as alcançava e elas
+   continuavam acendendo sobre o fundo escuro. `display: none` em vez de
+   `background: none` porque o valor real está no atributo `style`, que teria
+   precedência sobre um simples `background` da folha de estilo. */
+:root[data-theme="dark"] .page-aurora,
+:root[data-theme="dark"] .page-dots {
+  display: none;
+}
+
+/* Miolo do card do resumo. Precisa ser classe e não utilitários Tailwind:
+   como é um *gradiente* (`from-white via-white`), nenhum dos overrides de
+   `bg-white` do modo escuro o alcançava e o card ficava branco no escuro. */
+.ai-ring-body {
+  background-image: linear-gradient(to bottom right, #ffffff, #ffffff 55%, #faf8ff);
+}
+
+:root[data-theme="dark"] .ai-ring-body {
+  background-image: none;
+  background-color: var(--surface-color);
+}
+
+/* No escuro a moldura vai **quase cheia**: no claro o alpha baixo já basta
+   porque o branco atrás empurra a cor, aqui o grafite atrás a engole. É o único
+   elemento animado da home — rebaixada, ela sumia e a tela perdia seu ponto de
+   energia. */
+:root[data-theme="dark"] .ai-ring {
+  background-image: linear-gradient(
+    110deg,
+    rgba(132, 74, 245, 0.95),
+    rgba(169, 120, 255, 0.62),
+    rgba(240, 75, 135, 0.78),
+    rgba(107, 53, 255, 0.9),
+    rgba(132, 74, 245, 0.95)
+  );
 }
 
 .animate-slide-in {

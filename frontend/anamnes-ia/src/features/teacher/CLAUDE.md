@@ -5,6 +5,7 @@ Ferramentas do professor: turmas, criação de casos, compartilhamento e métric
 ## Arquivos
 - `services/teacherService.ts` — chamadas via `authFetch`.
 - `components/CaseForm.tsx` — formulário de caso.
+  Também anexa **exames complementares** (SPEC-014): estado local `examIds` + `ExamPicker` de `@/features/case`, renderizado no lugar do conteúdo do modal (dois overlays empilhados brigariam por foco e Esc). A persistência (`saveCaseExams`) acontece **depois** do `createCase`/`updateCase` — na criação o caso ainda não tem `id`. Falha ao anexar mostra `caseForm.err_exams` e **não** desfaz o caso salvo. Os textos dos exames vêm do namespace `case`, não do `teacher`.
 - `components/CreateClassModal.tsx` — criação de turma.
 - `components/ClassSharingPanel.tsx` — atribuir casos à turma (prazo/disponibilidade).
 - `components/FlashcardsView.tsx` — gestão de flashcards.

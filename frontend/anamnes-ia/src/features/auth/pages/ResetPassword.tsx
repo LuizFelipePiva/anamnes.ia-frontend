@@ -77,8 +77,8 @@ const ResetPasswordPage: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full bg-[#f3f1ff] flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-[#7a55ff]/10 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] rounded-full bg-[#6b35ff]/8 blur-3xl pointer-events-none" />
+      <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-[#7a55ff]/10 blur-3xl pointer-events-none reset-bubble" />
+      <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] rounded-full bg-[#6b35ff]/8 blur-3xl pointer-events-none reset-bubble" />
 
       <div className="relative z-10 w-full max-w-md flex flex-col items-center">
         <img src={logoImg} alt="Anamnes.IA" className="h-12 mb-2 object-contain" />

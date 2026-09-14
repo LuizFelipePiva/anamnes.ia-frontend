@@ -12,7 +12,6 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/features/auth';
 import AdminFlashcardsView from '../components/AdminFlashcardsView';
-import QuestionsAdminPage from './QuestionsAdminPage';
 import type { AdminOverview, AdminUser, Institution, AdminTab, BulkCreateResult, AdminClass, AdminClassDetail, AdminFreeCase, GptSettings, GptInfo, GptUsage, GptBalance, ConversationStats } from '../types/admin';
 import {
   fetchOverview, fetchInstitutions, fetchUsers,
@@ -787,7 +786,6 @@ const NAV: { id: AdminTab; labelKey: NavKey; icon: React.ReactNode }[] = [
   { id: 'free-cases', labelKey: 'free_cases', icon: <Stethoscope size={20} /> },
   { id: 'gpt', labelKey: 'gpt', icon: <Bot size={20} /> },
   { id: 'flashcards', labelKey: 'flashcards', icon: <Sliders size={20} /> },
-  { id: 'questions', labelKey: 'questoes', icon: <BookOpen size={20} /> },
 ];
 
 // ─── Free Case Form helpers (mirrors CaseForm) ───────────────────────────────
@@ -1415,7 +1413,7 @@ const AdminPanel: React.FC = () => {
               onClick={() => { navigate('/admin/questoes'); setSidebarOpen(false); }}
               className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-[15px] font-semibold text-[#a39dc4] hover:bg-white/[.06] hover:text-white transition-all select-none focus:outline-none"
             >
-              <ListChecks size={20} /> Questões
+              <ListChecks size={20} /> {t('panel.nav.questoes')}
             </button>
           </nav>
 

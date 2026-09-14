@@ -32,7 +32,6 @@
     "export": "Exportar JSON",
     "back_panel": "Painel principal",
     "subtitle": "Organize o conteúdo com mais rapidez e mantenha o material sempre alinhado.",
-    "back": "Voltar",
     "error_save": "Erro ao salvar questão.",
     "error_delete": "Erro ao deletar.",
     "error_import": "Erro ao importar o arquivo JSON. Verifique o formato."

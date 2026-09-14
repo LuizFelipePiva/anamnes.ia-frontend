@@ -19,7 +19,7 @@ import StudentDashboard from '@/features/student/pages/StudentDashboard';
 import supabase from '@/core/lib/supabaseClient';
 import { QuestionsPage, QuestionsHubPage } from '@/features/questoes';
 import QuestionsAdminPage from '@/features/admin/pages/QuestionsAdminPage';
-import { SimuladosListPage, SimuladoRunPage, SimuladoReportPage } from '@/features/simulados';
+import { SimuladosListPage, SimuladoRunPage, SimuladoReportPage, TreinamentoPage } from '@/features/simulados';
 import { TrilhasPage, TrilhaMapaPage, LicaoPage, RevisaoPage } from '@/features/trilhas';
 import { PuericulturaPage } from '@/features/puericultura';
 import { PreNatalPage } from '@/features/preNatal';
@@ -48,6 +48,8 @@ const router = createBrowserRouter([
   { path: '/questoes/unica', element: <ProtectedRoute><QuestionsPage /></ProtectedRoute> },
   { path: '/puericultura', element: <ProtectedRoute><PuericulturaPage /></ProtectedRoute> },
   { path: '/preNatal', element: <ProtectedRoute><PreNatalPage /></ProtectedRoute> },
+
+  { path: '/treinamento', element: <ProtectedRoute><TreinamentoPage /></ProtectedRoute> },
 
   // Rotas de SIMULADOS
   { path: '/simulados', element: <ProtectedRoute><SimuladosListPage /></ProtectedRoute> },

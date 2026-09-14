@@ -36,6 +36,6 @@ __pycache__/
 .pytest_cache/
 
 
-# BACKEND - REMOVER DEPOIS
-
-backend/
+# Configura??o e credenciais locais
+backend/.env
+backend/.env.e2e

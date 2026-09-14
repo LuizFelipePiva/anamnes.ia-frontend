@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React, { useEffect, useMemo, useState } from 'react';
 import { CheckCircle2, ChevronRight, Plus, X } from 'lucide-react';
 import { BsFileEarmarkMedical } from 'react-icons/bs';
@@ -52,6 +53,7 @@ const ComplementaryExamModal: React.FC<ComplementaryExamModalProps> = ({
   selectedItems: initialSelectedItems = [],
   suggestedItems = [],
 }) => {
+  const { t: tUi } = useTranslation('common');
   const [selectedCategoryKey, setSelectedCategoryKey] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<string[]>(initialSelectedItems);
   const [customExam, setCustomExam] = useState('');
@@ -102,8 +104,8 @@ const ComplementaryExamModal: React.FC<ComplementaryExamModalProps> = ({
               <BsFileEarmarkMedical size={24} />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white">Exames complementares</h2>
-              <p className="mt-1 text-sm text-gray-400">Selecione os exames que poderão ser solicitados neste caso.</p>
+              <h2 className="text-2xl font-bold text-white">{tUi('clinical_tools.additional_tests')}</h2>
+              <p className="mt-1 text-sm text-gray-400">{tUi('clinical_tools.select_case_tests')}</p>
             </div>
           </div>
           <button
@@ -123,8 +125,8 @@ const ComplementaryExamModal: React.FC<ComplementaryExamModalProps> = ({
                 {suggestedItems.length > 0 && (
                   <section className="mb-6 rounded-2xl border border-violet-500/20 bg-violet-500/10 p-4">
                     <div className="mb-3">
-                      <h3 className="text-sm font-bold text-violet-200">Sugestões para esta patologia</h3>
-                      <p className="mt-0.5 text-xs text-violet-200/60">Clique para incluir ou remover uma sugestão.</p>
+                      <h3 className="text-sm font-bold text-violet-200">{tUi('clinical_tools.pathology_suggestions')}</h3>
+                      <p className="mt-0.5 text-xs text-violet-200/60">{tUi('clinical_tools.toggle_suggestion')}</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {suggestedItems.map(item => {
@@ -163,7 +165,7 @@ const ComplementaryExamModal: React.FC<ComplementaryExamModalProps> = ({
                       </span>
                       <span className="flex-1">
                         <span className="block text-sm font-bold text-gray-100 group-hover:text-white">{category.label}</span>
-                        <span className="mt-1 block text-xs text-gray-500">{category.items.length} opções frequentes</span>
+                        <span className="mt-1 block text-xs text-gray-500">{category.items.length} {tUi('clinical_tools.common_options')}</span>
                       </span>
                       <ChevronRight className="h-5 w-5 text-gray-600 transition-colors group-hover:text-violet-400" />
                     </button>
@@ -177,13 +179,13 @@ const ComplementaryExamModal: React.FC<ComplementaryExamModalProps> = ({
                   onClick={() => setSelectedCategoryKey(null)}
                   className="mb-5 flex items-center gap-2 text-sm text-gray-400 transition hover:text-white"
                 >
-                  <ChevronRight className="h-4 w-4 rotate-180" /> Voltar para categorias
+                  <ChevronRight className="h-4 w-4 rotate-180" /> {tUi('clinical_tools.back_categories')}
                 </button>
                 <div className="mb-6 flex items-center gap-3">
                   <span className="text-3xl">{selectedCategory.icon}</span>
                   <div>
                     <h3 className="text-xl font-bold text-white">{selectedCategory.label}</h3>
-                    <p className="text-sm text-gray-400">Selecione os exames disponíveis para o aluno.</p>
+                    <p className="text-sm text-gray-400">{tUi('clinical_tools.select_student_tests')}</p>
                   </div>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -263,13 +265,13 @@ const ComplementaryExamModal: React.FC<ComplementaryExamModalProps> = ({
                 ))}
               </ul>
             ) : (
-              <p className="mt-4 text-sm leading-relaxed text-gray-500">Nenhum exame complementar foi selecionado.</p>
+              <p className="mt-4 text-sm leading-relaxed text-gray-500">{tUi('clinical_tools.no_tests')}</p>
             )}
           </aside>
         </div>
 
         <div className="flex items-center justify-between gap-4 border-t border-white/5 bg-white/[0.02] p-6">
-          <p className="text-xs text-gray-500">Os exames serão disponibilizados para o aluno solicitar durante o caso.</p>
+          <p className="text-xs text-gray-500">{tUi('clinical_tools.tests_available')}</p>
           <div className="flex gap-3">
             <button type="button" onClick={onClose} className="rounded-xl px-5 py-2.5 text-sm font-semibold text-gray-400 transition hover:text-white">
               Cancelar

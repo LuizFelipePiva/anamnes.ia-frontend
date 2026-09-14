@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React, { useState, useMemo, useEffect } from 'react';
 import { Search, X, Check, ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from 'lucide-react';
 import { CID10_DATA, CID10_CATEGORIES } from '../data/cid10Data';
@@ -16,6 +17,7 @@ const CID10Modal: React.FC<CID10ModalProps> = ({
   onSelect,
   selectedItems = []
 }) => {
+  const { t: tUi } = useTranslation('common');
   const [search, setSearch] = useState('');
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [localSelected, setLocalSelected] = useState<CID10Item[]>(selectedItems);
@@ -119,7 +121,7 @@ const CID10Modal: React.FC<CID10ModalProps> = ({
             </div>
             <div>
               <h3 className="text-xl font-bold text-white">Selecionar CID-10</h3>
-              <p className="text-sm text-gray-400">{CID10_DATA.length} códigos disponíveis</p>
+              <p className="text-sm text-gray-400">{CID10_DATA.length} {tUi('clinical_tools.codes_available')}</p>
             </div>
           </div>
           <button 
@@ -158,7 +160,7 @@ const CID10Modal: React.FC<CID10ModalProps> = ({
               ) : (
                 <>
                   <ChevronsDown size={14} />
-                  Expandir todas
+                  {tUi('clinical_tools.expand_all')}
                 </>
               )}
             </button>
@@ -218,7 +220,7 @@ const CID10Modal: React.FC<CID10ModalProps> = ({
           
           {filteredData.length === 0 && (
             <div className="text-center py-12 text-gray-500">
-              <p>Nenhum CID-10 encontrado para "{search}"</p>
+              <p>{tUi('clinical_tools.no_icd')}{search}"</p>
             </div>
           )}
         </div>

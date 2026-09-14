@@ -42,5 +42,47 @@
     "filters": "No hay casos para los filtros seleccionados.",
     "none": "No hay casos disponibles."
   },
-  "footer": "Anamnes.IA · CNPJ: 62.785.748/0001-02"
+  "footer": "Anamnes.IA · CNPJ: 62.785.748/0001-02",
+  "exams": {
+    "modality": {
+      "ecg": "Electrocardiograma",
+      "radiografia": "Radiografía",
+      "tomografia": "Tomografía computarizada",
+      "ultrassonografia": "Ecografía",
+      "fundoscopia": "Fondo de ojo",
+      "dermatoscopia": "Dermatoscopia",
+      "espirometria": "Espirometría",
+      "gasometria": "Gasometría arterial",
+      "colonoscopia": "Colonoscopia",
+      "ausculta_cardiaca": "Auscultación cardíaca",
+      "ausculta_pulmonar": "Auscultación pulmonar",
+      "unknown": "Examen complementario"
+    },
+    "numbered": "{{label}} {{ordinal}}",
+    "viewer": {
+      "open": "Exámenes complementarios",
+      "title": "Exámenes complementarios",
+      "close": "Cerrar",
+      "credits": "Fuente: {{credits}}",
+      "unavailable": "Contenido no disponible"
+    },
+    "picker": {
+      "title": "Adjuntar exámenes complementarios",
+      "search_placeholder": "Buscar por hallazgo, nombre o etiqueta...",
+      "all_modalities": "Todas las modalidades",
+      "selected": "{{n}} de {{max}} seleccionados",
+      "limit_reached": "Se alcanzó el límite de {{max}} exámenes por caso.",
+      "empty": "No se encontraron exámenes para esta búsqueda.",
+      "save": "Guardar exámenes",
+      "cancel": "Cancelar",
+      "attach": "Adjuntar exámenes",
+      "attached_one": "1 examen adjuntado",
+      "attached_other": "{{count}} exámenes adjuntados",
+      "none_attached": "Ningún examen adjuntado",
+      "preview": "Ver {{name}}",
+      "select": "Seleccionar examen",
+      "unselect": "Quitar selección",
+      "listen": "Escuchar {{name}}"
+    }
+  }
 }

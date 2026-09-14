@@ -40,7 +40,7 @@ jobs:
   # Backend: syntax + ruff lint
   # ─────────────────────────────────────────
   backend:
-    name: Backend (ruff + py_compile)
+    name: Backend (ruff + py_compile + pytest)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -60,10 +60,16 @@ jobs:
         # então o comportamento é determinístico e independe dos defaults do ruff
         # (que mudam entre versões). Ao subir o pin, rode `ruff check app/` local
         # e trate os findings novos antes de mergear.
-        run: pip install -r requirements.txt "ruff==0.16.0"
+        run: pip install -r requirements.txt "ruff==0.16.0" "pytest==9.1.1"
 
       - name: Lint (ruff)
         run: ruff check app/
 
       - name: Syntax check
         run: python -m compileall app/ -q
+
+      # A suíte não toca serviço externo: `tests/conftest.py` injeta env dummy,
+      # mocka o cliente Supabase (inclusive nas chamadas diretas, que escapam do
+      # `dependency_overrides`) e blinda o cliente da OpenAI. Roda em ~3s.
+      - name: Tests (pytest)
+        run: pytest -q

@@ -42,5 +42,47 @@
     "filters": "No cases for the selected filters.",
     "none": "No cases available."
   },
-  "footer": "Anamnes.IA · CNPJ: 62.785.748/0001-02"
+  "footer": "Anamnes.IA · CNPJ: 62.785.748/0001-02",
+  "exams": {
+    "modality": {
+      "ecg": "Electrocardiogram",
+      "radiografia": "X-ray",
+      "tomografia": "CT scan",
+      "ultrassonografia": "Ultrasound",
+      "fundoscopia": "Fundoscopy",
+      "dermatoscopia": "Dermoscopy",
+      "espirometria": "Spirometry",
+      "gasometria": "Arterial blood gas",
+      "colonoscopia": "Colonoscopy",
+      "ausculta_cardiaca": "Cardiac auscultation",
+      "ausculta_pulmonar": "Lung auscultation",
+      "unknown": "Complementary exam"
+    },
+    "numbered": "{{label}} {{ordinal}}",
+    "viewer": {
+      "open": "Complementary exams",
+      "title": "Complementary exams",
+      "close": "Close",
+      "credits": "Source: {{credits}}",
+      "unavailable": "Media unavailable"
+    },
+    "picker": {
+      "title": "Attach complementary exams",
+      "search_placeholder": "Search by finding, name or tag...",
+      "all_modalities": "All modalities",
+      "selected": "{{n}} of {{max}} selected",
+      "limit_reached": "Limit of {{max}} exams per case reached.",
+      "empty": "No exams found for this search.",
+      "save": "Save exams",
+      "cancel": "Cancel",
+      "attach": "Attach exams",
+      "attached_one": "1 exam attached",
+      "attached_other": "{{count}} exams attached",
+      "none_attached": "No exams attached",
+      "preview": "View {{name}}",
+      "select": "Select exam",
+      "unselect": "Remove selection",
+      "listen": "Play {{name}}"
+    }
+  }
 }

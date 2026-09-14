@@ -69,7 +69,6 @@
     "symptoms": "Sintomas associados",
     "symptoms_placeholder": "Ex: Sudorese fria, náusea, irradiação para braço esquerdo",
     "exams": "Exames complementares",
-    "exams_placeholder": "Ex: ECG, troponina, ecocardiograma",
     "difficulty": "Dificuldade",
     "specifics": "Especificidades",
     "specifics_placeholder": "Ex: Alergia a AAS, uso de marcapasso",
@@ -123,7 +122,9 @@
     "saved_success": "Caso \"{{title}}\" salvo com sucesso!",
     "updated_success": "Caso \"{{title}}\" atualizado com sucesso!",
     "err_save": "Erro ao salvar caso.",
-    "err_update": "Erro ao atualizar caso."
+    "err_update": "Erro ao atualizar caso.",
+    "err_exams": "Caso salvo, mas erro ao anexar os exames complementares.",
+    "physical_exam": "Exame físico"
   },
   "flashcards": {
     "my_decks": "Meus Decks",

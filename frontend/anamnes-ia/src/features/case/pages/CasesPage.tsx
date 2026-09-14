@@ -215,7 +215,7 @@ const CasesPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#f7f6fa] text-[#20202a] w-full">
       {/* Aurora */}
-      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0" style={{
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 page-aurora" style={{
         background: [
           'radial-gradient(ellipse 65% 55% at 0% 0%, rgba(138,91,255,0.20) 0%, transparent 70%)',
           'radial-gradient(ellipse 55% 50% at 100% 0%, rgba(99,179,237,0.16) 0%, transparent 70%)',
@@ -223,7 +223,7 @@ const CasesPage: React.FC = () => {
         ].join(', '),
       }} />
       {/* Dot grid */}
-      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0" style={{
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 page-dots" style={{
         backgroundImage: 'radial-gradient(circle, rgba(122,85,255,0.18) 1px, transparent 1px)',
         backgroundSize: '28px 28px',
       }} />
@@ -262,7 +262,7 @@ const CasesPage: React.FC = () => {
           {/* Wave */}
           <div aria-hidden="true" className="w-full -mt-px overflow-hidden leading-none">
             <svg viewBox="0 0 1440 56" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full h-12 sm:h-14">
-              <path d="M0,0 C360,56 1080,0 1440,40 L1440,0 L0,0 Z" fill="#1a1730" />
+              <path d="M0,0 C360,56 1080,0 1440,40 L1440,0 L0,0 Z" fill="#1a1730" className="header-wave" />
             </svg>
           </div>
 

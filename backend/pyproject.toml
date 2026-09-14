@@ -1,0 +1,52 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Your Name",email = "you@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "python-dotenv (>=1.1.1,<2.0.0)",
+    "psycopg2-binary (>=2.9.10,<3.0.0)",
+    "openai (>=1.97.1,<2.0.0)",
+    "supabase (>=2.17.0,<3.0.0)",
+    "fastapi (>=0.116.1,<0.117.0)",
+    "uvicorn (>=0.35.0,<0.36.0)",
+    "python-jose[cryptography] (>=3.5.0,<4.0.0)"
+]
+
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+# Baseline moderno determinístico (não depende dos defaults, que mudam entre
+# versões do ruff): defaults estáveis (E4/E7/E9/F) + imports (I), bugbear (B)
+# e pyupgrade (UP). E501 (line-too-long) fica de fora — o código legado tem
+# ~350 linhas longas e reformatar tudo não agrega agora.
+select = ["E4", "E7", "E9", "F", "I", "B", "UP"]
+# B008: o app usa Depends()/Query() como valor default de argumento — idioma
+# do FastAPI, não um bug.
+ignore = ["B008"]
+
+[tool.pytest.ini_options]
+# `backend/` no sys.path para `tests/conftest.py` conseguir `from app...`.
+#
+# Sem isto, o resultado depende de COMO o pytest é chamado: `python -m pytest`
+# insere o diretório atual no sys.path e passa; o executável `pytest` (que é o
+# que o CI roda) não insere, e a coleta morre em
+# `ModuleNotFoundError: No module named 'app'` antes do primeiro teste.
+# Reproduzível localmente com `PYTHONSAFEPATH=1 python -m pytest`.
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+[tool.poetry.dependencies]
+python = ">=3.12,<4.0"
+
+[tool.poetry.group.dev.dependencies]
+uvicorn = "^0.35.0"

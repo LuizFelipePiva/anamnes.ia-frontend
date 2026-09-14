@@ -32,7 +32,6 @@
     "export": "Exportar JSON",
     "back_panel": "Panel principal",
     "subtitle": "Organiza el contenido más rápido y mantén el material siempre alineado.",
-    "back": "Volver",
     "error_save": "Error al guardar la pregunta.",
     "error_delete": "Error al eliminar.",
     "error_import": "Error al importar el archivo JSON. Verifica el formato."
@@ -110,7 +109,8 @@
       "classes": "Clases",
       "free_cases": "Casos gratuitos",
       "gpt": "GPT / Tokens",
-      "flashcards": "Flashcards"
+      "flashcards": "Flashcards",
+      "questoes": "Banco de preguntas"
     },
     "sidebar": {
       "admin": "Admin",
