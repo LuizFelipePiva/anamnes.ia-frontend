@@ -112,15 +112,11 @@ const SoapForm: React.FC<SoapFormProps> = ({
         {errorKey && <div className="text-red-500 text-center">{t(errorKey)}</div>}
         {/* S */}
         <div className="flex items-center gap-2 mb-1 w-full">
-          <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#8B2E7E] flex-shrink-0">
-            <span className="text-2xl font-bold text-white">S</span>
-          </div>
-          <div className="flex-1 px-3 py-1.5 rounded-lg bg-[#8B2E7E]/20 w-full flex items-center justify-between">
+          <Tooltip color="#8B2E7E" text={t('soap.subjective_tip')} label={t('soap.subjective')}>
+            S
+          </Tooltip>
+          <div className="flex-1 min-h-11 px-3 py-1.5 rounded-lg bg-[#8B2E7E]/20 w-full flex items-center justify-between">
             <span className="text-base font-semibold text-white">{t('soap.subjective')}</span>
-            <Tooltip
-              color="#8B2E7E"
-              text={t('soap.subjective_tip')}
-            />
           </div>
         </div>
         <textarea
@@ -133,16 +129,12 @@ const SoapForm: React.FC<SoapFormProps> = ({
         />
         {/* O */}
         <div className="flex items-center gap-2 mb-1 w-full">
-          <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#2D4993] flex-shrink-0">
-            <span className="text-2xl font-bold text-white">O</span>
-          </div>
+          <Tooltip color="#2D4993" text={t('soap.objective_tip')} label={t('soap.objective')}>
+            O
+          </Tooltip>
           <div className="flex-1 px-3 py-1.5 rounded-lg bg-[#2D4993]/20 w-full flex items-center justify-between">
             <span className="text-base font-semibold text-white">{t('soap.objective')}</span>
             <div className="flex items-center gap-1">
-              <Tooltip
-                color="#2D4993"
-                text={t('soap.objective_tip')}
-              />
               <button
                 type="button"
                 onClick={() => setShowExamModal(true)}
@@ -176,16 +168,12 @@ const SoapForm: React.FC<SoapFormProps> = ({
         />
         {/* A */}
         <div className="flex items-center gap-2 mb-1 w-full">
-          <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#918E27] flex-shrink-0">
-            <span className="text-2xl font-bold text-white">A</span>
-          </div>
+          <Tooltip color="#918E27" text={t('soap.assessment_tip')} label={t('soap.assessment')}>
+            A
+          </Tooltip>
           <div className="flex-1 px-3 py-1.5 rounded-lg bg-[#918E27]/20 w-full flex items-center justify-between">
             <span className="text-base font-semibold text-white">{t('soap.assessment')}</span>
             <div className="flex items-center gap-1">
-              <Tooltip
-                color="#918E27"
-                text={t('soap.assessment_tip')}
-              />
               <button
                 type="button"
                 onClick={() => setShowCIDModal(true)}
@@ -225,13 +213,12 @@ const SoapForm: React.FC<SoapFormProps> = ({
         />
         {/* P */}
         <div className="flex items-center gap-2 mb-1 w-full">
-          <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-[#2A8921] flex-shrink-0">
-            <span className="text-2xl font-bold text-white">P</span>
-          </div>
+          <Tooltip color="#2A8921" text={t('soap.plan_tip')} label={t('soap.plan')}>
+            P
+          </Tooltip>
           <div className="flex-1 px-3 py-1.5 rounded-lg bg-[#2A8921]/20 w-full flex items-center justify-between">
             <span className="text-base font-semibold text-white">{t('soap.plan')}</span>
             <div className="flex items-center gap-1">
-              <Tooltip color="#2A8921" text={t('soap.plan_tip')} />
               <button type="button" onClick={() => setShowMedicinesModal(true)} className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer hover:scale-110 transition-transform" style={{ backgroundColor: '#3dcc30' }} title={t('soap.add_medicine', { defaultValue: 'Adicionar prescrição de medicamentos' })}>
                 <GiMedicines color="white" />
               </button>
