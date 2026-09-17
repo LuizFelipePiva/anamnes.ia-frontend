@@ -1,0 +1,20 @@
+ANAMNES.IA — ENTREGA LOCAL
+Data: 07/09/2026
+Branch de origem: Simulados
+Commit: beecca53d4179c93d989a807ab795942a28ff430
+Commit curto: beecca5
+
+Conteúdo:
+- Sistema completo exportado da branch local Simulados no commit acima.
+- Sem diretório .git.
+- Sem node_modules, caches ou builds locais não versionados.
+- MIGRATIONS_PARA_RODAR/ contém as duas migrations novas que devem ser aplicadas para os fluxos implementados nesta sessão.
+
+Fluxos incluídos:
+- Resumo semanal estruturado com weak_specialties.
+- Recomendações de Simulados por especialidade fraca.
+- Fallback para criação de Simulado pré-filtrado.
+- Flashcards automáticos por especialidade para questões erradas.
+- Questões avulsas: criação imediata após erro.
+- Simulados: criação somente após finish_attempt, evitando vazamento de gabarito durante a prova.
+- Deduplicação de deck/card por aluno e origem.

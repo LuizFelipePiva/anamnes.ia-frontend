@@ -221,33 +221,33 @@ const StudentChat: React.FC = () => {
   }, []);
 
   // Modo prova: fiscaliza somente uma tentativa ativa após o aviso.
-  useEffect(() => {
-    if (!focusWarningAccepted || !chatMode || !resolvedAttempt?.attemptId) return;
-    const redirectOnFocusLoss = () => {
-      if (isCompletedRef.current) return;
+  // useEffect(() => {
+  //   if (!focusWarningAccepted || !chatMode || !resolvedAttempt?.attemptId) return;
+  //   const redirectOnFocusLoss = () => {
+  //     if (isCompletedRef.current) return;
 
-      isCompletedRef.current = true;
-      setIsCompleted(true);
-      if (attemptIdRef.current) {
-        void abandonAttempt(attemptIdRef.current);
-      }
-      window.location.replace('/mainpage');
-    };
+  //     isCompletedRef.current = true;
+  //     setIsCompleted(true);
+  //     if (attemptIdRef.current) {
+  //       void abandonAttempt(attemptIdRef.current);
+  //     }
+  //     window.location.replace('/mainpage');
+  //   };
 
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        redirectOnFocusLoss();
-      }
-    };
+  //   const handleVisibilityChange = () => {
+  //     if (document.visibilityState === 'hidden') {
+  //       redirectOnFocusLoss();
+  //     }
+  //   };
 
-    window.addEventListener('blur', redirectOnFocusLoss);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+  //   window.addEventListener('blur', redirectOnFocusLoss);
+  //   document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    return () => {
-      window.removeEventListener('blur', redirectOnFocusLoss);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [focusWarningAccepted, chatMode, resolvedAttempt?.attemptId]);
+  //   return () => {
+  //     window.removeEventListener('blur', redirectOnFocusLoss);
+  //     document.removeEventListener('visibilitychange', handleVisibilityChange);
+  //   };
+  // }, [focusWarningAccepted, chatMode, resolvedAttempt?.attemptId]);
 
   const [conversationId, setConversationId] = useState<string | null>(
     caseAttempt?.conversationId ?? currentFreeCase?.conversationId ?? null

@@ -1,0 +1,13 @@
+# docker-compose.bench.yml — override para o ambiente do anamnes-bench
+# uso: docker compose -f docker-compose.yml -f docker-compose.bench.yml up -d
+#
+# Sozinho não sobe nada ("neither an image nor a build context") — é override,
+# não stack completa. Aponta o backend para Supabase local (via `supabase start`,
+# supabase/config.toml deste repo) em vez do Supabase de produção usado por
+# docker-compose.yml, e renomeia o container para não colidir com o dev normal.
+
+services:
+  backend:
+    container_name: anamnes-backend-bench
+    env_file:
+      - ./backend/.env.local
